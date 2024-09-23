@@ -1,10 +1,11 @@
-from typing import List
+from typing import List, Any
 from sqlalchemy import String, Integer, BigInteger, Column, Boolean, Date, DateTime, ForeignKey, CheckConstraint, func
 from sqlalchemy.orm import declarative_base, relationship
 from datetime import date, datetime
+
 from src.service.service_tools import correct_time
-# from sqlalchemy import create_engine
-# from config import URI_DB
+from sqlalchemy import create_engine
+from config import URI_DB
 
 Base = declarative_base()
 
@@ -37,26 +38,29 @@ class User(Base):
     status: bool = Column(type_=Boolean, nullable=False, default=False)
     info: str = Column(type_=String, nullable=True, default=None)
     chat = relationship("Chat", back_populates="users")
-    holiday = relationship("Birthday", back_populates="users")
+    holiday = relationship("Holiday", back_populates="users")
 
 
 class Chat(Base):
     __tablename__ = "chats"
     id: int = Column(type_=Integer, primary_key=True)
     chat_id: int = Column(type_=BigInteger, nullable=False, unique=True)
-    user_id: int = Column(BigInteger, ForeignKey('user.id'), nullable=False)
-    is_member: bool = Column(type_=Boolean, nullable=False, default=True)
+    user_id: int = Column(Integer, ForeignKey('users.id'), nullable=False)
     user = relationship("User", back_populates="chats")
+    holiday = relationship("Holiday", back_populates="chats")
 
 
 class Holiday(Base):
     __tablename__ = "holidays"
     id: int = Column(type_=Integer, primary_key=True)
-    user_id: int = Column(BigInteger, ForeignKey('user.id'), nullable=False)
-
+    user_id: int = Column(Integer, ForeignKey('users.id'), nullable=True)
+    chat_id: int = Column(Integer, ForeignKey('chats.id'), nullable=False)
+    amount: int = Column(type_=Integer, nullable=False, default=500)
+    card_number: str = Column(type_=String(length=16), nullable=False)
     user = relationship("User", back_populates="holidays")
+    chat = relationship("Chat", back_populates="holidays")
 
 
 """ якщо треба створити таблиці в базі даних """
-# engine = create_engine(url=f"postgresql://{URI_DB}", echo=True)
-# Base.metadata.create_all(engine)
+engine = create_engine(url=f"postgresql://{URI_DB}", echo=True)
+Base.metadata.create_all(engine)
