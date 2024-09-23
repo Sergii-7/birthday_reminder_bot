@@ -1,0 +1,62 @@
+from typing import List
+from sqlalchemy import String, Integer, BigInteger, Column, Boolean, Date, DateTime, ForeignKey, CheckConstraint, func
+from sqlalchemy.orm import declarative_base, relationship
+from datetime import date, datetime
+from src.service.service_tools import correct_time
+# from sqlalchemy import create_engine
+# from config import URI_DB
+
+Base = declarative_base()
+
+
+class AdminApp(Base):
+    __tablename__ = "admins_app"
+    id: int = Column(type_=Integer, primary_key=True)
+    login: str = Column(type_=String, unique=True, nullable=False)
+    password: str = Column(type_=String, unique=True, nullable=False)
+    status: bool = Column(type_=Boolean, nullable=False, default=True)
+    info: str = Column(type_=String, nullable=True, default=None)
+
+    __table_args__ = (
+        CheckConstraint(func.length(login).between(3, 20), name='login_length_range'),
+        CheckConstraint(func.length(password).between(8, 32), name='password_length_range')
+    )
+
+
+class User(Base):
+    __tablename__ = "users"
+    id: int = Column(type_=Integer, primary_key=True)
+    telegram_id: int = Column(type_=BigInteger, nullable=False, unique=True)
+    first_name: str = Column(type_=String, nullable=False)
+    last_name: str = Column(type_=String, nullable=True, default=None)
+    username: str = Column(type_=String, nullable=True, default=None)
+    language_code: str = Column(type_=String(3), nullable=True, default=None)
+    created_at: datetime = Column(type_=DateTime, nullable=False, default=correct_time)
+    phone_number: str = Column(type_=String(30))
+    birthday: date = Column(type_=Date, nullable=True, default=None)
+    status: bool = Column(type_=Boolean, nullable=False, default=False)
+    info: str = Column(type_=String, nullable=True, default=None)
+    chat = relationship("Chat", back_populates="users")
+    holiday = relationship("Birthday", back_populates="users")
+
+
+class Chat(Base):
+    __tablename__ = "chats"
+    id: int = Column(type_=Integer, primary_key=True)
+    chat_id: int = Column(type_=BigInteger, nullable=False, unique=True)
+    user_id: int = Column(BigInteger, ForeignKey('user.id'), nullable=False)
+    is_member: bool = Column(type_=Boolean, nullable=False, default=True)
+    user = relationship("User", back_populates="chats")
+
+
+class Holiday(Base):
+    __tablename__ = "holidays"
+    id: int = Column(type_=Integer, primary_key=True)
+    user_id: int = Column(BigInteger, ForeignKey('user.id'), nullable=False)
+
+    user = relationship("User", back_populates="holidays")
+
+
+""" якщо треба створити таблиці в базі даних """
+# engine = create_engine(url=f"postgresql://{URI_DB}", echo=True)
+# Base.metadata.create_all(engine)
