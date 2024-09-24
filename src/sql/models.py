@@ -1,11 +1,9 @@
-from typing import List, Any
 from sqlalchemy import String, Integer, BigInteger, Column, Boolean, Date, DateTime, ForeignKey, CheckConstraint, func
 from sqlalchemy.orm import declarative_base, relationship
 from datetime import date, datetime
-
-from src.service.service_tools import correct_time
-from sqlalchemy import create_engine
-from config import URI_DB
+# from sqlalchemy import create_engine
+# from config import URI_DB
+from src.service.service_tools import correct_time, generate_users_password
 
 Base = declarative_base()
 
@@ -33,21 +31,29 @@ class User(Base):
     username: str = Column(type_=String, nullable=True, default=None)
     language_code: str = Column(type_=String(3), nullable=True, default=None)
     created_at: datetime = Column(type_=DateTime, nullable=False, default=correct_time)
-    phone_number: str = Column(type_=String(30))
+    phone_number: str = Column(type_=String(30), nullable=True, default=None)
     birthday: date = Column(type_=Date, nullable=True, default=None)
     status: bool = Column(type_=Boolean, nullable=False, default=False)
     info: str = Column(type_=String, nullable=True, default=None)
-    chat = relationship("Chat", back_populates="users")
-    holiday = relationship("Holiday", back_populates="users")
+    user_login = relationship("UserLogin", back_populates="user")
+    chats = relationship("Chat", back_populates="user")
+    holidays = relationship("Holiday", back_populates="user")
+
+
+class UserLogin(Base):
+    __tablename__ = "user_login"
+    id: int = Column(type_=Integer, primary_key=True)
+    user_telegram_id: int = Column(BigInteger, ForeignKey('users.telegram_id'), nullable=False)
+    password: str = Column(type_=String(30), nullable=True, default=generate_users_password)
+    user = relationship("User", back_populates="user_login")
 
 
 class Chat(Base):
     __tablename__ = "chats"
     id: int = Column(type_=Integer, primary_key=True)
-    chat_id: int = Column(type_=BigInteger, nullable=False, unique=True)
     user_id: int = Column(Integer, ForeignKey('users.id'), nullable=False)
     user = relationship("User", back_populates="chats")
-    holiday = relationship("Holiday", back_populates="chats")
+    holidays = relationship("Holiday", back_populates="chat")
 
 
 class Holiday(Base):
@@ -62,5 +68,5 @@ class Holiday(Base):
 
 
 """ якщо треба створити таблиці в базі даних """
-engine = create_engine(url=f"postgresql://{URI_DB}", echo=True)
-Base.metadata.create_all(engine)
+# engine = create_engine(url=f"postgresql://{URI_DB}", echo=True)
+# Base.metadata.create_all(engine)

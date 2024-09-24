@@ -1,2 +1,5 @@
+alembic/
 .venv/
+.idea/
 .gitignore
+alembic.ini

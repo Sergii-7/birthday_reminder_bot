@@ -15,3 +15,7 @@ URI_DB = os.environ.get('UBUNTU_URI_DB')
 TOKEN = os.environ.get('TOKEN')
 bot_name = "Holiday organizer"
 bot_link = "https://t.me/holiday_organizer_bot"
+sb_telegram_id = 620527199
+WEBHOOK_PATH = '/telegram/api/bot/hr/set/webhook/path/a/b/c/d/e'
+HOST = 'https://hr-api-hj3x6.ondigitalocean.app'
+WEBHOOK_URL = f'{HOST}{WEBHOOK_PATH}'
