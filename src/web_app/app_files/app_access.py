@@ -26,15 +26,16 @@ async def get_current_user(credentials: HTTPBasicCredentials = Depends(security)
     """ Check if user == admin or not """
     try:
         logger.debug('get_current_user()')
-        user_login = await get_user_by_login(telegram_id=int(credentials.telegram_id), password=credentials.password)
+        user_login = await get_user_by_login(
+            telegram_id=int(credentials.telegram_id), password=credentials.user_password)
         if user_login:
             return user_login
     except Exception as e:
         logger.error(e)
-    logger.error(f"status.HTTP_401_UNAUTHORIZED: '{credentials.username}' and his password are not valid!")
+    logger.error(f"status.HTTP_401_UNAUTHORIZED: 'Incorrect telegram_id or password'")
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Incorrect username or password",
+        detail="Incorrect telegram_id or password",
         headers={"WWW-Authenticate": "Basic"},
     )
 
