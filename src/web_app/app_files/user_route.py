@@ -50,11 +50,11 @@ async def login(request: Request, response: Response, telegram_id: int, password
     # Перевірка користувача
     user = await get_user_by_login(telegram_id=telegram_id, password=password)
     if user:
-        # Збереження ідентифікаційних даних користувача у кукі з розширеними параметрами
-        response.set_cookie(key="telegram_id", value=str(telegram_id))
-        response.set_cookie(key="user_password", value=password)
-        # Переадресація на іншу сторінку після успішного входу
-        return RedirectResponse(url="/path/another_page", status_code=status.HTTP_302_FOUND)
+        # Використання заголовків для встановлення кукі
+        response = RedirectResponse(url="/path/another_page", status_code=status.HTTP_302_FOUND)
+        response.set_cookie(key="telegram_id", value=str(telegram_id), path="/", samesite="Lax", secure=False)
+        response.set_cookie(key="user_password", value=password, path="/", samesite="Lax", secure=False)
+        return response
     else:
         # Якщо дані невірні
         msg = "Data is not valid!"
