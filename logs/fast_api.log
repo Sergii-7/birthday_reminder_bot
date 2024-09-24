@@ -1,1 +1,7 @@
 2024-09-24 22:03:58,737 [INFO] - src.web_app.app_files.telegram_route - on_shutdown(22) - Bot webhook has been delete.
+2024-09-24 22:24:40,061 [INFO] - src.web_app.app_files.admin_route - home(26) - 2024-09-24 22:24:40.061842: Sergii in page 'home'
+ip_address: None
+2024-09-24 22:26:36,931 [INFO] - src.web_app.app_files.admin_route - home(26) - 2024-09-24 22:26:36.931012: Sergii in page 'home'
+ip_address: None
+2024-09-24 22:27:52,534 [INFO] - src.web_app.app_files.admin_route - home(26) - 2024-09-24 22:27:52.534249: Sergii in page 'home'
+ip_address: None

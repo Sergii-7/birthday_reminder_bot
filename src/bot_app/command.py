@@ -24,8 +24,8 @@ async def start_command_handler(message: Message):
 async def get_phone_number(message: Message):
     """ Get phone_number from User """
     phone_number = message.contact.phone_number
-    await message.reply(text=f'{phone_number}\n✔️')
     telegram_id = message.contact.user_id
+    await bot.send_message(chat_id=telegram_id, text=f'{phone_number}\n✔️')
     if phone_number[0] != '+':
         phone_number = f"+{phone_number}"
     user = await update_phone_number(telegram_id=telegram_id, phone_number=phone_number)
