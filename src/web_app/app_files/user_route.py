@@ -66,7 +66,7 @@ async def login(request: Request, response: Response, telegram_id: int, password
 
 
 @user_router.get(path="/another_page", include_in_schema=True, status_code=status.HTTP_200_OK)
-async def check_auth(request: Request, user_login: Union[User, UserLogin] = Depends(get_current_user)):
+async def check_auth(request: Request):
     """
     Checks if the user is authenticated by verifying cookies.
     """
@@ -76,11 +76,35 @@ async def check_auth(request: Request, user_login: Union[User, UserLogin] = Depe
     password = request.cookies.get("password")
     logger.info(f"password={password}")
     # Перевірка користувача в базі даних
-    logger.info(str(user_login))
-    if user_login:
+    if telegram_id:
         return JSONResponse({"success": True, "message": "User is authenticated."})
     else:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
+
+
+@user_router.get("/set-cookie-test")
+async def set_cookie_test(response: Response):
+    """
+    Встановлення тестової кукі без редиректу.
+    """
+    response.set_cookie(
+        key="telegram_id",
+        value="test_id",
+        httponly=True,
+        path="/",
+        samesite="Lax",
+        secure=False  # Використовуйте False для HTTP під час тестування
+    )
+    response.set_cookie(
+        key="password",
+        value="test_password",
+        httponly=True,
+        path="/",
+        samesite="Lax",
+        secure=False  # Використовуйте False для HTTP під час тестування
+    )
+    return {"message": "Cookies set successfully!"}
+
 
 # Підключення маршрутів 'USER' до основного додатку
 app.include_router(router=user_router)
