@@ -52,9 +52,21 @@ async def login(request: Request, response: Response, telegram_id: int, password
     if user:
         # Збереження ідентифікаційних даних користувача у кукі з розширеними параметрами
         response.set_cookie(
-            key="telegram_id", value=str(telegram_id), httponly=True, path="/", samesite="Lax", secure=True)
+            key="telegram_id",
+            value=str(telegram_id),
+            httponly=True,
+            path="/",
+            samesite="Lax",
+            secure=False  # Використовуйте False для HTTP під час тестування
+        )
         response.set_cookie(
-            key="password", value=password, httponly=True, path="/", samesite="Lax", secure=True)
+            key="user_password",
+            value=password,
+            httponly=True,
+            path="/",
+            samesite="Lax",
+            secure=False  # Використовуйте False для HTTP під час тестування
+        )
         # Переадресація на іншу сторінку після успішного входу
         return RedirectResponse(url="/path/another_page", status_code=status.HTTP_302_FOUND)
     else:
@@ -73,11 +85,11 @@ async def check_auth(request: Request):
     # https://holiday-organizer-dp6b4.ondigitalocean.app/path/login/620527199/XDXWYINdEh3ZkniDSX52T9aj53j
     telegram_id = request.cookies.get("telegram_id")
     logger.info(f"telegram_id={telegram_id}")
-    password = request.cookies.get("password")
+    password = request.cookies.get("user_password")
     logger.info(f"password={password}")
     # Перевірка користувача в базі даних
     if telegram_id:
-        return JSONResponse({"success": True, "message": "User is authenticated."})
+        return {"success": True, "message": "User is authenticated."}
     else:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
 
