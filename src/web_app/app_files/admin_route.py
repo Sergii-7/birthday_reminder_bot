@@ -18,12 +18,12 @@ logger = get_logger(__name__)
 
 @app.get(path="/", response_class=HTMLResponse, include_in_schema=False, status_code=status.HTTP_200_OK)
 @limiter.limit("5/minute")
-async def home(request: Request, admin: AdminApp = Depends(get_current_admin)):
+async def home(request: Request):
     """ Перевірка робота додатка """
     time_now = correct_time()
     headers = dict(request.headers)
     ip_address, page = headers.get('x-forwarded-for'), 'home'
-    logger.info(f"{time_now}: {admin.login} in page '{page}'\nip_address: {ip_address}")
+    logger.info(f"{time_now}: Somebody in page '{page}'\nip_address: {ip_address}")
     data = {
         "title": "Avrora", "message": "Welcome to the 'Holiday organizer App' API !",
         "redoc": "see the documentation", "docs": "try the documentation in swagger"
