@@ -1,6 +1,9 @@
 from fastapi import Request, status, HTTPException, Body, APIRouter, Response, Depends
 from fastapi.responses import JSONResponse, HTMLResponse, RedirectResponse
 from typing import Union
+
+from pydantic_core.core_schema import tuple_schema
+
 from create_app import app, limiter, templates
 from src.sql.func_db import get_user_by_login
 from src.sql.models import User, UserLogin
@@ -63,7 +66,7 @@ async def login(request: Request, response: Response, telegram_id: int, password
 
 
 @user_router.get(path="/another_page", include_in_schema=True, status_code=status.HTTP_200_OK)
-async def check_auth(request: Request):
+async def check_auth(request: Request, user_login: Union[User, UserLogin] = Depends(get_current_user)):
     """
     Checks if the user is authenticated by verifying cookies.
     """
@@ -73,7 +76,8 @@ async def check_auth(request: Request):
     password = request.cookies.get("password")
     logger.info(f"password={password}")
     # Перевірка користувача в базі даних
-    if telegram_id:
+    logger.info(str(user_login))
+    if user_login:
         return JSONResponse({"success": True, "message": "User is authenticated."})
     else:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
