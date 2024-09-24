@@ -51,22 +51,8 @@ async def login(request: Request, response: Response, telegram_id: int, password
     user = await get_user_by_login(telegram_id=telegram_id, password=password)
     if user:
         # Збереження ідентифікаційних даних користувача у кукі з розширеними параметрами
-        response.set_cookie(
-            key="telegram_id",
-            value=str(telegram_id),
-            httponly=True,
-            path="/",
-            samesite="Lax",
-            secure=False  # Використовуйте False для HTTP під час тестування
-        )
-        response.set_cookie(
-            key="user_password",
-            value=password,
-            httponly=True,
-            path="/",
-            samesite="Lax",
-            secure=False  # Використовуйте False для HTTP під час тестування
-        )
+        response.set_cookie(key="telegram_id", value=str(telegram_id))
+        response.set_cookie(key="user_password", value=password)
         # Переадресація на іншу сторінку після успішного входу
         return RedirectResponse(url="/path/another_page", status_code=status.HTTP_302_FOUND)
     else:
@@ -108,7 +94,7 @@ async def set_cookie_test(response: Response):
         secure=False  # Використовуйте False для HTTP під час тестування
     )
     response.set_cookie(
-        key="password",
+        key="user_password",
         value="test_password",
         httponly=True,
         path="/",
