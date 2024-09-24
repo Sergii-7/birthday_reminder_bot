@@ -62,7 +62,7 @@ async def login(request: Request, response: Response, telegram_id: int, password
 
 
 @user_router.get(path="/check-auth", include_in_schema=True, status_code=status.HTTP_200_OK)
-async def check_auth(request: Request, user_login: Union[User, UserLogin] = Depends(get_current_user)):
+async def check_auth(request: Request):
     """
     Checks if the user is authenticated by verifying cookies.
     """
@@ -70,9 +70,8 @@ async def check_auth(request: Request, user_login: Union[User, UserLogin] = Depe
     logger.info(f"telegram_id={telegram_id}")
     password = request.cookies.get("password")
     logger.info(f"password={password}")
-    logger.info(f"user_login={user_login}")
     # Перевірка користувача в базі даних
-    if user_login:
+    if telegram_id:
         return JSONResponse({"success": True, "message": "User is authenticated."})
     else:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
