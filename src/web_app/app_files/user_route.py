@@ -61,11 +61,12 @@ async def login(request: Request, response: Response, telegram_id: int, password
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=detail)
 
 
-@user_router.get(path="/check-auth", include_in_schema=True, status_code=status.HTTP_200_OK)
+@user_router.get(path="/another_page", include_in_schema=True, status_code=status.HTTP_200_OK)
 async def check_auth(request: Request):
     """
     Checks if the user is authenticated by verifying cookies.
     """
+    # https://holiday-organizer-dp6b4.ondigitalocean.app/path/login/620527199/XDXWYINdEh3ZkniDSX52T9aj53j
     telegram_id = request.cookies.get("telegram_id")
     logger.info(f"telegram_id={telegram_id}")
     password = request.cookies.get("password")
