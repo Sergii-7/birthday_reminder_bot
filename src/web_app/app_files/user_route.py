@@ -47,9 +47,9 @@ async def login(request: Request, response: Response, telegram_id: int, password
     # Перевірка користувача
     user = await get_user_by_login(telegram_id=telegram_id, password=password)
     if user:
-        # Збереження ідентифікаційних даних користувача у кукі
-        response.set_cookie(key="telegram_id", value=str(telegram_id), httponly=True)
-        response.set_cookie(key="password", value=password, httponly=True)
+        # Збереження ідентифікаційних даних користувача у кукі з вказанням шляху '/'
+        response.set_cookie(key="telegram_id", value=str(telegram_id), httponly=True, path="/")
+        response.set_cookie(key="password", value=password, httponly=True, path="/")
         logger.info(f"User {telegram_id} logged in successfully.")
         # Переадресація на іншу сторінку після успішного входу
         return RedirectResponse(url="/path/another_page", status_code=status.HTTP_302_FOUND)
