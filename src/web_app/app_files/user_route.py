@@ -64,7 +64,7 @@ async def login(request: Request, response: Response, telegram_id: int, password
 
 
 @user_router.get(path="/another_page", include_in_schema=True, status_code=status.HTTP_200_OK)
-async def check_auth(request: Request, user_login: Union[User, UserLogin] = Depends(get_current_user)):
+async def check_auth(request: Request):
     """
     Checks if the user is authenticated by verifying cookies.
     """
@@ -73,6 +73,7 @@ async def check_auth(request: Request, user_login: Union[User, UserLogin] = Depe
     logger.info(f"telegram_id={telegram_id}")
     password = request.cookies.get("user_password")
     logger.info(f"password={password}")
+    user_login = await get_user_by_login(telegram_id=int(telegram_id), password=password)
     logger.info(str(user_login))
     # Перевірка користувача в базі даних
     if telegram_id and password and user_login:
