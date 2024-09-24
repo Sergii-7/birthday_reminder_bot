@@ -52,8 +52,8 @@ async def login(request: Request, response: Response, telegram_id: int, password
     if user:
         # Використання заголовків для встановлення кукі
         response = RedirectResponse(url="/path/another_page", status_code=status.HTTP_302_FOUND)
-        response.set_cookie(key="telegram_id", value=str(telegram_id), path="/", samesite="Lax", secure=False)
-        response.set_cookie(key="user_password", value=password, path="/", samesite="Lax", secure=False)
+        response.set_cookie(key="telegram_id", value=str(telegram_id), path="/", samesite="Lax", secure=True)
+        response.set_cookie(key="user_password", value=password, path="/", samesite="Lax", secure=True)
         return response
     else:
         # Якщо дані невірні
@@ -64,7 +64,7 @@ async def login(request: Request, response: Response, telegram_id: int, password
 
 
 @user_router.get(path="/another_page", include_in_schema=True, status_code=status.HTTP_200_OK)
-async def check_auth(request: Request):
+async def check_auth(request: Request, user_login: Union[User, UserLogin] = Depends(get_current_user)):
     """
     Checks if the user is authenticated by verifying cookies.
     """
@@ -73,35 +73,12 @@ async def check_auth(request: Request):
     logger.info(f"telegram_id={telegram_id}")
     password = request.cookies.get("user_password")
     logger.info(f"password={password}")
+    logger.info(str(user_login))
     # Перевірка користувача в базі даних
-    if telegram_id:
+    if telegram_id and password and user_login:
         return {"success": True, "message": "User is authenticated."}
     else:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
-
-
-@user_router.get("/set-cookie-test")
-async def set_cookie_test(response: Response):
-    """
-    Встановлення тестової кукі без редиректу.
-    """
-    response.set_cookie(
-        key="telegram_id",
-        value="test_id",
-        httponly=True,
-        path="/",
-        samesite="Lax",
-        secure=False  # Використовуйте False для HTTP під час тестування
-    )
-    response.set_cookie(
-        key="user_password",
-        value="test_password",
-        httponly=True,
-        path="/",
-        samesite="Lax",
-        secure=False  # Використовуйте False для HTTP під час тестування
-    )
-    return {"message": "Cookies set successfully!"}
 
 
 # Підключення маршрутів 'USER' до основного додатку
