@@ -1,10 +1,7 @@
 import logging
 from config import file_log_tel_bot as filename
 
-
 _format = f"%(asctime)s [%(levelname)s] - %(name)s - %(funcName)s(%(lineno)d) - %(message)s"
-
-# filename = 'logs/fast_api_admin_panel.log'
 
 file_handler = logging.FileHandler(filename=filename, encoding='utf-8')
 file_handler.setLevel(level=logging.INFO)
