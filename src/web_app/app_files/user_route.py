@@ -67,19 +67,15 @@ async def check_auth(request: Request, user_login: Union[User, UserLogin] = Depe
     Checks if the user is authenticated by verifying cookies.
     """
     telegram_id = request.cookies.get("telegram_id")
-    print(telegram_id)
+    logger.info(f"telegram_id={telegram_id}")
     password = request.cookies.get("password")
-    print(password)
-    print(user_login)
-    if not telegram_id or not password:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized")
-
+    logger.info(f"password={password}")
+    logger.info(f"user_login={user_login}")
     # Перевірка користувача в базі даних
     if user_login:
-        return {"success": True, "message": "User is authenticated."}
+        return JSONResponse({"success": True, "message": "User is authenticated."})
     else:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
-
 
 # Підключення маршрутів 'USER' до основного додатку
 app.include_router(router=user_router)
