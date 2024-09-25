@@ -83,3 +83,20 @@ async def update_phone_number(telegram_id: int, phone_number: str) -> Optional[U
         except Exception as e:
             logger.error(f"attempt={n + 1} error: {e}")
     return None
+
+
+async def doc_update(
+        doc: Union[User, UserLogin, Chat, Holiday]) -> Union[bool, Union[User, UserLogin, Chat, Holiday]]:
+    """ Оновлюємо будь-який object в якому ми робили ті чи інші зміни """
+    if doc:
+        for n in range(3):
+            try:
+                logger.debug(f'doc_update(doc={doc})')
+                async with DBSession() as session:
+                    async with session.begin():
+                        await session.merge(doc)
+                        await session.commit()
+                        return doc
+            except Exception as e:
+                logger.error(f'Attempt {n + 1} failed: {e}')
+    return False
