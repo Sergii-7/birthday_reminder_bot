@@ -14,7 +14,7 @@
 <main class="container-fluid px-3">
     <div class="col-md-12 border">
         <h1>{{ data.msg }}</h1>
-        <form action="/path/get_birthday" method="POST" onsubmit="return validateDates()">
+        <form action="/path/get_birthday" method="POST" enctype="multipart/form-data" onsubmit="return validateDates()">
             <div class="form-group">
                 <label for="birthday">твій день народження:</label>
                 <input type="date" class="form-control" id="birthday" name="birthday" required>

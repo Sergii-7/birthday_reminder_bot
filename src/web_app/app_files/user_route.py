@@ -83,8 +83,8 @@ async def set_birthday(request: Request):
 
 
 @user_router.post(
-    path='/get_birthday', include_in_schema=True, response_class=HTMLResponse, status_code=status.HTTP_200_OK)
-async def get_birthday(request: Request, user_birthday: str = Form(...)):
+    path='/get_birthday', include_in_schema=True, status_code=status.HTTP_302_FOUND)
+async def get_birthday(request: Request, birthday: str = Form(...)):
     """
 
     :param request:
@@ -97,7 +97,7 @@ async def get_birthday(request: Request, user_birthday: str = Form(...)):
     user_login = await get_user_by_login(
         telegram_id=int(telegram_id), password=password) if telegram_id and password else None
     if user_login:
-        user_login.user.birthday = datetime.strptime(user_birthday, "%Y-%m-%d")
+        user_login.user.birthday = datetime.strptime(birthday, "%Y-%m-%d")
         ''' Update User in DataBase '''
         user_login = await doc_update(doc=user_login)
         res = "User.birthday updated successfully!" if user_login else "Error in updating User.birthday!"
