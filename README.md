@@ -10,8 +10,8 @@ Birthday reminder telegram-bot  by fast-api and aiogram for Avrora
 ```from your_model_file import Base  # Змініть на реальний шлях до файлу з вашими моделями```
 ```target_metadata = Base.metadata```
 ### create migration after changing in models:
-```alembic revision --autogenerate -m "initial migration"```
-```alembic upgrade head```
+``` alembic revision --autogenerate -m "initial migration" ```
+``` alembic upgrade head ```
 
 
 

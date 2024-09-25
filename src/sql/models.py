@@ -43,7 +43,7 @@ class User(Base):
 class UserLogin(Base):
     __tablename__ = "user_login"
     id: int = Column(type_=Integer, primary_key=True)
-    user_telegram_id: int = Column(BigInteger, ForeignKey('users.telegram_id'), nullable=False)
+    user_telegram_id: int = Column(BigInteger, ForeignKey('users.telegram_id'), unique=True, nullable=False)
     password: str = Column(type_=String(30), nullable=True, default=generate_users_password)
     user = relationship("User", back_populates="user_login")
 
