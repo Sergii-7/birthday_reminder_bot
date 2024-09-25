@@ -2,7 +2,7 @@ from datetime import datetime
 from fastapi import Request, status, HTTPException, Form, APIRouter, Response
 from fastapi.responses import HTMLResponse, RedirectResponse
 from create_app import app, limiter, templates
-from config import bot_link
+from config import bot_user_name
 from src.sql.func_db import get_user_by_login, doc_update
 from src.service.service_tools import correct_time
 from src.service.loggers.py_logger_fast_api import get_logger
@@ -102,7 +102,7 @@ async def get_birthday(request: Request, birthday: str = Form(...)):
         user_login = await doc_update(doc=user_login)
         res = "User.birthday updated successfully!" if user_login else "Error in updating User.birthday!"
         logger.info(res)
-        response = RedirectResponse(url=bot_link, status_code=status.HTTP_302_FOUND)
+        response = RedirectResponse(url=bot_user_name, status_code=status.HTTP_302_FOUND)
         response.set_cookie(key="telegram_id", value=str(telegram_id), path="/", samesite="Lax", secure=True)
         response.set_cookie(key="user_password", value=password, path="/", samesite="Lax", secure=True)
         return response
