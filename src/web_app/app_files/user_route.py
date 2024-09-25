@@ -97,7 +97,7 @@ async def get_birthday(request: Request, birthday: str = Form(...)):
     user_login = await get_user_by_login(
         telegram_id=int(telegram_id), password=password) if telegram_id and password else None
     if user_login:
-        user_login.user.birthday = datetime.strptime(birthday, "%Y-%m-%d")
+        user_login.user.birthday = datetime.strptime(birthday, "%Y-%m-%d") if birthday else None
         ''' Update User in DataBase '''
         user_login = await doc_update(doc=user_login)
         res = "User.birthday updated successfully!" if user_login else "Error in updating User.birthday!"
