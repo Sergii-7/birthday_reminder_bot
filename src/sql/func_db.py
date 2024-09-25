@@ -69,7 +69,7 @@ async def get_login_user_by_telegram_id(telegram_id: int) -> Optional[UserLogin]
         try:
             logger.debug(f'get_login_user_by_telegram_id(telegram_id={telegram_id})')
             async with DBSession() as session:
-                result = await session.execute(select(UserLogin).filter_by(telegram_id=telegram_id))
+                result = await session.execute(select(UserLogin).filter_by(user_telegram_id=telegram_id))
                 user_login = result.scalar()
                 if user_login:
                     return user_login
