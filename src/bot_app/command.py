@@ -16,7 +16,7 @@ async def start_command_handler(message: Message):
     """ Check User in DataBase and give him menu buttons """
     user = await check_user(message=message)
     if user:
-        await menu.start_command(user=user)
+        await menu.start_command(user=user, message_text=message.text)
         await message.delete()
 
 
