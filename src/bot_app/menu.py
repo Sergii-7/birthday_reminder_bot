@@ -2,6 +2,7 @@ from aiogram.types import KeyboardButton, ReplyKeyboardMarkup, InlineKeyboardMar
 from config import HOST
 from src.bot_app.create_bot import bot
 from src.sql.models import User
+from src.sql.func_db import get_login_user_by_telegram_id
 from src.service.loggers.py_logger_tel_bot import get_logger
 
 logger = get_logger(__name__)
@@ -38,7 +39,10 @@ class Menu:
 
     async def request_birthday(self, user: User):
         """ Робимо запит на отримання даних про день народження: sms + miniapp """
-        web_app = {'url': f"{HOST}/path/login/{user.telegram_id}/{user.password}"}
+        user_login = await get_login_user_by_telegram_id(telegram_id=user.telegram_id)
+        if not user_login:
+            return
+        web_app = {'url': f"{HOST}/path/login/{user.telegram_id}/{user_login.password}"}
         text = "Надати/Оновити дані про свій День Народження"
         text_b = "🎂 🥳 🎉"
         reply_markup = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text=text_b, web_app=web_app)],])

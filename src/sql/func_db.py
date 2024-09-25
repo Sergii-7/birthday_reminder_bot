@@ -63,6 +63,23 @@ async def get_user_by_login(telegram_id: int, password: str) -> Optional[Union[U
     return None
 
 
+async def get_login_user_by_telegram_id(telegram_id: int) -> Optional[UserLogin]:
+    """ Get user and user login from DataBase by 'login' and 'password' """
+    for n in range(3):
+        try:
+            logger.debug(f'get_login_user_by_telegram_id(telegram_id={telegram_id})')
+            async with DBSession() as session:
+                result = await session.execute(select(UserLogin).filter_by(telegram_id=telegram_id))
+                user_login = result.scalar()
+                if user_login:
+                    return user_login
+                else:
+                    return None
+        except Exception as e:
+            logger.error(f"attempt={n + 1} error: {e}")
+    return None
+
+
 async def update_phone_number(telegram_id: int, phone_number: str) -> Optional[Union[User]]:
     """ Update 'phone_number' in table='users' in DataBase """
     for n in range(3):
