@@ -98,8 +98,8 @@ async def get_birthday(request: Request, user_birthday: str = Form(...)):
         user_login.user.birthday = datetime.strptime(user_birthday, "%Y-%m-%d")
         ''' Update User in DataBase '''
         user_login = await doc_update(doc=user_login)
-        res = logger.info(
-            "User.birthday updated successfully!") if user_login else logger.error("Error in updating User.birthday!")
+        res = "User.birthday updated successfully!" if user_login else "Error in updating User.birthday!"
+        logger.info(res)
         response = RedirectResponse(url=bot_link, status_code=status.HTTP_302_FOUND)
         response.set_cookie(key="telegram_id", value=str(telegram_id), path="/", samesite="Lax", secure=True)
         response.set_cookie(key="user_password", value=password, path="/", samesite="Lax", secure=True)
