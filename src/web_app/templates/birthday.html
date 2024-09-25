@@ -12,25 +12,33 @@
 </head>
 <body>
 <main class="container-fluid px-3">
-    <div class="col-md-12 border">
-        <br>
-        <br>
-        <br>
-        <h3>{{ data.msg }}</h3>
-        <br>
-        <br>
-        <form action="/path/get_birthday" method="POST" enctype="multipart/form-data" onsubmit="return validateDates()">
-            <div class="form-group">
-                <label for="birthday"><b>твій день народження:</b></label>
+    <div class="row">
+        <div class="col-md-6 border">
+            <br>
+            <br>
+            <br>
+            <h3>{{ data.msg }}</h3>
+            <br>
+            <br>
+            <form action="/path/get_birthday" method="POST" enctype="multipart/form-data" onsubmit="return validateDates()">
+                <div class="form-group">
+                    <label for="birthday"><b>твій день народження:</b></label>
+                    <br>
+                    <br>
+                    <input type="date" class="form-control" id="birthday" name="birthday" required>
+                </div>
                 <br>
                 <br>
-                <input type="date" class="form-control" id="birthday" name="birthday" required>
-            </div>
+                <button type="submit" class="btn btn-primary">Відправити</button>
+            </form>
+        </div>
+        <div class="col-md-6 border">
             <br>
             <br>
+            <img src="/static/images/birthday_1280x1280.png" alt="Full Screen Image" class="img-fluid">
             <br>
-            <button type="submit" class="btn btn-primary">Відправити</button>
-        </form>
+            <br>
+        </div>
     </div>
 </main>
 </body>
