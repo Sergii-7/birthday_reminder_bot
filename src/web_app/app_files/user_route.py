@@ -42,7 +42,9 @@ async def login(request: Request, response: Response, telegram_id: int, password
     - The user remains logged in by storing `telegram_id` and `password` in cookies.
     - Redirects to a specific page after successful login.
     """
-    # https://holiday-organizer-dp6b4.ondigitalocean.app/path/login/620527199/XDXWYINdEh3ZkniDSX52T9aj53j
+    '''
+    https://holiday-organizer-dp6b4.ondigitalocean.app/path/login/620527199/XDXWYINdEh3ZkniDSX52T9aj53j
+    '''
     ip_address, page = dict(request.headers).get('x-forwarded-for'), 'login'
     logger.info(f"time_now: {correct_time()}, /{page}/telegram_id={telegram_id}, ip_address={ip_address}")
     # Перевірка користувача
