@@ -31,8 +31,11 @@ async def get_phone_number(message: Message):
     user = await update_phone_number(telegram_id=telegram_id, phone_number=phone_number)
     if user:
         logger.info(f'User:{telegram_id} gave his phone:{phone_number}')
-        await bot.delete_message(chat_id=telegram_id, message_id=message.message_id)
-        await bot.delete_message(chat_id=telegram_id, message_id=message.reply_to_message.message_id)
+        try:
+            await bot.delete_message(chat_id=telegram_id, message_id=message.message_id)
+            await bot.delete_message(chat_id=telegram_id, message_id=message.reply_to_message.message_id)
+        except Exception as e:
+            logger.error(e)
         if user.birthday:
             await menu.give_main_menu(user=user)
         else:
