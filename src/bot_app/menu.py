@@ -43,7 +43,7 @@ class Menu:
         if not user_login:
             return
         web_app = {'url': f"{HOST}/path/login/{user.telegram_id}/{user_login.password}"}
-        text = "Надати/Оновити дані про свій День Народження"
+        text = "Вказати свій День Народження"
         text_b = "🎂 🥳 🎉"
         reply_markup = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text=text_b, web_app=web_app)],])
         await bot.send_message(chat_id=user.telegram_id, text=text, reply_markup=reply_markup)

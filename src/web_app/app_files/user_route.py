@@ -2,7 +2,6 @@ from datetime import datetime
 from fastapi import Request, status, HTTPException, Form, APIRouter, Response
 from fastapi.responses import HTMLResponse, RedirectResponse
 from create_app import app, limiter, templates
-from config import bot_link
 from src.sql.func_db import get_user_by_login, doc_update
 from src.service.service_tools import correct_time
 from src.service.loggers.py_logger_fast_api import get_logger
@@ -43,7 +42,7 @@ async def login(request: Request, response: Response, telegram_id: int, password
     - Redirects to a specific page after successful login.
     """
     '''
-    https://holiday-organizer-dp6b4.ondigitalocean.app/path/login/620527199/XDXWYINdEh3ZkniDSX52T9aj53j
+    https://holiday-organizer-dp6b4.ondigitalocean.app/path/login/620527199/HEdE8Bx8geKWe1UPB5DIoSLkQiM2
     '''
     ip_address, page = dict(request.headers).get('x-forwarded-for'), 'login'
     logger.info(f"time_now: {correct_time()}, /{page}/telegram_id={telegram_id}, ip_address={ip_address}")
@@ -86,9 +85,31 @@ async def set_birthday(request: Request):
     path='/get_birthday', include_in_schema=True, status_code=status.HTTP_200_OK, response_class=HTMLResponse)
 async def get_birthday(request: Request, birthday: str = Form(...)):
     """
+        Handles user's birthday submission, updates the database, and closes the Telegram Web App.
 
-    :param request:
-    :return:
+        **Description:**
+        This route processes the user's birthday submitted via a form, updates it in the database, and notifies the user of the update. Afterward, it automatically closes the Telegram Web App using the Telegram Web Apps API.
+
+        **Parameters:**
+        - `request` (Request): FastAPI request object containing the HTTP request data.
+        - `birthday` (str): The user's birthday in `YYYY-MM-DD` format, submitted via a form.
+
+        **Cookies:**
+        - `telegram_id`: User's Telegram ID used for authentication.
+        - `user_password`: User's password used for authentication.
+
+        **Flow:**
+        1. Retrieves user data from cookies and verifies the user.
+        2. Updates the user's birthday in the database if authenticated.
+        3. Displays a success message.
+        4. Closes the Telegram Web App using `Telegram.WebApp.close()`.
+
+        **Returns:**
+        - `HTMLResponse`: An HTML page with a script to alert the user and close the app.
+
+        **HTTP Status Codes:**
+        - `200 OK`: Successfully updated and closed the Web App.
+        - `401 Unauthorized`: Authentication failed.
     """
     ip_address, page = dict(request.headers).get('x-forwarded-for'), 'get_birthday'
     telegram_id, password = request.cookies.get("telegram_id"), request.cookies.get("user_password")
