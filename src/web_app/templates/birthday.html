@@ -14,7 +14,7 @@
 <main class="container-fluid px-3">
     <div class="col-md-12 border">
         <h1>{{ data.msg }}</h1>
-        <form action="/get_birthday" method="POST">
+        <form action="/path/get_birthday" method="POST" onsubmit="return validateDates()">
             <div class="form-group">
                 <label for="birthday">твій день народження:</label>
                 <input type="date" class="form-control" id="birthday" name="birthday" required>
@@ -29,7 +29,7 @@
     const birthday = document.getElementById('birthday').value;
     const today = new Date().toISOString().split('T')[0]; // Поточна дата у форматі 'YYYY-MM-DD'
     // Перевірка, чи вибрані дати коректно
-    if birthday {
+    if (birthday) {
         if (new Date(birthday) > new Date(today)) {
             alert("Помилка: Ви прибули на машині часу з майбутнього? Вкажіть реальну дату народження!");
             return false;  // Блокує відправлення форми
