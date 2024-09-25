@@ -83,7 +83,7 @@ async def set_birthday(request: Request):
 
 
 @user_router.post(
-    path='/get_birthday', include_in_schema=True, status_code=status.HTTP_302_FOUND)
+    path='/get_birthday', include_in_schema=True, status_code=status.HTTP_200_OK, response_class=HTMLResponse)
 async def get_birthday(request: Request, birthday: str = Form(...)):
     """
 
@@ -102,15 +102,16 @@ async def get_birthday(request: Request, birthday: str = Form(...)):
         user_login = await doc_update(doc=user_login)
         res = "User.birthday updated successfully!" if user_login else "Error in updating User.birthday!"
         logger.info(res)
-        # response = RedirectResponse(url=bot_link, status_code=status.HTTP_302_FOUND)
-        # response.set_cookie(key="telegram_id", value=str(telegram_id), path="/", samesite="Lax", secure=True)
-        # response.set_cookie(key="user_password", value=password, path="/", samesite="Lax", secure=True)
+        # Відправляємо HTML з повідомленням і скриптом для закриття Web App
         return HTMLResponse(content="""
                     <html>
+                        <head>
+                            <script src="https://telegram.org/js/telegram-web-app.js"></script> <!-- Підключення Telegram Web App API -->
+                        </head>
                         <body>
                             <script>
                                 alert('Дата народження успішно оновлена!');
-                                window.close();
+                                Telegram.WebApp.close(); // Закриває Telegram Web App
                             </script>
                         </body>
                     </html>
