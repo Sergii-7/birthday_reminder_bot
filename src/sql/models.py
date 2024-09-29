@@ -51,7 +51,11 @@ class UserLogin(Base):
 class Chat(Base):
     __tablename__ = "chats"
     id: int = Column(type_=Integer, primary_key=True)
+    chat_id: int = Column(type_=BigInteger, nullable=False, unique=True)
     user_id: int = Column(Integer, ForeignKey('users.id'), nullable=False)
+    card_number: str = Column(type_=String(length=16), nullable=False)
+    status: bool = Column(type_=Boolean, nullable=False, default=False)
+    created_at: datetime = Column(type_=DateTime, nullable=False, default=correct_time)
     user = relationship("User", back_populates="chats")
     holidays = relationship("Holiday", back_populates="chat")
 
@@ -62,7 +66,8 @@ class Holiday(Base):
     user_id: int = Column(Integer, ForeignKey('users.id'), nullable=True)
     chat_id: int = Column(Integer, ForeignKey('chats.id'), nullable=False)
     amount: int = Column(type_=Integer, nullable=False, default=500)
-    card_number: str = Column(type_=String(length=16), nullable=False)
+    status: bool = Column(type_=Boolean, nullable=False, default=False)
+    created_at: datetime = Column(type_=DateTime, nullable=False, default=correct_time)
     user = relationship("User", back_populates="holidays")
     chat = relationship("Chat", back_populates="holidays")
 
