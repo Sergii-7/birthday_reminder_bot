@@ -1,3 +1,4 @@
+from asyncio import sleep as asyncio_sleep
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton, FSInputFile
 from config import HOST, media_file_path
 from src.bot_app.create_bot import bot
@@ -41,7 +42,7 @@ class Menu:
         reply_markup = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text=text_b, web_app=web_app)],])
         await bot.send_message(chat_id=user.telegram_id, text=text, reply_markup=reply_markup)
 
-    async def get_main_menu(self, user: User, message_text: str = None):
+    async def get_main_menu(self, user: User, message_text: str = None, pause: int | float = None):
         """ Даємо користувачу головне меню """
         buttons = []
         ''' menu for everybody (data users) '''
@@ -60,6 +61,8 @@ class Menu:
         reply_markup = InlineKeyboardMarkup(inline_keyboard=buttons)
         photo = FSInputFile(path=f"{media_file_path}admin_panel.jpg")
         text = f"Привіт, {user.first_name}!"
+        if pause and isinstance(pause, (int, float)):
+            await asyncio_sleep(delay=pause)
         try:
             await bot.send_photo(chat_id=user.telegram_id, caption=text, photo=photo, reply_markup=reply_markup)
         except Exception as e:

@@ -1,4 +1,4 @@
-from asyncio import create_task
+from asyncio import create_task as asyncio_create_task
 from datetime import datetime
 from fastapi import Request, status, HTTPException, Form, APIRouter, Response
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -123,7 +123,8 @@ async def get_birthday(request: Request, birthday: str = Form(...)):
         user_login.user.birthday = datetime.strptime(birthday, "%Y-%m-%d") if birthday else None
         ''' Update User in DataBase '''
         user_login = await doc_update(doc=user_login)
-        await Menu().get_main_menu(user=user_login.user)
+        task = asyncio_create_task(Menu().get_main_menu(user=user_login.user, pause=2))
+        logger.info(f"asyncio_create_task: {task}")
         res = "User.birthday updated successfully!" if user_login else "Error in updating User.birthday!"
         logger.info(res)
         # Відправляємо HTML з повідомленням і скриптом для закриття Web App
@@ -142,7 +143,6 @@ async def get_birthday(request: Request, birthday: str = Form(...)):
                 """)
     else:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
-
 
 # Підключення маршрутів 'USER' до основного додатку
 app.include_router(router=user_router)
