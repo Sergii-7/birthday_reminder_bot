@@ -17,7 +17,7 @@ async def callback_run(callback_query: CallbackQuery):
     logger.info(f"callback_query.data: {callback_query.data}, telegram_id: {telegram_id}")
     if data == "x":
         ''' Del sms with buttons '''
-        await callback_query.answer(url='avrora.ua')
+        await callback_query.answer(text="ok")
         await callback_query.message.delete()
     elif data.startswith("user"):
         ''' callback from user '''
