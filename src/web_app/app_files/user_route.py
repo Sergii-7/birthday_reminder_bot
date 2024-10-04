@@ -1,8 +1,10 @@
+from asyncio import create_task
 from datetime import datetime
 from fastapi import Request, status, HTTPException, Form, APIRouter, Response
 from fastapi.responses import HTMLResponse, RedirectResponse
 from create_app import app, limiter, templates
 from src.sql.func_db import get_user_by_login, doc_update
+from src.bot_app.menu import Menu
 from src.service.service_tools import correct_time
 from src.service.loggers.py_logger_fast_api import get_logger
 
@@ -121,6 +123,7 @@ async def get_birthday(request: Request, birthday: str = Form(...)):
         user_login.user.birthday = datetime.strptime(birthday, "%Y-%m-%d") if birthday else None
         ''' Update User in DataBase '''
         user_login = await doc_update(doc=user_login)
+        await Menu().get_main_menu(user=user_login.user)
         res = "User.birthday updated successfully!" if user_login else "Error in updating User.birthday!"
         logger.info(res)
         # Відправляємо HTML з повідомленням і скриптом для закриття Web App
