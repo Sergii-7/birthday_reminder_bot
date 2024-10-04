@@ -37,6 +37,6 @@ async def get_phone_number(message: Message):
         except Exception as e:
             logger.error(e)
         if user.birthday:
-            await menu.give_main_menu(user=user)
+            await menu.get_main_menu(user=user)
         else:
             await menu.request_birthday(user=user)

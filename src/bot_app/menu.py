@@ -1,5 +1,5 @@
-from aiogram.types import KeyboardButton, ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton
-from config import HOST
+from aiogram.types import KeyboardButton, ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton, FSInputFile
+from config import HOST, media_file_path
 from src.bot_app.create_bot import bot
 from src.sql.models import User
 from src.sql.func_db import get_login_user_by_telegram_id
@@ -15,7 +15,7 @@ class Menu:
         if user.phone_number:
             if user.birthday:
                 ''' Даємо користувачу головне меню '''
-                await self.give_main_menu(user=user, message_text=message_text)
+                await self.get_main_menu(user=user, message_text=message_text)
             else:
                 ''' Робимо запит на отримання даних про день народження: sms + miniapp '''
                 await self.request_birthday(user=user)
@@ -30,13 +30,6 @@ class Menu:
         reply_markup = ReplyKeyboardMarkup(keyboard=[[b_contact]], resize_keyboard=True, one_time_keyboard=True)
         await bot.send_message(chat_id=user.telegram_id, text=text, reply_markup=reply_markup)
 
-    async def give_main_menu(self, user: User, message_text: str = None):
-        """ Даємо користувачу головне меню """
-
-        reply_markup = None
-
-        await bot.send_message(chat_id=user.telegram_id, text='main buttons', reply_markup=None)
-
     async def request_birthday(self, user: User):
         """ Робимо запит на отримання даних про день народження: sms + miniapp """
         user_login = await get_login_user_by_telegram_id(telegram_id=user.telegram_id)
@@ -47,4 +40,29 @@ class Menu:
         text_b = "🎂 🥳 🎉"
         reply_markup = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text=text_b, web_app=web_app)],])
         await bot.send_message(chat_id=user.telegram_id, text=text, reply_markup=reply_markup)
+
+    async def get_main_menu(self, user: User, message_text: str = None):
+        """ Даємо користувачу головне меню """
+        buttons = []
+        ''' menu for everybody (data users) '''
+        buttons.append([InlineKeyboardButton(text="Змінити Дату Народження", callback_data=f"0:user1")])
+        buttons.append([InlineKeyboardButton(text="Календар всіх подій", callback_data=f"0:user2")])
+        if user.info in ['admin', 'super-admin']:
+            ''' add menu for admin and super-admin (check users) '''
+            buttons.append([InlineKeyboardButton(text="💰 Звіт по внескам 💰", callback_data=f"0:admin1")])
+            buttons.append([InlineKeyboardButton(text="🎆 Створити подію 🎇", callback_data=f"0:admin2")])
+            buttons.append([InlineKeyboardButton(text="Передати права адміна", callback_data=f"0:admin3")])
+            if user.info == 'super-admin':
+                ''' add menu for super-admin (add new group) '''
+                buttons.append([InlineKeyboardButton(text="super-admin_button 1", callback_data="0:super1")])
+                buttons.append([InlineKeyboardButton(text="super-admin_button 2", callback_data="0:super2")])
+        buttons.append([InlineKeyboardButton(text="🫣 сховати панель 🫣", callback_data="0:x")])
+        reply_markup = InlineKeyboardMarkup(inline_keyboard=buttons)
+        photo = FSInputFile(path=f"{media_file_path}admin_panel.jpg")
+        text = f"Привіт, {user.first_name}!"
+        try:
+            await bot.send_photo(chat_id=user.telegram_id, caption=text, photo=photo, reply_markup=reply_markup)
+        except Exception as e:
+            logger.error(e)
+            await bot.send_message(chat_id=user.telegram_id, text=text, reply_markup=reply_markup)
 
