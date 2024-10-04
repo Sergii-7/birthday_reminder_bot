@@ -1,9 +1,9 @@
 from sqlalchemy import String, Integer, BigInteger, Column, Boolean, Date, DateTime, ForeignKey, CheckConstraint, func
 from sqlalchemy.orm import declarative_base, relationship
 from datetime import date, datetime
+from src.service.service_tools import correct_time, generate_users_password
 # from sqlalchemy import create_engine
 # from config import URI_DB
-from src.service.service_tools import correct_time, generate_users_password
 
 Base = declarative_base()
 

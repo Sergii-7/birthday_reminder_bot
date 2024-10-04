@@ -4,7 +4,7 @@ from create_app import app
 """ імпортуємо всі файли з маршрутами """
 from src.web_app.app_files import admin_route, user_route, telegram_route
 """ імпортуємо всі файли з хендлерами від aiogram """
-from src.bot_app import command, message
+from src.bot_app import command, message, callback
 
 # запуск локального серверу: uvicorn main:app --reload
 # подивитися інтер-активну документацію: {host}/docs
