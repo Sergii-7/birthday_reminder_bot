@@ -5,3 +5,6 @@ ip_address: None
 ip_address: None
 2024-09-24 22:27:52,534 [INFO] - src.web_app.app_files.admin_route - home(26) - 2024-09-24 22:27:52.534249: Sergii in page 'home'
 ip_address: None
+2024-10-04 18:26:24,693 [ERROR] - __main__ - get_user_by_telegram_id(58) - attempt=1 error: Entity namespace for "users" has no property "user_telegram_id"
+2024-10-04 18:26:24,693 [ERROR] - __main__ - get_user_by_telegram_id(58) - attempt=2 error: Entity namespace for "users" has no property "user_telegram_id"
+2024-10-04 18:26:24,693 [ERROR] - __main__ - get_user_by_telegram_id(58) - attempt=3 error: Entity namespace for "users" has no property "user_telegram_id"

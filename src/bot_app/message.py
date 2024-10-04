@@ -31,6 +31,6 @@ async def working(message: Message):
                         text = f"ERROR in sending file '{log_file_}':\n{e}"
                         await bot.send_message(chat_id=telegram_id, text=text)
         else:
-            user = await func_db.get_login_user_by_telegram_id(telegram_id=telegram_id)
+            user = await func_db.get_user_by_telegram_id(telegram_id=telegram_id)
             await Menu().start_command(user=user)
     await message.delete()

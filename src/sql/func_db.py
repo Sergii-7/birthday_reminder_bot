@@ -42,6 +42,23 @@ async def check_user(message: object) -> Optional[User]:
     return None
 
 
+async def get_user_by_telegram_id(telegram_id: int) -> Optional[User]:
+    """ Get User from DataBase by telegram_id """
+    for n in range(3):
+        try:
+            logger.debug(f'get_user_by_telegram_id(telegram_id={telegram_id}')
+            async with DBSession() as session:
+                result = await session.execute(select(User).filter_by(telegram_id=telegram_id))
+                user = result.scalar()
+                if user:
+                    return user
+                else:
+                    return None
+        except Exception as e:
+            logger.error(f"attempt={n + 1} error: {e}")
+    return None
+
+
 async def get_user_by_login(telegram_id: int, password: str) -> Optional[Union[User, UserLogin]]:
     """ Get user and user login from DataBase by 'login' and 'password' """
     for n in range(3):
@@ -117,3 +134,9 @@ async def doc_update(
             except Exception as e:
                 logger.error(f'Attempt {n + 1} failed: {e}')
     return False
+
+
+# import asyncio
+# from config import sb_telegram_id
+# user = asyncio.run(get_user_by_telegram_id(telegram_id=sb_telegram_id))
+# print(user.first_name)
