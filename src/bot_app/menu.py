@@ -48,6 +48,7 @@ class Menu:
         ''' menu for everybody (data users) '''
         buttons.append([InlineKeyboardButton(text="Змінити Дату Народження", callback_data=f"0:user1")])
         buttons.append([InlineKeyboardButton(text="Календар всіх подій", callback_data=f"0:user2")])
+        buttons.append([InlineKeyboardButton(text="💵 Зробити внесок 💵", callback_data=f"0:user3")])
         if user.info in ['admin', 'super-admin']:
             ''' add menu for admin and super-admin (check users) '''
             buttons.append([InlineKeyboardButton(text="💰 Звіт по внескам 💰", callback_data=f"0:admin1")])
@@ -55,8 +56,8 @@ class Menu:
             buttons.append([InlineKeyboardButton(text="Передати права адміна", callback_data=f"0:admin3")])
             if user.info == 'super-admin':
                 ''' add menu for super-admin (add new group) '''
-                buttons.append([InlineKeyboardButton(text="super-admin_button 1", callback_data="0:super1")])
-                buttons.append([InlineKeyboardButton(text="super-admin_button 2", callback_data="0:super2")])
+                buttons.append([InlineKeyboardButton(text="⚙️ керувати групами ⚙️", callback_data="0:super1")])
+                # buttons.append([InlineKeyboardButton(text=" bla-bla ", callback_data="0:super2")])
         buttons.append([InlineKeyboardButton(text="🫣 сховати панель 🫣", callback_data="0:x")])
         reply_markup = InlineKeyboardMarkup(inline_keyboard=buttons)
         photo = FSInputFile(path=f"{media_file_path}admin_panel.jpg")
