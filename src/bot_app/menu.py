@@ -90,8 +90,8 @@ class Menu:
                     return
                 else:
                     ''' Get chat settings '''
-                    chat_id = int(type_menu)
-                    chat = await func_db.get_chat_with_user(chat_id=chat_id)
+                    chat_pk = int(type_menu)
+                    chat = await func_db.get_chat_with_user(pk=chat_pk)
                     admin = chat.user
                     status = await check_user_in_group(telegram_id=chat.admin.telegram_id, chat_id=chat.chat_id)
                     if chat.status != status:
@@ -100,7 +100,7 @@ class Menu:
                     status_description = "ГРУПА АКТИВНА" if status else ("<b>⚠️ налаштування не можливі - адмін або "
                                                                          "Телеграм бот не мають доступу до групи</b>")
                     count_users = await bot.get_chat_member_count(chat_id=chat.chat_id) if status else "не відомо"
-                    chat_data = None if not status else await bot.get_chat(chat_id=chat_id)
+                    chat_data = None if not status else await bot.get_chat(chat_id=chat.chat_id)
                     title = f"{chat_data.title}\n" if chat_data else ""
                     user_name = f"@{admin.username}\n" if admin.username else ""
                     text = (f"chat_id: <code>{chat.chat_id}</code>\nстатус: {status_description}\n<b>{title}</b"

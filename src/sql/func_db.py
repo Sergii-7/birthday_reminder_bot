@@ -152,14 +152,23 @@ async def doc_update(
     return False
 
 
-async def get_chat_with_user(chat_id: int) -> Optional[Chat]:
-    """ Get Chat by chat_id (id group in telegram) with the associated user """
+async def get_chat_with_user(pk: int = None, chat_id: int = None) -> Optional[Chat]:
+    """ Get Chat by pk (primary key) and chat_id (id group in telegram) with the associated user """
+    if not pk and not chat_id:
+        return None
     for n in range(3):
         try:
-            logger.debug(f'get_chat_by_chat_id(chat_id={chat_id})')
+            logger.debug(f'get_chat_with_user(pk={pk}, chat_id={chat_id})')
             async with DBSession() as session:
-                # Формуємо запит з використанням selectinload для завантаження користувача
-                query = select(Chat).options(selectinload(Chat.user)).filter_by(chat_id=chat_id)
+                # Створюємо запит
+                query = select(Chat).options(selectinload(Chat.user))
+                # Якщо обидва параметри передані, перевіряємо їх одночасно
+                if pk and chat_id:
+                    query = query.filter_by(id=pk, chat_id=chat_id)
+                elif pk:
+                    query = query.filter_by(id=pk)
+                elif chat_id:
+                    query = query.filter_by(chat_id=chat_id)
                 result = await session.execute(query)
                 chat = result.scalar()
                 return chat
@@ -226,19 +235,11 @@ async def create_new_doc(model: str, data: dict, data_has_datatime: bool = False
     return
 
 
-# import asyncio
-# from config import sb_telegram_id, my_banc_card
-# from src.service.service_tools import correct_time
-# user = asyncio.run(get_user_by_telegram_id(telegram_id=sb_telegram_id))
-# print(user.first_name)
-# user = asyncio.run(get_user_by_id(user_id=2))
-# print(user.first_name)
-# print(asyncio.run(get_chats()))
+import asyncio
 
-# data_ = {
-#     "chat_id": -4546525808,
-#     "user_id": 3,
-#     "card_number": my_banc_card
-# }
-#
-# print(asyncio.run(create_new_doc(model='chat', data=data_)))
+
+async def test():
+    chat = await get_chat_with_user(chat_id=-4546525808)
+    print(chat.user.telegram_id)
+
+# asyncio.run(test())
