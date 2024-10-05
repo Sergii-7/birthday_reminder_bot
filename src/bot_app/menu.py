@@ -5,6 +5,7 @@ from aiogram.types import KeyboardButton, ReplyKeyboardMarkup, InlineKeyboardMar
 from config import HOST, media_file_path, get_chat_id_bot
 from src.bot_app.create_bot import bot
 from src.sql.models import User, Chat
+from src.bot_app.bot_service import check_user_in_group
 from src.sql import func_db
 from src.service.loggers.py_logger_tel_bot import get_logger
 
@@ -87,7 +88,34 @@ class Menu:
                     setting = Settings(telegram_id=user.telegram_id, text_sms=text_sms, text_to_insert=text_to_insert)
                     await setting.admin_commands(photo="admin_panel.jpg")
                     return
+                else:
+                    ''' Get chat settings '''
+                    chat_id = int(type_menu)
+                    chat = await func_db.get_chat_by_telegram_id(chat_id=chat_id)
+                    status = await check_user_in_group(telegram_id=chat.user_id, chat_id=chat.chat_id)
+                    if chat.status != status:
+                        chat.status = status
+                        chat = await func_db.doc_update(doc=chat)
+                    status_description = "ГРУПА АКТИВНА" if status else ("<b>⚠️ налаштування не можливі - адмін або "
+                                                                         "Телеграм бот не мають доступу до групи</b>")
+                    count_users = await bot.get_chat_member_count(chat_id=chat.chat_id) if status else "не відомо"
+                    admin = user if chat.user_id==user.id else await func_db.get_user_by_id(user_id=chat.user_id)
+                    user_name = f"@{admin.username}\n" if admin.username else ""
+                    text = (f"id={chat.id} | chat_id=<code>{chat.chat_id}</code>\nстатус: {status_description}\n"
+                            f"кількість учасників: <b>{count_users}</b>\n\n<b>Адмін</b>\nІм'я в Телеграмі: "
+                            f"<b>{admin.first_name}</b>\nтелефон: <code>{admin.phone_number}</code>\n{user_name}")
 
+                    """ Додати панель налаштувань якщо статус активний і фото """
+                    reply_markup = None
+                    try:
+                        await bot.edit_message_caption(
+                            chat_id=user.telegram_id, message_id=message_id, caption=text, reply_markup=reply_markup)
+                    except TelegramBadRequest as e:
+                        logger.error(e)  # "message is not modified"
+                        photo = FSInputFile(path=f"{media_file_path}admin_panel.jpg")
+                        await bot.send_photo(chat_id=user.telegram_id, caption=text, photo=photo,
+                                             reply_markup=reply_markup)
+                        await bot.delete_message(chat_id=user.telegram_id, message_id=message_id)
             else:
                 # ⚙️ керувати групами ⚙️
                 index_2 = int(type_menu) * 10

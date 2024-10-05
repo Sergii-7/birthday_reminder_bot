@@ -152,6 +152,22 @@ async def doc_update(
     return False
 
 
+async def get_chat_by_telegram_id(chat_id: int) -> Optional[Chat]:
+    """ Get Chat by chat_id (id group in telegram) """
+    for n in range(3):
+        try:
+            logger.debug(f'get_chat_by_chat_id(chat_id={chat_id})')
+            async with DBSession() as session:
+                # Формуємо запит
+                query = select(Chat).filter_by(chat_id=chat_id)
+                result = await session.execute(query)
+                chat = result.scalar()
+                return chat
+        except Exception as e:
+            logger.error(f"attempt={n + 1} error: {e}")
+    return None
+
+
 async def get_chats(user_id: int = None, limit: int = None) -> List[Chat]:
     """ Get array with object<SQLAlchemy>: 'Chat' by optional user_id and optional limit """
     for n in range(3):

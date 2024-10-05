@@ -3,3 +3,4 @@ alembic/
 .idea/
 .gitignore
 alembic.ini
+test.py
