@@ -91,31 +91,38 @@ class Menu:
                 else:
                     ''' Get chat settings '''
                     chat_id = int(type_menu)
-                    chat = await func_db.get_chat_by_telegram_id(chat_id=chat_id)
-                    status = await check_user_in_group(telegram_id=chat.user_id, chat_id=chat.chat_id)
+                    chat = await func_db.get_chat_with_user(chat_id=chat_id)
+                    admin = chat.user
+                    status = await check_user_in_group(telegram_id=chat.admin.telegram_id, chat_id=chat.chat_id)
                     if chat.status != status:
                         chat.status = status
                         chat = await func_db.doc_update(doc=chat)
                     status_description = "ГРУПА АКТИВНА" if status else ("<b>⚠️ налаштування не можливі - адмін або "
                                                                          "Телеграм бот не мають доступу до групи</b>")
                     count_users = await bot.get_chat_member_count(chat_id=chat.chat_id) if status else "не відомо"
-                    admin = user if chat.user_id==user.id else await func_db.get_user_by_id(user_id=chat.user_id)
+                    chat_data = None if not status else await bot.get_chat(chat_id=chat_id)
+                    title = f"{chat_data.title}\n" if chat_data else ""
                     user_name = f"@{admin.username}\n" if admin.username else ""
-                    text = (f"id={chat.id} | chat_id=<code>{chat.chat_id}</code>\nстатус: {status_description}\n"
+                    text = (f"chat_id: <code>{chat.chat_id}</code>\nстатус: {status_description}\n<b>{title}</b"
                             f"кількість учасників: <b>{count_users}</b>\n\n<b>Адмін</b>\nІм'я в Телеграмі: "
                             f"<b>{admin.first_name}</b>\nтелефон: <code>{admin.phone_number}</code>\n{user_name}")
 
                     """ Додати панель налаштувань якщо статус активний і фото """
                     reply_markup = None
                     try:
+                        photo = chat_data.photo.small_file_id
+                    except Exception as e:
+                        logger.error(e)
+                        photo = FSInputFile(path=f"{media_file_path}admin_panel.jpg")
+                    try:
                         await bot.edit_message_caption(
                             chat_id=user.telegram_id, message_id=message_id, caption=text, reply_markup=reply_markup)
                     except TelegramBadRequest as e:
                         logger.error(e)  # "message is not modified"
-                        photo = FSInputFile(path=f"{media_file_path}admin_panel.jpg")
                         await bot.send_photo(chat_id=user.telegram_id, caption=text, photo=photo,
                                              reply_markup=reply_markup)
                         await bot.delete_message(chat_id=user.telegram_id, message_id=message_id)
+                    return
             else:
                 # ⚙️ керувати групами ⚙️
                 index_2 = int(type_menu) * 10

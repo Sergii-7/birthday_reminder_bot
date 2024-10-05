@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional, Union, List
 from sqlalchemy.future import select
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import joinedload, selectinload
 from src.sql.connect import DBSession
 from src.sql.models import User, UserLogin, Chat, Holiday
 from src.service.service_tools import correct_time
@@ -152,14 +152,14 @@ async def doc_update(
     return False
 
 
-async def get_chat_by_telegram_id(chat_id: int) -> Optional[Chat]:
-    """ Get Chat by chat_id (id group in telegram) """
+async def get_chat_with_user(chat_id: int) -> Optional[Chat]:
+    """ Get Chat by chat_id (id group in telegram) with the associated user """
     for n in range(3):
         try:
             logger.debug(f'get_chat_by_chat_id(chat_id={chat_id})')
             async with DBSession() as session:
-                # Формуємо запит
-                query = select(Chat).filter_by(chat_id=chat_id)
+                # Формуємо запит з використанням selectinload для завантаження користувача
+                query = select(Chat).options(selectinload(Chat.user)).filter_by(chat_id=chat_id)
                 result = await session.execute(query)
                 chat = result.scalar()
                 return chat
