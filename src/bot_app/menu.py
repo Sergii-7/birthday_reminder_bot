@@ -142,7 +142,7 @@ class AdminMenu:
                         except Exception as e:
                             logger.error(e)
                     else:
-                        await bot.send_message(chat_id=user.telegram_id, text=text)
+                        await bot.send_message(chat_id=user.telegram_id, text=text, reply_markup=reply_markup)
                     if len(chats) > 1 and chat != chats[-1]:
                         await asyncio_sleep(delay=1)
             else:

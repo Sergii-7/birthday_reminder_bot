@@ -1,8 +1,6 @@
 import asyncio
-
 from aiogram.types import FSInputFile
-
-from config import sb_telegram_id
+from config import sb_telegram_id, media_file_path
 from src.bot_app.create_bot import bot
 
 
@@ -14,12 +12,11 @@ async def test():
     if chat.photo:
         # Отримуємо інформацію про файл
         file_info = await bot.get_file(chat.photo.big_file_id)
-
         # Завантажуємо файл на локальний диск
-        await bot.download_file(file_info.file_path, "chat_photo.jpg")
-
+        file_path = f"{media_file_path}images/chat_photo.jpg"
+        await bot.download_file(file_info.file_path, file_path)
         # Використовуємо об'єкт FSInputFile для відправки фото з локального диску
-        photo = FSInputFile("chat_photo.jpg")
+        photo = FSInputFile(file_path)
         await bot.send_photo(chat_id=sb_telegram_id, photo=photo)
     else:
         print("Чат не має фотографії.")

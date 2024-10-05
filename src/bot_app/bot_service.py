@@ -31,7 +31,8 @@ async def check_user_in_group(telegram_id: int, chat_id: int) -> bool:
         return False
 
 
-async def get_chat_info(admin: User, chat: Chat, get_photo: bool = True) -> Dict[str, Optional[Union[str, object]]]:
+async def get_chat_info(
+        admin: User, chat: Chat, get_photo: bool = True) -> Dict[str, Optional[Union[str, FSInputFile]]]:
     """ Get chat info from Telegram and DataBase """
     try:
         chat_data = await bot.get_chat(chat_id=chat.chat_id)
@@ -44,22 +45,29 @@ async def get_chat_info(admin: User, chat: Chat, get_photo: bool = True) -> Dict
         chat = await doc_update(doc=chat)
     status_description = "ГРУПА АКТИВНА" if status else ("<b>⚠️ налаштування не можливі - адмін або "
                                                          "Телеграм бот не мають доступу до групи</b>")
-    count_users = await bot.get_chat_member_count(chat_id=chat.chat_id) if status else "не відомо"
+    count_users = "не відомо"
+    try:
+        if status:
+            count_users = await bot.get_chat_member_count(chat_id=chat.chat_id)
+    except Exception as e:
+        logger.error(e)
     title = f"<b>{chat_data.title}</b>\n" if chat_data else ""
     user_name = f"@{admin.username}\n" if admin.username else ""
     text = (f"chat_id: <code>{chat.chat_id}</code>\nстатус: {status_description}\n{title}"
-            f"кількість учасників: <b>{count_users}</b>\n\n<b>Адмін</b>\nІм'я в Телеграмі: "
+            f"кількість учасників: <b>{count_users}</b>\n<b>Адмін</b>\nІм'я в Телеграмі: "
             f"<b>{admin.first_name}</b>\nтелефон: <code>{admin.phone_number}</code>\n{user_name}")
     photo = None
     if get_photo:
         try:
-            # Отримуємо інформацію про файл
-            file_info = await bot.get_file(chat_data.photo.big_file_id)
-            # Завантажуємо файл на локальний диск
-            file_path = f"{media_file_path}images/chat_photo_{chat.id}.jpg"
-            await bot.download_file(file_info.file_path, file_path)
-            # Використовуємо об'єкт FSInputFile для відправки фото з локального диску
-            photo = FSInputFile("chat_photo.jpg")
+            if chat_data:
+                if chat_data.photo:
+                    # Отримуємо інформацію про файл
+                    file_info = await bot.get_file(chat_data.photo.big_file_id)
+                    # Завантажуємо файл на локальний диск
+                    file_path = f"{media_file_path}images/chat_photo_{chat.id}.jpg"
+                    await bot.download_file(file_info.file_path, file_path)
+                    # Використовуємо об'єкт FSInputFile для відправки фото з локального диску
+                    photo = FSInputFile(file_path)
         except Exception as e:
             logger.error(e)
     return {"text": text, "chat_data": chat_data, "photo": photo}
