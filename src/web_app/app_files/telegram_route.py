@@ -25,7 +25,7 @@ async def on_shutdown():
 @app.post(path=WEBHOOK_PATH, include_in_schema=False, status_code=status.HTTP_200_OK)
 async def handle_webhook(request: Request):
     update = await request.json()
-    logger.info(f"Received update: {update}")
+    # logger.info(f"Received update: {update}")
     telegram_update = Update(**update)
     await dp.feed_update(bot=bot, update=telegram_update)  # Передаємо bot та update
     return {"status": "ok"}

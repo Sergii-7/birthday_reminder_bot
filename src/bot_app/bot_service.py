@@ -45,9 +45,9 @@ async def get_chat_info(admin: User, chat: Chat) -> Dict[str, Optional[Union[str
     status_description = "ГРУПА АКТИВНА" if status else ("<b>⚠️ налаштування не можливі - адмін або "
                                                          "Телеграм бот не мають доступу до групи</b>")
     count_users = await bot.get_chat_member_count(chat_id=chat.chat_id) if status else "не відомо"
-    title = f"{chat_data.title}\n" if chat_data else ""
+    title = f"<b>{chat_data.title}</b>\n" if chat_data else ""
     user_name = f"@{admin.username}\n" if admin.username else ""
-    text = (f"chat_id: <code>{chat.chat_id}</code>\nстатус: {status_description}\n<b>{title}</b"
+    text = (f"chat_id: <code>{chat.chat_id}</code>\nстатус: {status_description}\n{title}"
             f"кількість учасників: <b>{count_users}</b>\n\n<b>Адмін</b>\nІм'я в Телеграмі: "
             f"<b>{admin.first_name}</b>\nтелефон: <code>{admin.phone_number}</code>\n{user_name}")
     try:
