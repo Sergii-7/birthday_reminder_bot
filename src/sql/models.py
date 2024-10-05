@@ -2,8 +2,6 @@ from sqlalchemy import String, Integer, BigInteger, Column, Boolean, Date, DateT
 from sqlalchemy.orm import declarative_base, relationship
 from datetime import date, datetime
 from src.service.service_tools import correct_time, generate_users_password
-# from sqlalchemy import create_engine
-# from config import URI_DB
 
 Base = declarative_base()
 
@@ -70,8 +68,3 @@ class Holiday(Base):
     created_at: datetime = Column(type_=DateTime, nullable=False, default=correct_time)
     user = relationship("User", back_populates="holidays")
     chat = relationship("Chat", back_populates="holidays")
-
-
-""" якщо треба створити таблиці в базі даних """
-# engine = create_engine(url=f"postgresql://{URI_DB}", echo=True)
-# Base.metadata.create_all(engine)

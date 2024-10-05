@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Optional, Union, List
 from sqlalchemy.future import select
 from sqlalchemy.orm import joinedload
 from src.sql.connect import DBSession
@@ -136,7 +136,26 @@ async def doc_update(
     return False
 
 
+async def get_chats_by_user_id(user_id: int, limit: int = None) -> List[Chat]:
+    """ Get array with object<SQLAlchemy>: 'Chat' by user_id with optional limit """
+    for n in range(3):
+        try:
+            logger.debug(f'get_chats_by_user_id(user_id={user_id}, limit={limit})')
+            async with DBSession() as session:
+                query = select(Chat).filter_by(user_id=user_id)
+                # Додаємо ліміт, якщо він переданий
+                if limit:
+                    query = query.limit(limit)
+                result = await session.execute(query)
+                chats = result.scalars().all()  # Отримуємо список чатів
+                return chats
+        except Exception as e:
+            logger.error(f'Attempt {n + 1} failed: {e}')
+    return []
+
+
 # import asyncio
 # from config import sb_telegram_id
 # user = asyncio.run(get_user_by_telegram_id(telegram_id=sb_telegram_id))
 # print(user.first_name)
+# print(asyncio.run(get_chats_by_user_id(user_id=1)))

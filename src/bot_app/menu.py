@@ -46,14 +46,15 @@ class Menu:
         """ Даємо користувачу головне меню """
         buttons = []
         ''' menu for everybody (data users) '''
-        buttons.append([InlineKeyboardButton(text="⚒ Змінити свій 🎂 🛠", callback_data=f"0:user1")])
+        buttons.append([InlineKeyboardButton(text="🎂 Змінити дату свого ДР 🎂", callback_data=f"0:user1")])
         buttons.append([InlineKeyboardButton(text="📅 Календар подій 📅", callback_data=f"0:user2")])
         buttons.append([InlineKeyboardButton(text="💵 Зробити внесок 💵", callback_data=f"0:user3")])
         if user.info in ['admin', 'super-admin']:
             ''' add menu for admin and super-admin (check users) '''
-            buttons.append([InlineKeyboardButton(text="💰 Звіт по внескам 💰", callback_data=f"0:admin1")])
+            buttons.append([InlineKeyboardButton(text="💳 номер вашої карти 💳", callback_data=f"0:admin1")])
             buttons.append([InlineKeyboardButton(text="🎆 Створити подію 🎇", callback_data=f"0:admin2")])
-            buttons.append([InlineKeyboardButton(text="Передати права адміна", callback_data=f"0:admin3")])
+            buttons.append([InlineKeyboardButton(text="💰 Звіт по внескам 💰", callback_data=f"0:admin3")])
+            buttons.append([InlineKeyboardButton(text="☢️ Передати права адміна ☣️", callback_data=f"0:admin4")])
             if user.info == 'super-admin':
                 ''' add menu for super-admin (add new group) '''
                 buttons.append([InlineKeyboardButton(text="⚙️ керувати групами ⚙️", callback_data="0:super1")])
@@ -70,3 +71,29 @@ class Menu:
             logger.error(e)
             await bot.send_message(chat_id=user.telegram_id, text=text, reply_markup=reply_markup)
 
+
+class Settings:
+    """ class to create menu for setting to admin | super-admin """
+    def __init__(self, telegram_id: int, text_to_insert: str, text_sms: str):
+        self.telegram_id = telegram_id
+        self.text_to_insert = text_to_insert
+        self.text_sms = text_sms
+
+    async def admin_commands(self, photo: str = None):
+        """
+        :param photo: (str) example: 'admin_panel.jpg'
+        :return: None
+        """
+        b1 = InlineKeyboardButton(text="Tak ✔️", switch_inline_query_current_chat=self.text_to_insert)
+        b2 = InlineKeyboardButton(text="Hi 🙅", callback_data="0:m")
+        reply_markup = InlineKeyboardMarkup(inline_keyboard=[[b1, b2]])
+        if photo:
+            try:
+                photo = FSInputFile(path=f"{media_file_path}{photo}")
+                await bot.send_photo(
+                    chat_id=self.telegram_id, caption=self.text_sms, photo=photo, reply_markup=reply_markup)
+            except Exception as e:
+                logger.error(e)
+                await bot.send_message(chat_id=self.telegram_id, text=self.text_sms, reply_markup=reply_markup)
+        else:
+            await bot.send_message(chat_id=self.telegram_id, text=self.text_sms, reply_markup=reply_markup)
