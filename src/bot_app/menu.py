@@ -134,7 +134,9 @@ class AdminMenu:
                     callback_data = f"0:{role}_set_chat_{chat.id}"
                     buttons.append([InlineKeyboardButton(text=button_text, callback_data=callback_data)])
                     reply_markup = InlineKeyboardMarkup(inline_keyboard=buttons)
-                    await bot.send_photo(chat_id=user.telegram_id, aption=text, photo=photo, reply_markup=reply_markup)
+                    await bot.send_photo(chat_id=user.telegram_id, caption=text, photo=photo, reply_markup=reply_markup)
+                    if len(chats) > 1 and chat != chats[-1]:
+                        await asyncio_sleep(delay=1)
             else:
                 text = "У вас немає груп 🤷"
                 buttons = list()
