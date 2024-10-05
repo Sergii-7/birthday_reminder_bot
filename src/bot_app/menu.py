@@ -2,7 +2,7 @@ from asyncio import sleep as asyncio_sleep
 from typing import List, Optional, Union, Dict, Any
 from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton, FSInputFile
-from config import HOST, media_file_path
+from config import HOST, media_file_path, get_chat_id_bot
 from src.bot_app.create_bot import bot
 from src.sql.models import User, Chat
 from src.sql import func_db
@@ -80,7 +80,13 @@ class Menu:
                 type_menu = type_menu.replace("_set_chat_", "")
                 if type_menu == '0':
                     # 👫👫 Додати групу 👫👫
-                    text: str = "Заповни анкету"
+                    text_sms: str = (f"Якщо ви бажаєте створити нову групу, натисніть <b>Tak ✔️</b> у вас з'явиться "
+                                     f"спеціальна форма, не змінюйте її, лише додайте chat_id цієї групи.\n"
+                                     f"ps: Дізнатися chat_id можна за допомогою цього бота: {get_chat_id_bot}")
+                    text_to_insert = '\nnew chat_id:\n'
+                    setting = Settings(telegram_id=user.telegram_id, text_sms=text_sms, text_to_insert=text_to_insert)
+                    await setting.admin_commands(photo="admin_panel.jpg")
+                    return
 
             else:
                 # ⚙️ керувати групами ⚙️
@@ -114,7 +120,7 @@ class Menu:
             await bot.edit_message_caption(
                 chat_id=user.telegram_id, message_id=message_id, caption=text, reply_markup=reply_markup)
         except TelegramBadRequest as e:
-            logger.error(e)  # Перевіряємо, чи це саме "message is not modified"
+            logger.error(e)  # "message is not modified"
             photo = FSInputFile(path=f"{media_file_path}admin_panel.jpg")
             await bot.send_photo(chat_id=user.telegram_id, caption=text, photo=photo, reply_markup=reply_markup)
             await bot.delete_message(chat_id=user.telegram_id, message_id=message_id)

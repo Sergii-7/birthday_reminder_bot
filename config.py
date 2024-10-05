@@ -24,3 +24,7 @@ sb_telegram_id = 620527199
 HOST = 'https://holiday-organizer-dp6b4.ondigitalocean.app'
 WEBHOOK_PATH = '/telegram/api/bot/hr/set/webhook/path/a/b/c/d/e'
 WEBHOOK_URL = f'{HOST}{WEBHOOK_PATH}'
+get_chat_id_bot = "@GetChatID_IL_BOT"
+
+""" My card number """
+my_banc_card: str = "4441111152635466"

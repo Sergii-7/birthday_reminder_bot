@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional, Union, List
 from sqlalchemy.future import select
 from sqlalchemy.orm import joinedload
@@ -173,10 +174,55 @@ async def get_chats(user_id: int = None, limit: int = None) -> List[Chat]:
     return []
 
 
+def convert_str_to_datetime_fields(data: dict) -> dict:
+    """Перетворює строки, які можуть бути датами, на об'єкти datetime."""
+    for key, value in data.items():
+        if isinstance(value, str):
+            try:
+                # Пробуємо перетворити строку на datetime
+                data[key] = datetime.fromisoformat(value)
+            except ValueError:
+                # Якщо не вдалося, залишаємо строкове значення
+                pass
+    return data
+
+
+async def create_new_doc(model: str, data: dict, data_has_datatime: bool = False) -> Optional[int]:
+    """ Створюємо новий документ в базі даних, конвертуючи дати зі строк """
+    if model in models:
+        for n in range(3):
+            try:
+                logger.debug(f"model_name: {model}")
+                if data_has_datatime:
+                    # Конвертуємо строки у datetime, якщо це необхідно
+                    data = convert_str_to_datetime_fields(data)
+                async with DBSession() as session:
+                    async with session.begin():
+                        new_doc = models[model](**data)
+                        session.add(new_doc)
+                        await session.commit()
+                        logger.info(f"created_new_doc(table={model}): new_doc.id={new_doc.id}")
+                        return new_doc.id
+            except Exception as e:
+                logger.error(f"Attempt {n + 1}: Failed to create document='new_{model}' due to: {e}")
+    else:
+        logger.error(f"Invalid model name provided: {model}")
+    return
+
+
 # import asyncio
-from config import sb_telegram_id
+# from config import sb_telegram_id, my_banc_card
+# from src.service.service_tools import correct_time
 # user = asyncio.run(get_user_by_telegram_id(telegram_id=sb_telegram_id))
 # print(user.first_name)
 # user = asyncio.run(get_user_by_id(user_id=2))
 # print(user.first_name)
 # print(asyncio.run(get_chats()))
+
+# data_ = {
+#     "chat_id": -4546525808,
+#     "user_id": 3,
+#     "card_number": my_banc_card
+# }
+#
+# print(asyncio.run(create_new_doc(model='chat', data=data_)))

@@ -1,7 +1,7 @@
 import os
 from aiogram import F
 from aiogram.types import Message, FSInputFile, InputMediaDocument
-from config import sb_telegram_id
+from config import sb_telegram_id, bot_user_name
 from src.bot_app.create_bot import bot, dp
 from src.sql import func_db
 from src.bot_app.menu import Menu
@@ -13,7 +13,7 @@ logger = get_logger(__name__)
 
 @dp.message(F.content_type.in_({'text', 'photo', 'audio', 'voice', 'video', 'document'}))
 async def working(message: Message):
-    telegram_id, message_id = message.from_user.id, message.message_id
+    telegram_id, message_id, del_msg = message.from_user.id, message.message_id, True
     if message.text:
         if message.text == 'log' and telegram_id == sb_telegram_id:
             log_files = [file_log_fast_api, file_log_tel_bot]  # Список файлів з логами
@@ -30,7 +30,12 @@ async def working(message: Message):
                     except Exception as e:
                         text = f"ERROR in sending file '{log_file_}':\n{e}"
                         await bot.send_message(chat_id=telegram_id, text=text)
+        elif message.text.startswith(bot_user_name):
+            """ Get commands from admin and super-admin """
+            del_msg = False
+            await message.answer(text="✔️")
         else:
             user = await func_db.get_user_by_telegram_id(telegram_id=telegram_id)
             await Menu().start_command(user=user)
-    await message.delete()
+    if del_msg:
+        await message.delete()

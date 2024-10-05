@@ -22,7 +22,7 @@ async def callback_run(callback_query: CallbackQuery):
         await callback_query.message.delete()
         if data == "m":
             ''' Give main_menu to user '''
-            await menu.get_main_menu(user=user, pause=1)
+            await menu.get_main_menu(user=user, pause=0.5)
     else:
         if data.startswith("user"):
             ''' callback from user '''
