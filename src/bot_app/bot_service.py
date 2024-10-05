@@ -1,14 +1,14 @@
-from http.cookiejar import debug
-
 import aiohttp
 from PIL import Image
 from io import BytesIO
-from typing import Optional
+from typing import Optional, Dict, Union
 from aiogram.types import FSInputFile, ChatMember
 from aiogram.enums import ChatMemberStatus
 import os
 from config import media_file_path
 from src.bot_app.create_bot import bot
+from src.sql.models import User, Chat
+from src.sql.func_db import doc_update
 from src.service.loggers.py_logger_tel_bot import get_logger
 
 logger = get_logger(__name__)
@@ -29,6 +29,33 @@ async def check_user_in_group(telegram_id: int, chat_id: int) -> bool:
     except Exception as e:
         logger.error(e)
         return False
+
+
+async def get_chat_info(admin: User, chat: Chat) -> Dict[str, Optional[Union[str, object]]]:
+    """ Get chat info from Telegram and DataBase """
+    try:
+        chat_data = await bot.get_chat(chat_id=chat.chat_id)
+    except Exception as e:
+        logger.error(e)
+        chat_data = None
+    status = await check_user_in_group(telegram_id=admin.telegram_id, chat_id=chat.chat_id)
+    if chat.status != status:
+        chat.status = status
+        chat = await doc_update(doc=chat)
+    status_description = "ГРУПА АКТИВНА" if status else ("<b>⚠️ налаштування не можливі - адмін або "
+                                                         "Телеграм бот не мають доступу до групи</b>")
+    count_users = await bot.get_chat_member_count(chat_id=chat.chat_id) if status else "не відомо"
+    title = f"{chat_data.title}\n" if chat_data else ""
+    user_name = f"@{admin.username}\n" if admin.username else ""
+    text = (f"chat_id: <code>{chat.chat_id}</code>\nстатус: {status_description}\n<b>{title}</b"
+            f"кількість учасників: <b>{count_users}</b>\n\n<b>Адмін</b>\nІм'я в Телеграмі: "
+            f"<b>{admin.first_name}</b>\nтелефон: <code>{admin.phone_number}</code>\n{user_name}")
+    try:
+        photo = chat_data.photo.small_file_id
+    except Exception as e:
+        logger.error(e)
+        photo = FSInputFile(path=f"{media_file_path}admin_panel.jpg")
+    return {"text": text, "chat_data": chat_data, "photo": photo}
 
 
 async def download_and_compress_image(
