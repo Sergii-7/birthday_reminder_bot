@@ -1,4 +1,5 @@
 from asyncio import sleep as asyncio_sleep
+import os
 from typing import List, Optional, Union, Dict, Any
 from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton, FSInputFile
@@ -86,8 +87,8 @@ class AdminMenu:
         chat_pk = int(type_menu)
         chat = await func_db.get_chat_with_user(pk=chat_pk)
         admin = chat.user
-        chat_info = await get_chat_info(admin=admin, chat=chat)
-        chat_data, text, photo = chat_info['chat_data'], chat_info['text'], chat_info['photo']
+        chat_info = await get_chat_info(admin=admin, chat=chat, get_photo=False)
+        chat_data, text = chat_info['chat_data'], chat_info['text']
         """ Додати панель налаштувань якщо статус активний і фото """
         buttons.append([InlineKeyboardButton(
             text="💳 Номер вашої карти 💳", callback_data=f"0:{role}:set:card:{chat.id}")])
@@ -105,9 +106,8 @@ class AdminMenu:
                 chat_id=user.telegram_id, message_id=message_id, caption=text, reply_markup=reply_markup)
         except TelegramBadRequest as e:
             logger.error(e)  # "message is not modified"
-            await bot.send_photo(chat_id=user.telegram_id, caption=text, photo=photo,
-                                 reply_markup=reply_markup)
-            await bot.delete_message(chat_id=user.telegram_id, message_id=message_id)
+            await bot.edit_message_text(
+                chat_id=user.telegram_id, message_id=message_id, text=text, reply_markup=reply_markup)
 
     async def get_chats_list(self, user: User, message_id: int, type_menu: str, role: str = "admin"):
         """ Get special menu for super-admin or admin """
@@ -128,13 +128,21 @@ class AdminMenu:
                 for chat in chats:
                     buttons = []
                     admin = await func_db.get_user_by_id(user_id=chat.user_id)
-                    chat_info = await get_chat_info(admin=admin, chat=chat)
+                    chat_info = await get_chat_info(admin=admin, chat=chat, get_photo=True)
                     chat_data, text, photo = chat_info['chat_data'], chat_info['text'], chat_info['photo']
                     button_text = f"{admin.first_name}" if not chat_data else chat_data.title
                     callback_data = f"0:{role}_set_chat_{chat.id}"
                     buttons.append([InlineKeyboardButton(text=button_text, callback_data=callback_data)])
                     reply_markup = InlineKeyboardMarkup(inline_keyboard=buttons)
-                    await bot.send_photo(chat_id=user.telegram_id, caption=text, photo=photo, reply_markup=reply_markup)
+                    if photo:
+                        await bot.send_photo(
+                            chat_id=user.telegram_id, caption=text, photo=photo, reply_markup=reply_markup)
+                        try:
+                            os.remove(path=f"{media_file_path}images/chat_photo_{chat.id}.jpg")
+                        except Exception as e:
+                            logger.error(e)
+                    else:
+                        await bot.send_message(chat_id=user.telegram_id, text=text)
                     if len(chats) > 1 and chat != chats[-1]:
                         await asyncio_sleep(delay=1)
             else:
