@@ -46,8 +46,8 @@ class Menu:
         """ Даємо користувачу головне меню """
         buttons = []
         ''' menu for everybody (data users) '''
-        buttons.append([InlineKeyboardButton(text="Змінити Дату Народження", callback_data=f"0:user1")])
-        buttons.append([InlineKeyboardButton(text="Календар всіх подій", callback_data=f"0:user2")])
+        buttons.append([InlineKeyboardButton(text="⚒ Змінити свій 🎂 🛠", callback_data=f"0:user1")])
+        buttons.append([InlineKeyboardButton(text="📅 Календар подій 📅", callback_data=f"0:user2")])
         buttons.append([InlineKeyboardButton(text="💵 Зробити внесок 💵", callback_data=f"0:user3")])
         if user.info in ['admin', 'super-admin']:
             ''' add menu for admin and super-admin (check users) '''
