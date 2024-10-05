@@ -1,5 +1,6 @@
 from asyncio import sleep as asyncio_sleep
 from typing import List, Optional, Union, Dict, Any
+from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton, FSInputFile
 from config import HOST, media_file_path
 from src.bot_app.create_bot import bot
@@ -67,13 +68,9 @@ class Menu:
         text: str = f"Привіт, {user.first_name}!"
         if pause and isinstance(pause, (int, float)):
             await asyncio_sleep(delay=pause)
-        try:
-            await bot.send_photo(chat_id=user.telegram_id, caption=text, photo=photo, reply_markup=reply_markup)
-        except Exception as e:
-            logger.error(e)
-            await bot.send_message(chat_id=user.telegram_id, text=text, reply_markup=reply_markup)
+        await bot.send_photo(chat_id=user.telegram_id, caption=text, photo=photo, reply_markup=reply_markup)
 
-    async def for_super_admin(self, user: User, message_id: int, type_menu: str = '1'):
+    async def for_super_admin(self, user: User, message_id: int, type_menu: str):
         """ Get special menu for super-admin """
         chats = await func_db.get_chats()  # get all [Chat] or []
         text: str = "Вибери групу."
@@ -116,10 +113,11 @@ class Menu:
         try:
             await bot.edit_message_caption(
                 chat_id=user.telegram_id, message_id=message_id, caption=text, reply_markup=reply_markup)
-        except Exception as e:
-            logger.error(e)
-            await bot.edit_message_text(
-                chat_id=user.telegram_id, message_id=message_id, text=text, reply_markup=reply_markup)
+        except TelegramBadRequest as e:
+            logger.error(e)  # Перевіряємо, чи це саме "message is not modified"
+            photo = FSInputFile(path=f"{media_file_path}admin_panel.jpg")
+            await bot.send_photo(chat_id=user.telegram_id, caption=text, photo=photo, reply_markup=reply_markup)
+            await bot.delete_message(chat_id=user.telegram_id, message_id=message_id)
 
 
 class Settings:
