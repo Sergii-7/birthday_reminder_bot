@@ -83,7 +83,8 @@ class Menu:
                 type_menu = type_menu.replace("_set_chat_", "")
                 if type_menu == '0':
                     # 👫👫 Додати групу 👫👫
-                    ...
+                    text: str = "Заповни анкету"
+
             else:
                 # ⚙️ керувати групами ⚙️
                 index_2 = int(type_menu) * 10
@@ -108,7 +109,7 @@ class Menu:
                 buttons.append(
                     [InlineKeyboardButton(text="👫👫 Додати групу 👫👫", callback_data="0:super_set_chat_0")])
         else:
-            text = "У вас немає груп 🤷"
+            text: str = "У вас немає груп 🤷"
             buttons.append([InlineKeyboardButton(text="👫👫 Додати групу 👫👫", callback_data="0:super_set_chat_0")])
         buttons.append([InlineKeyboardButton(text="🫣 сховати панель 🫣", callback_data="0:x")])
         reply_markup = InlineKeyboardMarkup(inline_keyboard=buttons)

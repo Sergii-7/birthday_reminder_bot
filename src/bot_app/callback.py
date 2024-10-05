@@ -68,7 +68,7 @@ async def callback_run(callback_query: CallbackQuery):
                         ...
                 else:
                     ''' user не має чатів і не може бути адміном '''
-                    text = "Ви не маєте повноважень приймати внески з будь-якого чату 🤷"
+                    text = "Ви не маєте повноважень приймати внески 🤷"
                     await callback_query.answer(text=text, show_alert=True)
                     if telegram_id != sb_telegram_id:
                         user.info = None
