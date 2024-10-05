@@ -46,14 +46,29 @@ async def get_user_by_telegram_id(telegram_id: int) -> Optional[User]:
     """ Get User from DataBase by telegram_id """
     for n in range(3):
         try:
-            logger.debug(f'get_user_by_telegram_id(telegram_id={telegram_id}')
+            logger.debug(f'get_user_by_telegram_id(telegram_id={telegram_id})')
             async with DBSession() as session:
-                result = await session.execute(select(User).filter_by(telegram_id=telegram_id))
+                # Формуємо запит
+                query = select(User).filter_by(telegram_id=telegram_id)
+                result = await session.execute(query)
                 user = result.scalar()
-                if user:
-                    return user
-                else:
-                    return None
+                return user
+        except Exception as e:
+            logger.error(f"attempt={n + 1} error: {e}")
+    return None
+
+
+async def get_user_by_id(user_id: int) -> Optional[User]:
+    """ Get User from DataBase by user_id """
+    for n in range(3):
+        try:
+            logger.debug(f'get_user_by_id(user_id={user_id})')
+            async with DBSession() as session:
+                # Формуємо запит
+                query = select(User).filter_by(id=user_id)
+                result = await session.execute(query)
+                user = result.scalar()
+                return user
         except Exception as e:
             logger.error(f"attempt={n + 1} error: {e}")
     return None
@@ -136,13 +151,17 @@ async def doc_update(
     return False
 
 
-async def get_chats_by_user_id(user_id: int, limit: int = None) -> List[Chat]:
-    """ Get array with object<SQLAlchemy>: 'Chat' by user_id with optional limit """
+async def get_chats(user_id: int = None, limit: int = None) -> List[Chat]:
+    """ Get array with object<SQLAlchemy>: 'Chat' by optional user_id and optional limit """
     for n in range(3):
         try:
-            logger.debug(f'get_chats_by_user_id(user_id={user_id}, limit={limit})')
+            logger.debug(f'get_chats(user_id={user_id}, limit={limit})')
             async with DBSession() as session:
-                query = select(Chat).filter_by(user_id=user_id)
+                # Формуємо запит
+                query = select(Chat)
+                # Якщо передано user_id, додаємо фільтрацію
+                if user_id:
+                    query = query.filter_by(user_id=user_id)
                 # Додаємо ліміт, якщо він переданий
                 if limit:
                     query = query.limit(limit)
@@ -155,7 +174,9 @@ async def get_chats_by_user_id(user_id: int, limit: int = None) -> List[Chat]:
 
 
 # import asyncio
-# from config import sb_telegram_id
+from config import sb_telegram_id
 # user = asyncio.run(get_user_by_telegram_id(telegram_id=sb_telegram_id))
 # print(user.first_name)
-# print(asyncio.run(get_chats_by_user_id(user_id=1)))
+# user = asyncio.run(get_user_by_id(user_id=2))
+# print(user.first_name)
+# print(asyncio.run(get_chats()))

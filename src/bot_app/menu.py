@@ -1,9 +1,10 @@
 from asyncio import sleep as asyncio_sleep
+from typing import List, Optional, Union, Dict, Any
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton, FSInputFile
 from config import HOST, media_file_path
 from src.bot_app.create_bot import bot
-from src.sql.models import User
-from src.sql.func_db import get_login_user_by_telegram_id
+from src.sql.models import User, Chat
+from src.sql import func_db
 from src.service.loggers.py_logger_tel_bot import get_logger
 
 logger = get_logger(__name__)
@@ -26,19 +27,19 @@ class Menu:
 
     async def request_phone_number(self, user: User):
         """ Робимо запит на номер телефону """
-        text = "Поділиться своїм номером телефону за допомогою кнопкою нижче 👇"
+        text: str = "Поділиться своїм номером телефону за допомогою кнопкою нижче 👇"
         b_contact = KeyboardButton(text='поділитися контактом', request_contact=True)
         reply_markup = ReplyKeyboardMarkup(keyboard=[[b_contact]], resize_keyboard=True, one_time_keyboard=True)
         await bot.send_message(chat_id=user.telegram_id, text=text, reply_markup=reply_markup)
 
     async def request_birthday(self, user: User):
         """ Робимо запит на отримання даних про день народження: sms + miniapp """
-        user_login = await get_login_user_by_telegram_id(telegram_id=user.telegram_id)
+        user_login = await func_db.get_login_user_by_telegram_id(telegram_id=user.telegram_id)
         if not user_login:
             return
-        web_app = {'url': f"{HOST}/path/login/{user.telegram_id}/{user_login.password}"}
-        text = "Вказати свій День Народження"
-        text_b = "🎂 🥳 🎉"
+        web_app: Dict[str, str] = {'url': f"{HOST}/path/login/{user.telegram_id}/{user_login.password}"}
+        text: str = "Вказати свій День Народження"
+        text_b: str = "🎂 🥳 🎉"
         reply_markup = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text=text_b, web_app=web_app)],])
         await bot.send_message(chat_id=user.telegram_id, text=text, reply_markup=reply_markup)
 
@@ -63,7 +64,7 @@ class Menu:
         buttons.append([InlineKeyboardButton(text="🫣 сховати панель 🫣", callback_data="0:x")])
         reply_markup = InlineKeyboardMarkup(inline_keyboard=buttons)
         photo = FSInputFile(path=f"{media_file_path}admin_panel.jpg")
-        text = f"Привіт, {user.first_name}!"
+        text: str = f"Привіт, {user.first_name}!"
         if pause and isinstance(pause, (int, float)):
             await asyncio_sleep(delay=pause)
         try:
@@ -71,6 +72,53 @@ class Menu:
         except Exception as e:
             logger.error(e)
             await bot.send_message(chat_id=user.telegram_id, text=text, reply_markup=reply_markup)
+
+    async def for_super_admin(self, user: User, message_id: int, type_menu: str = '1'):
+        """ Get special menu for super-admin """
+        chats = await func_db.get_chats()  # get all [Chat] or []
+        text: str = "Вибери групу."
+        buttons = list()
+        if chats:
+            if type_menu.startswith("_set_chat_"):
+                type_menu = type_menu.replace("_set_chat_", "")
+                if type_menu == '0':
+                    # 👫👫 Додати групу 👫👫
+                    ...
+            else:
+                # ⚙️ керувати групами ⚙️
+                index_2 = int(type_menu) * 10
+                index_1 = index_2 - 10
+                slice_chats = chats[index_1:index_2]
+                if not slice_chats:
+                    slice_chats = chats[:10]
+                for n in range(len(slice_chats)):
+                    chat = slice_chats[n]
+                    admin = await func_db.get_user_by_id(user_id=chat.user_id)
+                    button_text: str = f"{admin.first_name}:{admin.phone_number}"
+                    callback_data: str = f"0:super_set_chat_{chat.id}"
+                    buttons.append([InlineKeyboardButton(text=button_text, callback_data=callback_data)])
+                if len(slice_chats) < len(chats):
+                    if slice_chats[-1] == chats[-1]:
+                        button_text: str = "Дивитися з початку ⬅️"
+                        callback_data = "0:super1"
+                    else:
+                        button_text: str = "Дивитися далі ➡️"
+                        callback_data = f"0:super{index_2/100+1}"
+                    buttons.append([InlineKeyboardButton(text=button_text, callback_data=callback_data)])
+                buttons.append(
+                    [InlineKeyboardButton(text="👫👫 Додати групу 👫👫", callback_data="0:super_set_chat_0")])
+        else:
+            text = "У вас немає груп 🤷"
+            buttons.append([InlineKeyboardButton(text="👫👫 Додати групу 👫👫", callback_data="0:super_set_chat_0")])
+        buttons.append([InlineKeyboardButton(text="🫣 сховати панель 🫣", callback_data="0:x")])
+        reply_markup = InlineKeyboardMarkup(inline_keyboard=buttons)
+        try:
+            await bot.edit_message_caption(
+                chat_id=user.telegram_id, message_id=message_id, caption=text, reply_markup=reply_markup)
+        except Exception as e:
+            logger.error(e)
+            await bot.edit_message_text(
+                chat_id=user.telegram_id, message_id=message_id, text=text, reply_markup=reply_markup)
 
 
 class Settings:

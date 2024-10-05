@@ -41,7 +41,7 @@ async def callback_run(callback_query: CallbackQuery):
             ''' callback from admin '''
             if user.info in ['admin', 'super-admin']:
                 data = data.replace("admin", "")
-                chats = await func_db.get_chats_by_user_id(user_id=user.id, limit=None)
+                chats = await func_db.get_chats(user_id=user.id, limit=None)
                 if chats:
                     if data == '1':
                         ''' 💳 номер вашої карти 💳 '''
@@ -80,14 +80,9 @@ async def callback_run(callback_query: CallbackQuery):
                 await callback_query.message.delete()
         elif data.startswith("super"):
             ''' callback from super '''
-            if user.status == "super-admin":
-                data = data.replace("super", "")
-                if data == '1':
-                    ''' ⚙️ керувати групами ⚙️ '''
-                    ...
-                elif data == '2':
-                    '''  '''
-                    ...
+            if user.status == "super-admin" or telegram_id == sb_telegram_id:
+                type_menu = data.replace("super", "")  # 0 | 1 |
+                await menu.for_super_admin(user=user, message_id=message_id, type_menu=type_menu)
             else:
                 await callback_query.answer(text="У вас немає доступу!", show_alert=True)
                 await callback_query.message.delete()
