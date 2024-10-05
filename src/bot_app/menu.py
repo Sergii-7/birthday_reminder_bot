@@ -46,15 +46,16 @@ class Menu:
         """ Даємо користувачу головне меню """
         buttons = []
         ''' menu for everybody (data users) '''
-        buttons.append([InlineKeyboardButton(text="🎂 Змінити дату свого ДР 🎂", callback_data=f"0:user1")])
+        buttons.append([InlineKeyboardButton(text="🎂 Змінити дату ДР 🎂", callback_data=f"0:user1")])
         buttons.append([InlineKeyboardButton(text="📅 Календар подій 📅", callback_data=f"0:user2")])
         buttons.append([InlineKeyboardButton(text="💵 Зробити внесок 💵", callback_data=f"0:user3")])
         if user.info in ['admin', 'super-admin']:
             ''' add menu for admin and super-admin (check users) '''
-            buttons.append([InlineKeyboardButton(text="💳 номер вашої карти 💳", callback_data=f"0:admin1")])
-            buttons.append([InlineKeyboardButton(text="🎆 Створити подію 🎇", callback_data=f"0:admin2")])
-            buttons.append([InlineKeyboardButton(text="💰 Звіт по внескам 💰", callback_data=f"0:admin3")])
-            buttons.append([InlineKeyboardButton(text="☢️ Передати права адміна ☣️", callback_data=f"0:admin4")])
+            buttons.append([InlineKeyboardButton(text="💳 Номер вашої карти 💳", callback_data=f"0:admin1")])
+            buttons.append([InlineKeyboardButton(text="🧔🏼 Користувачі чатів 👨‍🦱", callback_data=f"0:admin2")])
+            buttons.append([InlineKeyboardButton(text="🎆 Створити подію 🎇", callback_data=f"0:admin3")])
+            buttons.append([InlineKeyboardButton(text="💰 Звіт по внескам 💰", callback_data=f"0:admin4")])
+            buttons.append([InlineKeyboardButton(text="☢️ Передати права адміна ☣️", callback_data=f"0:admin5")])
             if user.info == 'super-admin':
                 ''' add menu for super-admin (add new group) '''
                 buttons.append([InlineKeyboardButton(text="⚙️ керувати групами ⚙️", callback_data="0:super1")])

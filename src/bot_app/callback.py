@@ -55,12 +55,15 @@ async def callback_run(callback_query: CallbackQuery):
                         setting = Settings(telegram_id=telegram_id, text_sms=text_sms, text_to_insert=text_to_insert)
                         await setting.admin_commands(photo="bank_card.jpg")
                     elif data == '2':
-                        ''' 🎆 Створити подію 🎇 '''
+                        ''' Керувати учасниками чатів '''
                         ...
                     elif data == '3':
-                        ''' 💰 Звіт по внескам 💰 '''
+                        ''' 🎆 Створити подію 🎇 '''
                         ...
                     elif data == '4':
+                        ''' 💰 Звіт по внескам 💰 '''
+                        ...
+                    elif data == '5':
                         ''' ☢️ Передати права адміна ☣️ '''
                         ...
                 else:
