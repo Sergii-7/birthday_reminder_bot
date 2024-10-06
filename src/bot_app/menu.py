@@ -81,10 +81,9 @@ class AdminMenu:
         setting = Settings(telegram_id=user.telegram_id, text_sms=text_sms, text_to_insert=text_to_insert)
         await setting.admin_commands(photo="admin_panel.jpg")
 
-    async def edit_sms_with_chat(self, user: User, type_menu: str, role: str, message_id: int):
+    async def edit_sms_with_chat(self, user: User, chat_pk: int, role: str, message_id: int):
         """ Get chat settings """
         buttons = list()
-        chat_pk = int(type_menu)
         chat = await func_db.get_chat_with_user(pk=chat_pk)
         admin = chat.user
         chat_info = await get_chat_info(admin=admin, chat=chat, get_photo=False)
@@ -112,12 +111,14 @@ class AdminMenu:
     async def get_chats_list(self, user: User, message_id: int, type_menu: str, role: str = "admin"):
         """ Get special menu for super-admin or admin """
         if type_menu.startswith("_set_chat_"):
+            type_menu = type_menu.replace("_set_chat_", "")
             if type_menu == '0':
                 # 👫👫 Додати групу 👫👫
                 await self.add_new_chat(user=user)
             else:
+                chat_pk = int(type_menu)
                 # Get chat settings
-                await self.edit_sms_with_chat(user=user, type_menu=type_menu, role=role, message_id=message_id)
+                await self.edit_sms_with_chat(user=user, chat_pk=chat_pk, role=role, message_id=message_id)
             return
         else:
             """ type_menu = ':m" """
