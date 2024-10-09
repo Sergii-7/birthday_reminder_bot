@@ -274,4 +274,4 @@ async def test():
     print(chat.user.telegram_id)
 
 
-asyncio.run(test())
+# asyncio.run(test())
