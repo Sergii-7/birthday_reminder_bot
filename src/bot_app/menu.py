@@ -181,7 +181,7 @@ class SetChat:
             chat_users = await func_db.get_all_users_from_chat(chat_id=chat.id)
             chat_info = await get_chat_info(admin=user, chat=chat, get_photo=False)
             text = f"{chat_info.get('text')}"
-            text_users = "\n\n<b>Зареєстровані користувачі чату:</b>\n" if chat_users else ""
+            text_users = "\n<b>Зареєстровані користувачі чату:</b>\n" if chat_users else ""
             for user_chat in chat_users:
                 user_info = get_user_info(user=user_chat.user)
                 text_users = text_users + f"\n{user_info}\n------------"

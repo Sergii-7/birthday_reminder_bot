@@ -99,12 +99,11 @@ async def get_chat_info(
 
 def get_user_info(user: User) -> str:
     """ Get user info from User """
-    username = f"@{user.username}\n" if user.username else "\n"
-    phone_number = f"телефон <code>{user.phone_number}</code>\n" if user.phone_number else "\n"
-    last_name = f"<b>{user.last_name}</b>\n" if user.last_name else "\n"
-    birthday = f"<code>{user.birthday}</code>\n" if user.birthday else ""
-    text = (f"telegram_id: <code>{user.telegram_id}</code>\n<b>{user.first_name}</b> {last_name}{username}"
-            f"{phone_number}день народження: <code>{birthday if user.birthday else 'не вносив дані'}</code>")
+    username = f"@{user.username}\n" if user.username else ""
+    phone_number = f"телефон <code>{user.phone_number}</code>\n" if user.phone_number else ""
+    # last_name = f"<b>{user.last_name}</b>\n" if user.last_name else ""
+    text = (f"telegram_id: <code>{user.telegram_id}</code>\n<b>{user.first_name}</b>\n{username}{phone_number}"
+            f"день народження: <code>{user.birthday if user.birthday else 'не вносив дані'}</code>")
     return text
 
 
