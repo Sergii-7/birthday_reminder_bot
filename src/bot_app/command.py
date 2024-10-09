@@ -21,8 +21,12 @@ async def start_command_handler(message: Message):
     task = asyncio_create_task(check_user_in_every_chat(user=user))
     logger.info(f"asyncio_create_task(check_user_in_every_chat for user: {user.telegram_id}): {task}")
     if user:
+        logger.info(f"message: {message}")
         await menu.start_command(user=user, message_text=message.text)
-        await message.delete()
+        try:
+            await message.delete()
+        except ValueError:
+            pass
 
 
 @dp.message(F.content_type == 'contact')

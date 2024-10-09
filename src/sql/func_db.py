@@ -266,12 +266,8 @@ async def create_new_doc(model: str, data: dict, data_has_datatime: bool = False
     return
 
 
-import asyncio
-
-
-async def test():
-    chat = await get_chat_with_user(chat_id=-4546525808)
-    print(chat.user.telegram_id)
-
-
+# import asyncio
+# async def test():
+#     chat = await get_chat_with_user(chat_id=-4546525808)
+#     print(chat.user.telegram_id)
 # asyncio.run(test())
