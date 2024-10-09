@@ -102,12 +102,13 @@ class AdminMenu:
         buttons.append([InlineKeyboardButton(text="🫣 сховати панель 🫣", callback_data="0:x")])
         reply_markup = InlineKeyboardMarkup(inline_keyboard=buttons)
         try:
-            await bot.edit_message_caption(
-                chat_id=user.telegram_id, message_id=message_id, caption=text, reply_markup=reply_markup)
-        except TelegramBadRequest as e:
-            logger.error(e)  # "message is not modified"
             await bot.edit_message_text(
                 chat_id=user.telegram_id, message_id=message_id, text=text, reply_markup=reply_markup)
+        except TelegramBadRequest as e:
+            logger.error(e)  # "message is not modified"
+            await bot.send_message(chat_id=user.telegram_id, text=text, reply_markup=reply_markup)
+            await bot.delete_message(chat_id=user.telegram_id, message_id=message_id)
+
 
     async def get_chats_list(self, user: User, message_id: int, type_menu: str, role: str = "admin"):
         """ Get special menu for super-admin or admin """

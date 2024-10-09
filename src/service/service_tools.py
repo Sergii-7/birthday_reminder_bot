@@ -17,11 +17,9 @@ def generate_users_password():
 
 
 def check_card_number(card_number: str) -> bool:
-    """ Check_card_number """
+    """ Check card number """
     # card_number = "4111 1111 1111 1111"  # Приклад номера Visa
     if is_valid(card_number):
-        print("Номер картки валідний!")
         return True
     else:
-        print("Номер картки невалідний!")
         return False
