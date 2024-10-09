@@ -177,22 +177,22 @@ class SetChat:
             setting = Settings(telegram_id=user.telegram_id, text_sms=text_sms, text_to_insert=text_to_insert)
             await setting.admin_commands(photo="bank_card.jpg")
         elif command == 'users':
-            ''' Повертаємо дані про користувачів чату '''
+            ''' "🧔🏼 Користувачі чатів 👨‍🦱": Повертаємо дані про користувачів чату '''
             chat_users = await func_db.get_all_users_from_chat(chat_id=chat.id)
             chat_info = await get_chat_info(admin=user, chat=chat, get_photo=False)
             text = f"{chat_info.get('text')}"
-            text_users = "\n<b>Зареєстровані користувачі чату:</b>\n" if chat_users else ""
+            text_users = "\n<b>Зареєстровані користувачі чату:</b>" if chat_users else ""
             for user_chat in chat_users:
                 user_info = get_user_info(user=user_chat.user)
-                text_users = text_users + f"\n{user_info}\n------------"
+                text_users = text_users + f"\n------------\n{user_info}"
             text = text + text_users
             await bot.send_message(chat_id=user.telegram_id, text=text)
         elif command == 'holiday':
-            ''' Запускаємо процес організації нового свято/події '''
+            ''' "🎆 Створити подію 🎇": Запускаємо процес організації нового свято/події '''
         elif command == 'report':
-            ''' Звіт про надходження коштів від користувачів '''
+            ''' "💰 Звіт по внескам 💰": Звіт про надходження коштів від користувачів '''
         elif command == 'change_admin':
-            ''' Запускаємо процес зміни адміна чату '''
+            ''' "☢️ Передати права адміна ☣️": Запускаємо процес зміни адміна чату '''
 
 
 class Settings:

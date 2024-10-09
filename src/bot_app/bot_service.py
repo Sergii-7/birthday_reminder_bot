@@ -102,7 +102,7 @@ def get_user_info(user: User) -> str:
     username = f"@{user.username}\n" if user.username else ""
     phone_number = f"телефон <code>{user.phone_number}</code>\n" if user.phone_number else ""
     # last_name = f"<b>{user.last_name}</b>\n" if user.last_name else ""
-    text = (f"telegram_id: <code>{user.telegram_id}</code>\n<b>{user.first_name}</b>\n{username}{phone_number}"
+    text = (f"<b>{user.first_name}</b>\n{username}{phone_number}"
             f"день народження: <code>{user.birthday if user.birthday else 'не вносив дані'}</code>")
     return text
 
