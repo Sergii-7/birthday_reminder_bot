@@ -37,6 +37,7 @@ class User(Base):
     user_chat = relationship("UserChat", back_populates="user")
     chats = relationship("Chat", back_populates="user")
     holidays = relationship("Holiday", back_populates="user")
+    report = relationship("Report", back_populates="user")
 
 
 class UserLogin(Base):
@@ -69,6 +70,7 @@ class Chat(Base):
     user = relationship("User", back_populates="chats")
     user_chat = relationship("UserChat", back_populates="chat")
     holidays = relationship("Holiday", back_populates="chat")
+    report = relationship("Report", back_populates="chat")
 
 
 class Holiday(Base):
@@ -76,8 +78,21 @@ class Holiday(Base):
     id: int = Column(type_=Integer, primary_key=True)
     user_id: int = Column(Integer, ForeignKey('users.id'), nullable=True)
     chat_id: int = Column(Integer, ForeignKey('chats.id'), nullable=False)
+    info: str = Column(type_=String, nullable=False)
+    date_event: date = Column(type_=Date, nullable=False)
     amount: int = Column(type_=Integer, nullable=False, default=500)
     status: bool = Column(type_=Boolean, nullable=False, default=False)
     created_at: datetime = Column(type_=DateTime, nullable=False, default=correct_time)
     user = relationship("User", back_populates="holidays")
     chat = relationship("Chat", back_populates="holidays")
+    report = relationship("Report", back_populates="holidays")
+
+
+class Report(Base):
+    __tablename__ = "report"
+    id: int = Column(type_=Integer, primary_key=True)
+    user_id: int = Column(Integer, ForeignKey('users.id'), nullable=True)
+    chat_id: int = Column(Integer, ForeignKey('chats.id'), nullable=False)
+    user = relationship("User", back_populates="report")
+    chat = relationship("Chat", back_populates="report")
+    holidays = relationship("Holiday", back_populates="report")
