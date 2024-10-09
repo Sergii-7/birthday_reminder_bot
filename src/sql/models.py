@@ -1,3 +1,5 @@
+from codecs import BOM_LE
+
 from sqlalchemy import String, Integer, BigInteger, Column, Boolean, Date, DateTime, ForeignKey, CheckConstraint, func
 from sqlalchemy.orm import declarative_base, relationship
 from datetime import date, datetime
@@ -78,6 +80,7 @@ class Holiday(Base):
     id: int = Column(type_=Integer, primary_key=True)
     user_id: int = Column(Integer, ForeignKey('users.id'), nullable=True)
     chat_id: int = Column(Integer, ForeignKey('chats.id'), nullable=False)
+    report_id: int = Column(Integer, ForeignKey('report.id'), nullable=False)
     info: str = Column(type_=String, nullable=False)
     date_event: date = Column(type_=Date, nullable=False)
     amount: int = Column(type_=Integer, nullable=False, default=500)
@@ -93,6 +96,7 @@ class Report(Base):
     id: int = Column(type_=Integer, primary_key=True)
     user_id: int = Column(Integer, ForeignKey('users.id'), nullable=True)
     chat_id: int = Column(Integer, ForeignKey('chats.id'), nullable=False)
+    status: bool = Column(type_=Boolean, nullable=False, default=False)
     user = relationship("User", back_populates="report")
     chat = relationship("Chat", back_populates="report")
     holidays = relationship("Holiday", back_populates="report")
