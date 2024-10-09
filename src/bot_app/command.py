@@ -2,6 +2,7 @@ from asyncio import create_task as asyncio_create_task
 from aiogram import F
 from aiogram.types import Message
 from aiogram.filters import Command
+from config import bot_user_name
 from src.bot_app.create_bot import dp, bot
 from src.bot_app.menu import Menu
 from src.sql.func_db import check_user, update_phone_number
@@ -16,17 +17,23 @@ menu = Menu()
 @dp.message(Command(commands=["start"]))
 async def start_command_handler(message: Message):
     """ Check User in DataBase and give him menu buttons """
-    user = await check_user(message=message)
-    ''' Запускаємо перевірку по користувачу - чи належить він до якихось чатів, які у нас є в базі. '''
-    task = asyncio_create_task(check_user_in_every_chat(user=user))
-    logger.info(f"asyncio_create_task(check_user_in_every_chat for user: {user.telegram_id}): {task}")
-    if user:
-        logger.info(f"message: {message}")
-        await menu.start_command(user=user, message_text=message.text)
+    chat_id = message.chat.id
+    telegram_id = message.from_user.id
+    if chat_id != telegram_id:
+        """ User push '/start' command in group with bot """
         try:
+            await message.reply(text=f"Напиши мені особисто.\n{bot_user_name}")
+        except Exception as e:
+            logger.error(e)
+    else:
+        """ User push '/start' command in private chat with bot """
+        user = await check_user(message=message)
+        if user:
+            await menu.start_command(user=user, message_text=message.text)
+            task = asyncio_create_task(check_user_in_every_chat(user=user))
+            ''' Запускаємо перевірку по користувачу - чи належить він до якихось чатів, які у нас є в базі. '''
+            logger.info(f"asyncio_create_task(check_user_in_every_chat for user: {user.telegram_id}): {task}")
             await message.delete()
-        except ValueError:
-            pass
 
 
 @dp.message(F.content_type == 'contact')
