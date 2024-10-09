@@ -216,6 +216,20 @@ async def get_user_chat(chat_id: int, user_telegram_id: int) -> Optional[UserCha
     return None
 
 
+async def get_all_users_from_chat(chat_id: int) -> List[UserChat]:
+    """ Get all Users from UserChat by 'chat.id' with associated User """
+    for n in range(3):
+        try:
+            logger.debug(f"get_all_users_from_chat(chat_id={chat_id})")
+            async with DBSession() as session:
+                query = select(UserChat).options(joinedload(UserChat.user)).filter_by(chat_id=chat_id)
+                result = await session.execute(query)
+                return result.scalars().all()
+        except Exception as err:
+            logger.error(f"attempt={n+1}: {err}")
+    return []
+
+
 def convert_str_to_datetime_fields(data: dict) -> dict:
     """Перетворює строки, які можуть бути датами, на об'єкти datetime."""
     for key, value in data.items():
@@ -258,7 +272,6 @@ import asyncio
 async def test():
     chat = await get_chat_with_user(chat_id=-4546525808)
     print(chat.user.telegram_id)
-    user_chat = await get_user_chat(chat_id=2, user_telegram_id=2)
-    print(user_chat)
+
 
 # asyncio.run(test())

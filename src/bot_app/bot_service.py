@@ -97,6 +97,17 @@ async def get_chat_info(
     return {"text": text, "chat_data": chat_data, "photo": photo}
 
 
+def get_user_info(user: User) -> str:
+    """ Get user info from User """
+    username = f"@{user.username}\n" if user.username else "\n"
+    phone_number = f"телефон <code>{user.phone_number}</code>\n" if user.phone_number else "\n"
+    last_name = f"<b>{user.last_name}</b>\n" if user.last_name else "\n"
+    birthday = f"<code>{user.birthday}</code>\n" if user.birthday else ""
+    text = (f"telegram_id: <code>{user.telegram_id}</code>\n<b>{user.first_name}</b> {last_name}{username}"
+            f"{phone_number}день народження: <code>{birthday if user.birthday else 'не вносив дані'}</code>")
+    return text
+
+
 async def download_and_compress_image(
         url: str, max_size: int = 5 * 1024 * 1024, filename: str = "compressed_image.jpg") -> Optional[str]:
     """ Завантажує та стискає зображення з URL та повертає шлях до тимчасового файлу """

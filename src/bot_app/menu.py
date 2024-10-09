@@ -1,12 +1,13 @@
 from asyncio import sleep as asyncio_sleep
 import os
+from pickle import FALSE
 from typing import List, Optional, Union, Dict, Any
 from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton, FSInputFile
 from config import HOST, media_file_path, get_chat_id_bot, sb_telegram_id
 from src.bot_app.create_bot import bot
 from src.sql.models import User, Chat
-from src.bot_app.bot_service import get_chat_info
+from src.bot_app.bot_service import get_chat_info, get_user_info
 from src.sql import func_db
 from src.service.loggers.py_logger_tel_bot import get_logger
 
@@ -101,13 +102,8 @@ class AdminMenu:
             text="☢️ Передати права адміна ☣️", callback_data=f"0:{role}:set:change_admin:{chat.id}")])
         buttons.append([InlineKeyboardButton(text="🫣 сховати панель 🫣", callback_data="0:x")])
         reply_markup = InlineKeyboardMarkup(inline_keyboard=buttons)
-        try:
-            await bot.edit_message_caption(
-                chat_id=user.telegram_id, message_id=message_id, caption=text, photo=None, reply_markup=reply_markup)
-        except TelegramBadRequest as e:
-            logger.error(e)  # "message is not modified"
-            await bot.send_message(chat_id=user.telegram_id, text=text, reply_markup=reply_markup)
-            await bot.delete_message(chat_id=user.telegram_id, message_id=message_id)
+        await bot.send_message(chat_id=user.telegram_id, text=text, reply_markup=reply_markup)
+        await bot.delete_message(chat_id=user.telegram_id, message_id=message_id)
 
 
     async def get_chats_list(self, user: User, message_id: int, type_menu: str, role: str = "admin"):
@@ -167,7 +163,7 @@ class AdminMenu:
 
 
 class SetChat:
-    """ Chat settings """
+    """ Chat settings for Admins """
     async def get_command(self, user: User, chat: Chat, command: str):
         """ Execute the admin command """
         if command == 'card':
@@ -182,7 +178,15 @@ class SetChat:
             await setting.admin_commands(photo="bank_card.jpg")
         elif command == 'users':
             ''' Повертаємо дані про користувачів чату '''
-            ...
+            chat_users = await func_db.get_all_users_from_chat(chat_id=chat.id)
+            chat_info = await get_chat_info(admin=user, chat=chat, get_photo=False)
+            text = f"{chat_info.get('text')}"
+            text_users = "\n\n<b>Зареєстровані користувачі чату:</b>\n" if chat_users else ""
+            for user_chat in chat_users:
+                user_info = get_user_info(user=user_chat.user)
+                text_users = text_users + f"\n{user_info}\n------------"
+            text = text + text_users
+            await bot.send_message(chat_id=user.telegram_id, text=text)
         elif command == 'holiday':
             ''' Запускаємо процес організації нового свято/події '''
         elif command == 'report':
@@ -216,3 +220,4 @@ class Settings:
                 await bot.send_message(chat_id=self.telegram_id, text=self.text_sms, reply_markup=reply_markup)
         else:
             await bot.send_message(chat_id=self.telegram_id, text=self.text_sms, reply_markup=reply_markup)
+
