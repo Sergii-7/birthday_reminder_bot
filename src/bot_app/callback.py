@@ -1,7 +1,7 @@
 from aiogram.types import CallbackQuery
 from config import sb_telegram_id
 from src.bot_app.create_bot import dp
-from src.bot_app.menu import Menu, AdminMenu, Settings
+from src.bot_app.menu import Menu, AdminMenu, SetChat
 from src.sql import func_db
 from src.service.loggers.py_logger_tel_bot import get_logger
 
@@ -50,29 +50,13 @@ async def callback_run(callback_query: CallbackQuery):
                     """ Налаштуваня чату """
                     data = data.replace(":set:", "").split(":")
                     command, chat_pk = data[0], int(data[-1])
-                    await callback_query.answer(text=f"{command}:{chat_pk}", show_alert=True)
-                # chats = await func_db.get_chats(user_id=user.id, limit=1)
-                # if chats:
-                #     if data.startswith('card_number'):
-                #         ''' 💳 номер вашої карти 💳 '''
-                #         await callback_query.message.delete()
-                #         card_number = chats[0].card_number
-                #         text_sms = (f"<b>Номер вашої банківської картки, яка вказана для отримання внесків:</b>\n\n"
-                #                     f"<code>{card_number}</code>\n\nps: Якщо ви хочете змінити номер картки, натисніть"
-                #                     f" <b>Tak ✔️</b> у вас з'явиться спеціальна форма, не змінюйте її, "
-                #                     f"лише додайте інший номер картки.")
-                #         text_to_insert = '\nnew card number:\n'
-                #         setting = Settings(telegram_id=telegram_id, text_sms=text_sms, text_to_insert=text_to_insert)
-                #         await setting.admin_commands(photo="bank_card.jpg")
-                # else:
-                #     ''' user не має чатів і не може бути адміном '''
-                #     text = "Ви не маєте повноважень приймати внески 🤷"
-                #     await callback_query.answer(text=text, show_alert=True)
-                #     if telegram_id != sb_telegram_id:
-                #         user.info = None
-                #         user = await func_db.doc_update(doc=user)
-                #         await callback_query.message.delete()
-                #         await menu.get_main_menu(user=user)
+                    chat = await func_db.get_chat_with_user(pk=chat_pk)
+                    if chat and chat.status:
+                        await SetChat().get_command(user=user, chat=chat, command=command)
+                    else:
+                        text = "🤬 Ви або Телеграм бот не мають доступу до цієї групи!"
+                        await callback_query.answer(text=text, show_alert=True)
+                        await callback_query.message.delete()
             else:
                 await callback_query.answer(text="У вас немає доступу!", show_alert=True)
                 await callback_query.message.delete()

@@ -34,6 +34,7 @@ class User(Base):
     status: bool = Column(type_=Boolean, nullable=False, default=False)
     info: str = Column(type_=String, nullable=True, default=None)
     user_login = relationship("UserLogin", back_populates="user")
+    user_chat = relationship("UserChat", back_populates="user")
     chats = relationship("Chat", back_populates="user")
     holidays = relationship("Holiday", back_populates="user")
 
@@ -46,6 +47,17 @@ class UserLogin(Base):
     user = relationship("User", back_populates="user_login")
 
 
+class UserChat(Base):
+    __tablename__ = "user_chat"
+    id: int = Column(type_=Integer, primary_key=True)
+    chat_id: int = Column(Integer, ForeignKey('chats.id'), unique=False, nullable=False)
+    user_telegram_id: int = Column(BigInteger, ForeignKey('users.telegram_id'), unique=False, nullable=False)
+    status: bool = Column(type_=Boolean, nullable=False, default=True)
+    updated_at: datetime = Column(type_=DateTime, nullable=False, default=correct_time)
+    chat = relationship("Chat", back_populates="user_chat")
+    user = relationship("User", back_populates="user_chat")
+
+
 class Chat(Base):
     __tablename__ = "chats"
     id: int = Column(type_=Integer, primary_key=True)
@@ -55,6 +67,7 @@ class Chat(Base):
     status: bool = Column(type_=Boolean, nullable=False, default=False)
     created_at: datetime = Column(type_=DateTime, nullable=False, default=correct_time)
     user = relationship("User", back_populates="chats")
+    user_chat = relationship("UserChat", back_populates="chat")
     holidays = relationship("Holiday", back_populates="chat")
 
 

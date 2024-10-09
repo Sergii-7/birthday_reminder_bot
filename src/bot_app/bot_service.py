@@ -2,33 +2,57 @@ import aiohttp
 from PIL import Image
 from io import BytesIO
 from typing import Optional, Dict, Union
-from aiogram.types import FSInputFile, ChatMember
+from aiogram.types import (FSInputFile, ChatMember, InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove,
+                           ForceReply)
 from aiogram.enums import ChatMemberStatus
 import os
 from config import media_file_path
 from src.bot_app.create_bot import bot
 from src.sql.models import User, Chat
-from src.sql.func_db import doc_update
+from src.sql.func_db import doc_update, get_chats, get_user_chat, create_new_doc
+from src.service.service_tools import correct_time
 from src.service.loggers.py_logger_tel_bot import get_logger
 
 logger = get_logger(__name__)
 
 
 async def check_user_in_group(telegram_id: int, chat_id: int) -> bool:
-    """ Check user: is he member of admin_chat """
+    """ Check user: is he member of the chat """
     try:
         # Отримання інформації про учасника групи
         member: ChatMember = await bot.get_chat_member(chat_id=chat_id, user_id=telegram_id)
         # Перевірка статусу учасника
         if member.status in {ChatMemberStatus.MEMBER, ChatMemberStatus.ADMINISTRATOR, ChatMemberStatus.CREATOR}:
-            logger.info(f"User: '{telegram_id}' is member of admin_chat")
+            logger.info(f"User: '{telegram_id}' is member of chat: {chat_id}")
             return True
         else:
-            logger.info(f"User: '{telegram_id}' is NOT member of admin_chat")
+            logger.info(f"User: '{telegram_id}' is NOT member of chat: {chat_id}")
             return False
     except Exception as e:
         logger.error(e)
         return False
+
+
+async def check_user_in_every_chat(user: User) -> Dict[str, int]:
+    """ Check: is User member of one or more chats """
+    logger.info(f"start check_user_in_every_chat for user: {user.telegram_id}, {user.first_name}")
+    new_user_chat, updated_user_chat = 0, 0
+    chats = await get_chats()
+    for chat in chats:
+        if await check_user_in_group(telegram_id=user.telegram_id, chat_id=chat.chat_id):
+            user_chat = await get_user_chat(chat_id=chat.id, user_telegram_id=user.telegram_id)
+            if user_chat:
+                user_chat.status = True
+                user_chat.updated_at = correct_time()
+                r = await doc_update(doc=user_chat)
+                updated_user_chat = updated_user_chat + 1 if r else updated_user_chat
+            else:
+                user_chat = {"chat_id": chat.id, "user_telegram_id": user.telegram_id, "status": True}
+                r = await create_new_doc(model='user_chat', data=user_chat, data_has_datatime=False)
+                new_user_chat = new_user_chat + 1 if r else new_user_chat
+    res = {"new_user_chat": new_user_chat, "updated_user_chat": updated_user_chat}
+    logger.info(str(res))
+    return res
 
 
 async def get_chat_info(
@@ -103,7 +127,8 @@ async def download_and_compress_image(
 
 
 async def send_compressed_image(
-        chat_id: int, url: str, caption: str = None, disable_notification=True, filename: str = "compressed_image.jpg"
+        chat_id: int, url: str, caption: str=None, filename: str="compressed_image.jpg", disable_notification=True,
+        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]]=None
 ):
     """Відправляє стиснене зображення через Telegram"""
     # temp_filename = "compressed_image.jpg" - Ім'я тимчасового файлу
@@ -113,7 +138,9 @@ async def send_compressed_image(
             # Використовуємо FSInputFile для відправки через Telegram
             input_file = FSInputFile(file_path)
             await bot.send_photo(
-                chat_id=chat_id, photo=input_file, caption=caption, disable_notification=disable_notification
+                chat_id=chat_id, photo=input_file, caption=caption,
+                reply_markup=reply_markup,
+                disable_notification=disable_notification
             )
         except Exception as e:
             logger.error(f"Error sending image: {e}")

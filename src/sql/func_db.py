@@ -1,18 +1,19 @@
 from datetime import datetime
 from typing import Optional, Union, List
+from aiogram.types import Message
 from sqlalchemy.future import select
 from sqlalchemy.orm import joinedload, selectinload
 from src.sql.connect import DBSession
-from src.sql.models import User, UserLogin, Chat, Holiday
+from src.sql.models import User, UserLogin, UserChat, Chat, Holiday
 from src.service.service_tools import correct_time
 from src.service.loggers.py_logger_fast_api import get_logger
 
 logger = get_logger(__name__)
 
-models = {'user': User, 'user_login': UserLogin, 'chat': Chat, 'holiday': Holiday}
+models = {'user': User, 'user_login': UserLogin, 'user_chat': UserChat, 'chat': Chat, 'holiday': Holiday}
 
 
-async def check_user(message: object) -> Optional[User]:
+async def check_user(message: Message) -> Optional[User]:
     """ Create User and UserLogin in DataBase """
     for n in range(3):
         try:
@@ -199,6 +200,22 @@ async def get_chats(user_id: int = None, limit: int = None) -> List[Chat]:
     return []
 
 
+async def get_user_chat(chat_id: int, user_telegram_id: int) -> Optional[UserChat]:
+    """ Get UserChat from DataBase by 'chat.id' and 'user.telegram_id' """
+    for n in range(3):
+        try:
+            logger.debug(f"get_user_chat(chat_id={chat_id}, user_telegram_id={user_telegram_id})")
+            async with DBSession() as session:
+                query = select(UserChat).filter(
+                    (UserChat.chat_id == chat_id) & (UserChat.user_telegram_id == user_telegram_id)
+                )
+                result = await session.execute(query)
+                return result.scalar_one_or_none()
+        except Exception as err:
+            logger.error(f"attempt={n+1}: {err}")
+    return None
+
+
 def convert_str_to_datetime_fields(data: dict) -> dict:
     """Перетворює строки, які можуть бути датами, на об'єкти datetime."""
     for key, value in data.items():
@@ -241,5 +258,7 @@ import asyncio
 async def test():
     chat = await get_chat_with_user(chat_id=-4546525808)
     print(chat.user.telegram_id)
+    user_chat = await get_user_chat(chat_id=2, user_telegram_id=2)
+    print(user_chat)
 
 # asyncio.run(test())

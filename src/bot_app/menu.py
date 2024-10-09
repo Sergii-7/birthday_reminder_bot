@@ -99,6 +99,7 @@ class AdminMenu:
             text="💰 Звіт по внескам 💰", callback_data=f"0:{role}:set:report:{chat.id}")])
         buttons.append([InlineKeyboardButton(
             text="☢️ Передати права адміна ☣️", callback_data=f"0:{role}:set:change_admin:{chat.id}")])
+        buttons.append([InlineKeyboardButton(text="🫣 сховати панель 🫣", callback_data="0:x")])
         reply_markup = InlineKeyboardMarkup(inline_keyboard=buttons)
         try:
             await bot.edit_message_caption(
@@ -131,9 +132,8 @@ class AdminMenu:
                     admin = await func_db.get_user_by_id(user_id=chat.user_id)
                     chat_info = await get_chat_info(admin=admin, chat=chat, get_photo=True)
                     chat_data, text, photo = chat_info['chat_data'], chat_info['text'], chat_info['photo']
-                    button_text = f"{admin.first_name}" if not chat_data else chat_data.title
-                    callback_data = f"0:{role}_set_chat_{chat.id}"
-                    buttons.append([InlineKeyboardButton(text=button_text, callback_data=callback_data)])
+                    buttons.append([InlineKeyboardButton(
+                        text="⚙️ налаштування ⚙️", callback_data=f"0:{role}_set_chat_{chat.id}")])
                     reply_markup = InlineKeyboardMarkup(inline_keyboard=buttons)
                     if photo:
                         await bot.send_photo(
@@ -163,6 +163,31 @@ class AdminMenu:
                     await bot.send_photo(
                         chat_id=user.telegram_id, caption=text, photo=photo, reply_markup=reply_markup)
                     await bot.delete_message(chat_id=user.telegram_id, message_id=message_id)
+
+
+class SetChat:
+    """ Chat settings """
+    async def get_command(self, user: User, chat: Chat, command: str):
+        """ Execute the admin command """
+        if command == 'card':
+            ''' "💳 номер вашої карти 💳" - Запускаємо процес зміни номеру банківської карти '''
+            card_number = chat.card_number
+            text_sms = (f"<b>Номер вашої банківської картки, яка вказана для отримання внесків:</b>\n\n"
+                        f"<code>{card_number}</code>\n\nps: Якщо ви хочете змінити номер картки, натисніть"
+                        f" <b>Tak ✔️</b> у вас з'явиться спеціальна форма, не змінюйте її, "
+                        f"лише додайте інший номер картки.")
+            text_to_insert = '\nnew card number:\n'
+            setting = Settings(telegram_id=user.telegram_id, text_sms=text_sms, text_to_insert=text_to_insert)
+            await setting.admin_commands(photo="bank_card.jpg")
+        elif command == 'users':
+            ''' Повертаємо дані про користувачів чату '''
+            ...
+        elif command == 'holiday':
+            ''' Запускаємо процес організації нового свято/події '''
+        elif command == 'report':
+            ''' Звіт про надходження коштів від користувачів '''
+        elif command == 'change_admin':
+            ''' Запускаємо процес зміни адміна чату '''
 
 
 class Settings:
