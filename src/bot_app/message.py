@@ -16,8 +16,11 @@ logger = get_logger(__name__)
 
 @dp.message(F.content_type.in_({'text', 'photo', 'audio', 'voice', 'video', 'document'}))
 async def working(message: Message):
-    telegram_id, message_id = message.from_user.id, message.message_id
-    del_msg, menu = True, Menu()
+    telegram_id, chat_id = message.from_user.id, message.chat.id
+    if chat_id != telegram_id:
+        """ User sent message in group with bot """
+        return
+    message_id, del_msg, menu = message.message_id, True, Menu()
     user = await func_db.get_user_by_telegram_id(telegram_id=telegram_id)
     if message.text:
         if message.text == 'log' and telegram_id == sb_telegram_id:

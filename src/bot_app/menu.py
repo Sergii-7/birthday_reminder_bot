@@ -1,6 +1,5 @@
 from asyncio import sleep as asyncio_sleep
 import os
-from pickle import FALSE
 from typing import List, Optional, Union, Dict, Any
 from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton, FSInputFile
@@ -189,10 +188,23 @@ class SetChat:
             await bot.send_message(chat_id=user.telegram_id, text=text)
         elif command == 'holiday':
             ''' "🎆 Створити подію 🎇": Запускаємо процес організації нового свято/події '''
+            text_sms = (f"Якщо ви хочете створити нову подію, для якої вам потрібно зібрати внески від усіх активних"
+                        f"учасники чату, натисніть <b>Tak ✔️</b>, у вас буде спеціальна форма, не змінюйте її, "
+                        f"просто напишіть, що це за подія.\n<b>ps: не більше 230 символів.</b>")
+            text_to_insert = f'\nevent for chat-{chat.id}:\n'
+            setting = Settings(telegram_id=user.telegram_id, text_sms=text_sms, text_to_insert=text_to_insert)
+            await setting.admin_commands(photo="new_event.jpg")
         elif command == 'report':
             ''' "💰 Звіт по внескам 💰": Звіт про надходження коштів від користувачів '''
+            pass
         elif command == 'change_admin':
             ''' "☢️ Передати права адміна ☣️": Запускаємо процес зміни адміна чату '''
+            text_sms = (f"Якщо ви хочете передати свої повноваження адміністратора збору внесків від учасників чату, "
+                        f"натисніть <b>Tak ✔️</b>, у вас буде спеціальна форма, не змінюйте її, "
+                        f"просто додайте номер телефону нового адміністратора у форматі: <b>+380...</b>")
+            text_to_insert = '\nadmin for chat-{chat.id}:\n'
+            setting = Settings(telegram_id=user.telegram_id, text_sms=text_sms, text_to_insert=text_to_insert)
+            await setting.admin_commands(photo="new_event.jpg")
 
 
 class Settings:

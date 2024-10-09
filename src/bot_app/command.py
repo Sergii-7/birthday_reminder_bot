@@ -22,7 +22,7 @@ async def start_command_handler(message: Message):
     if chat_id != telegram_id:
         """ User push '/start' command in group with bot """
         try:
-            await message.reply(text=f"Напиши мені особисто.\n{bot_user_name}")
+            await message.reply(text=f"Напиши мені особисто:\n{bot_user_name}")
         except Exception as e:
             logger.error(e)
     else:
