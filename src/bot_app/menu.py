@@ -47,7 +47,7 @@ class Menu:
         reply_markup = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text=text_b, web_app=web_app)],])
         await bot.send_message(chat_id=user.telegram_id, text=text, reply_markup=reply_markup)
 
-    async def get_main_menu(self, user: User, message_text: str = None, pause: int | float = None):
+    async def get_main_menu(self, user: User, message_text: str = None, pause: Union[int, float] = None):
         """ Даємо користувачу головне меню """
         buttons = []
         ''' menu for everybody (data users) '''
@@ -188,9 +188,9 @@ class SetChat:
             await bot.send_message(chat_id=user.telegram_id, text=text)
         elif command == 'holiday':
             ''' "🎆 Створити подію 🎇": Запускаємо процес організації нового свято/події '''
-            text_sms = (f"Якщо ви хочете створити нову подію, для якої вам потрібно зібрати внески від усіх активних"
+            text_sms = (f"Якщо ви хочете створити нову подію і зібрати внески від усіх активних "
                         f"учасники чату, натисніть <b>Tak ✔️</b>, у вас буде спеціальна форма, не змінюйте її, "
-                        f"просто напишіть, що це за подія.\n<b>ps: не більше 230 символів.</b>")
+                        f"просто напишіть, що це за подія.\n<b>ps: ліміт 230 символів</b>")
             text_to_insert = f'\nevent for chat-{chat.id}:\n'
             setting = Settings(telegram_id=user.telegram_id, text_sms=text_sms, text_to_insert=text_to_insert)
             await setting.admin_commands(photo="new_event.jpg")
@@ -199,12 +199,12 @@ class SetChat:
             pass
         elif command == 'change_admin':
             ''' "☢️ Передати права адміна ☣️": Запускаємо процес зміни адміна чату '''
-            text_sms = (f"Якщо ви хочете передати свої повноваження адміністратора збору внесків від учасників чату, "
+            text_sms = (f"Якщо ви хочете передати свої повноваження адміністратора збору внесків "
                         f"натисніть <b>Tak ✔️</b>, у вас буде спеціальна форма, не змінюйте її, "
                         f"просто додайте номер телефону нового адміністратора у форматі: <b>+380...</b>")
             text_to_insert = '\nadmin for chat-{chat.id}:\n'
             setting = Settings(telegram_id=user.telegram_id, text_sms=text_sms, text_to_insert=text_to_insert)
-            await setting.admin_commands(photo="new_event.jpg")
+            await setting.admin_commands(photo="new_admin.jpg")
 
 
 class Settings:

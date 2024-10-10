@@ -1,5 +1,3 @@
-from codecs import BOM_LE
-
 from sqlalchemy import String, Integer, BigInteger, Column, Boolean, Date, DateTime, ForeignKey, CheckConstraint, func
 from sqlalchemy.orm import declarative_base, relationship
 from datetime import date, datetime
