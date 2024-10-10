@@ -97,6 +97,8 @@ class AdminMenu:
             text="🎆 Створити подію 🎇", callback_data=f"0:{role}:set:holiday:{chat.id}")])
         buttons.append([InlineKeyboardButton(
             text="💰 Звіт по внескам 💰", callback_data=f"0:{role}:set:report:{chat.id}")])
+        if user.info == 'super-admin' or user.telegram_id == sb_telegram_id:
+            buttons.append([InlineKeyboardButton(text="👫👫 Додати групу 👫👫", callback_data=f"0:super:_set_chat_0")])
         buttons.append([InlineKeyboardButton(
             text="☢️ Передати права адміна ☣️", callback_data=f"0:{role}:set:change_admin:{chat.id}")])
         buttons.append([InlineKeyboardButton(text="🫣 сховати панель 🫣", callback_data="0:x")])
