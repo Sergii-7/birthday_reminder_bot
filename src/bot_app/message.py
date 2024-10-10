@@ -7,7 +7,7 @@ from src.service.service_tools import check_card_number
 from src.bot_app.bot_service import check_user_in_group
 from src.bot_app.create_bot import bot, dp
 from src.sql import func_db
-from src.bot_app.dir_menu.menu import Menu
+from src.bot_app.dir_menu.menu import Menu, AdminMenu
 from config import file_log_fast_api, file_log_tel_bot, my_banc_card
 from src.service.loggers.py_logger_tel_bot import get_logger
 
@@ -102,9 +102,10 @@ async def working(message: Message):
                         data = data.replace("event for chat-", "", 1)
                         try:
                             chat_doc_id = int(data[0].split(":")[0])
-                            event = "".join(data[2:])
-                            print(chat_doc_id, event)
-                            await message.reply(text=f"{chat_doc_id}\n{event}")
+                            event = "".join(data[2:]).strip()
+                            chat = await func_db.get_chat_with_user(pk=chat_doc_id)
+                            if await check_user_in_group(telegram_id=telegram_id, chat_id=chat.chat_id):
+                                await message.reply(text=f"{chat_doc_id}\n{event}")
 
                         except Exception as e:
                             await message.reply(text=f"{error_msg}:\n{e}")
@@ -118,7 +119,7 @@ async def working(message: Message):
                             data = data.replace("admin for chat-", "", 1)
                             try:
                                 chat_doc_id = int(data[0].split(":")[0])
-                                phone_number = "".join(data[2:])
+                                phone_number = "".join(data[2:]).strip()
                                 await message.reply(text=f"{chat_doc_id}\n{phone_number}")
                             except Exception as e:
                                 await message.reply(text=f"{error_msg}:\n{e}")
