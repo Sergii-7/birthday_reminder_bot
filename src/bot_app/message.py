@@ -92,8 +92,9 @@ async def working(message: Message):
                             await message.reply(text=f"{error_msg}:\n{e}")
 
                 elif "event for chat-:" in data:
+                    await message.reply(text=data)
                     """ Add new event for chat """
-                    if user.info == "admin" or telegram_id == sb_telegram_id:
+                    if user.info in ["admin", "super-admin"] or telegram_id == sb_telegram_id:
                         data = data.split("event for chat-")
                         del_msg = False
                         try:

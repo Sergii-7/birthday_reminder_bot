@@ -42,9 +42,7 @@ async def callback_run(callback_query: CallbackQuery):
             if user.status in ["super-admin", "admin"] or telegram_id == sb_telegram_id:
                 admin_menu = AdminMenu()
                 role = "super" if user.status == "super-admin" or telegram_id == sb_telegram_id else "admin"
-                # data = data.replace("admin", "", 1).replace("super", "")
                 data = data[5:]
-                await callback_query.answer(text=data)
                 if data == ":m" or "_set_chat_" in data:
                     type_menu = data
                     await admin_menu.get_chats_list(user=user, message_id=message_id, type_menu=type_menu, role=role)

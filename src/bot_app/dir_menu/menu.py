@@ -172,7 +172,11 @@ class SetChat:
             await setting.admin_commands(photo="new_event.jpg")
         elif command == 'report':
             ''' "💰 Звіт по внескам 💰": Звіт про надходження коштів від користувачів '''
+
+            """ IN DEVELOPMENT """
+
             pass
+
         elif command == 'change_admin':
             ''' "☢️ Передати права адміна ☣️": Запускаємо процес зміни адміна чату '''
             text_sms = (f"Якщо ви хочете передати свої повноваження адміністратора збору внесків "
@@ -192,8 +196,7 @@ class Settings:
 
     async def admin_commands(self, photo: str = None):
         """
-        :param photo: (str) example: 'admin_panel.jpg'
-        :return: None
+        :param photo: Optional[str]: example: 'admin_panel.jpg'
         """
         reply_markup = InlineKeyboardMarkup(
             inline_keyboard=[buttons_for_admin_command(text_to_insert=self.text_to_insert)])
