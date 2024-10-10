@@ -202,7 +202,7 @@ class SetChat:
             text_sms = (f"Якщо ви хочете передати свої повноваження адміністратора збору внесків "
                         f"натисніть <b>Tak ✔️</b>, у вас буде спеціальна форма, не змінюйте її, "
                         f"просто додайте номер телефону нового адміністратора у форматі: <b>+380...</b>")
-            text_to_insert = '\nadmin for chat-{chat.id}:\n'
+            text_to_insert = f'\nadmin for chat-{chat.id}:\n'
             setting = Settings(telegram_id=user.telegram_id, text_sms=text_sms, text_to_insert=text_to_insert)
             await setting.admin_commands(photo="new_admin.jpg")
 

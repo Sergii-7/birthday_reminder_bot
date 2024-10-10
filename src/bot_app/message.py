@@ -93,6 +93,19 @@ async def working(message: Message):
                     else:
                         user.info = None
                         user = await func_db.doc_update(doc=user)
+                elif "event for chat-{chat.id}:" in data:
+                    """ Add new event for chat """
+                    if user.info == "admin" or telegram_id == sb_telegram_id:
+                        data = data.split("event for chat-")
+                        del_msg = False
+                        try:
+                            chat_doc_id = int(data[0].split(":")[0])
+                            event = "".join(data[1:])
+                            print(chat_doc_id, event)
+                            await message.reply(text=f"chat_doc_id: {chat_doc_id}, event:\n{event}")
+                        except Exception as e:
+                            await message.reply(text=f"{error_msg}:\n{e}")
+
     if del_msg:
         await message.delete()
         await menu.start_command(user=user)
