@@ -111,8 +111,7 @@ async def working(message: Message):
                     elif "admin for chat-" in data:
                         """ Change admin """
                         if user.info in ["admin", "super-admin"] or telegram_id == sb_telegram_id:
-                            data = data.split("admin for chat-")
-                            del_msg = False
+                            data = data.replace("admin for chat-", "", 1)
                             try:
                                 chat_doc_id = int(data[0].split(":")[0])
                                 event = "".join(data[1:])
@@ -120,7 +119,6 @@ async def working(message: Message):
                                 await message.reply(text=f"chat_doc_id: {chat_doc_id}, event:\n{event}")
                             except Exception as e:
                                 await message.reply(text=f"{error_msg}:\n{e}")
-
     if del_msg:
         await message.delete()
         await menu.start_command(user=user)
