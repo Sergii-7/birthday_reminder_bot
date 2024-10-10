@@ -170,7 +170,8 @@ class SetChat:
             IN DEVELOPMENT 
             
             """
-            await bot.send_message(chat_id=user.telegram_id, text="Ця функція знаходиться на стадії розробки 🤷")
+            await bot.send_message(
+                chat_id=user.telegram_id, text="Функція <b>Звіт по внескам</b> знаходиться на стадії розробки 🤷")
 
         elif command == 'change_admin':
             ''' "☢️ Передати права адміна ☣️": Запускаємо процес зміни адміна чату '''
@@ -193,8 +194,6 @@ class SetEvent:
             text_to_insert = f'\nset amount event-{holiday.id}:\n'
             setting = Settings(telegram_id=user.telegram_id, text_sms=text_sms, text_to_insert=text_to_insert)
             await setting.admin_commands(photo="new_event.jpg")
-
-
 
 
 class Settings:

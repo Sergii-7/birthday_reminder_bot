@@ -59,6 +59,6 @@ def buttons_for_event_settings(role: str, holiday_pk: int)  -> List[List[InlineK
 def buttons_for_admin_command(text_to_insert: str) -> List[InlineKeyboardButton]:
     """ buttons for 'class Settings().admin_commands()' """
     b_yes = InlineKeyboardButton(text="Tak ✔️", switch_inline_query_current_chat=text_to_insert)
-    b_not = InlineKeyboardButton(text="Hi 🙅", callback_data="0:m")
+    b_not = InlineKeyboardButton(text="Hi 🙅", callback_data="0:x")
     return [b_yes, b_not]
 
