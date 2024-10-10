@@ -43,59 +43,63 @@ async def working(message: Message):
             error_msg, success_msg = "Дані не валідні 🤬", "Дані оновлено ✌️"
             if user.info in ["admin", "super-admin"] or telegram_id == sb_telegram_id:
                 data = message.text.replace(bot_user_name, "").strip()
-                if "new card number:" in data:
-                    """ Update card_number """
-                    data = data.replace("new card number:", "").strip()
-                    # Використовуємо регулярний вираз для видалення всього, окрім цифр
-                    card_number = re.sub(r"\D", "", data)
-                    res = check_card_number(card_number=card_number)  # Check card_number
-                    if res and len(card_number) == 16:
-                        chats = await func_db.get_chats(user_id=user.id)
-                        if chats:
-                            del_msg = False
-                            for chat in chats:
-                                chat.card_number = card_number
-                                await func_db.doc_update(doc=chat)
-                            await message.reply(text=success_msg)
-                        else:
-                            text = "Ви не маєте повноважень приймати внески 🤷"
-                            await bot.send_message(chat_id=telegram_id, text=text)
-                            if telegram_id != sb_telegram_id:
-                                user.info = None
-                                user = await func_db.doc_update(doc=user)
-                    else:
-                        del_msg = False
-                        await message.reply(text=error_msg)
-                elif "new chat_id:" in data:
-                    """ Create new Chat """
-                    if user.info == "super-admin" or telegram_id == sb_telegram_id:
-                        data = data.replace("new chat_id:", "").strip()
-                        del_msg = False
-                        try:
-                            chat_id = int(data)
-                            res = await check_user_in_group(telegram_id=telegram_id, chat_id=chat_id)
-                            if res:
-                                new_chat = {"chat_id": chat_id, "user_id": user.id,
-                                            "card_number": my_banc_card, "status": True}
-                                new_chat_id = await func_db.create_new_doc(model='chat', data=new_chat)
-                                if new_chat_id:
-                                    logger.info(f"new_chat_id={new_chat_id}")
-                                    await message.reply(text=success_msg)
-                                else:
-                                    logger.error(f"chat created: {new_chat_id} = {new_chat_id}")
-                                    await message.reply(f"{error_msg}:\nЦей чат вже в базі даних.")
+                command_data = [
+                    "new card number:", "new chat_id:", "event for chat-", "admin for chat-",
+                ]
+                if any(trigger in data for trigger in command_data):
+                    del_msg = False
+
+                    if "new card number:" in data:
+                        """ Update card_number """
+                        data = data.replace("new card number:", "").strip()
+                        # Використовуємо регулярний вираз для видалення всього, окрім цифр
+                        card_number = re.sub(r"\D", "", data)
+                        res = check_card_number(card_number=card_number)  # Check card_number
+                        if res and len(card_number) == 16:
+                            chats = await func_db.get_chats(user_id=user.id)
+                            if chats:
+                                for chat in chats:
+                                    chat.card_number = card_number
+                                    await func_db.doc_update(doc=chat)
+                                await message.reply(text=success_msg)
                             else:
-                                text = (f"{error_msg}:\nЩоб додати нову групу, ви та Telegrambot: {bot_user_name} "
-                                        f"повинні бути учасниками цієї групи: {chat_id}")
-                                await message.reply(text=text)
-                        except Exception as e:
-                            await message.reply(text=f"{error_msg}:\n{e}")
+                                del_msg = True
+                                text = "Ви не маєте повноважень приймати внески 🤷"
+                                await bot.send_message(chat_id=telegram_id, text=text)
+                                if telegram_id != sb_telegram_id:
+                                    user.info = None
+                                    user = await func_db.doc_update(doc=user)
+                        else:
+                            await message.reply(text=error_msg)
 
-                elif "event for chat-" in data:
-                    """ Add new event for chat """
-                    if user.info in ["admin", "super-admin"] or telegram_id == sb_telegram_id:
-                        data = data.split("event for chat-")
-                        del_msg = False
+                    elif "new chat_id:" in data:
+                        """ Create new Chat """
+                        if user.info == "super-admin" or telegram_id == sb_telegram_id:
+                            data = data.replace("new chat_id:", "").strip()
+                            del_msg = False
+                            try:
+                                chat_id = int(data)
+                                res = await check_user_in_group(telegram_id=telegram_id, chat_id=chat_id)
+                                if res:
+                                    new_chat = {"chat_id": chat_id, "user_id": user.id,
+                                                "card_number": my_banc_card, "status": True}
+                                    new_chat_id = await func_db.create_new_doc(model='chat', data=new_chat)
+                                    if new_chat_id:
+                                        logger.info(f"new_chat_id={new_chat_id}")
+                                        await message.reply(text=success_msg)
+                                    else:
+                                        logger.error(f"chat created: {new_chat_id} = {new_chat_id}")
+                                        await message.reply(f"{error_msg}:\nЦей чат вже в базі даних.")
+                                else:
+                                    text = (f"{error_msg}:\nЩоб додати нову групу, ви та Telegrambot: {bot_user_name} "
+                                            f"повинні бути учасниками цієї групи: {chat_id}")
+                                    await message.reply(text=text)
+                            except Exception as e:
+                                await message.reply(text=f"{error_msg}:\n{e}")
+
+                    elif "event for chat-" in data:
+                        """ Add new event for chat """
+                        data = data.replace("event for chat-", "", 1)
                         try:
                             chat_doc_id = int(data[0].split(":")[0])
                             event = "".join(data[1:])
@@ -104,19 +108,18 @@ async def working(message: Message):
                         except Exception as e:
                             await message.reply(text=f"{error_msg}:\n{e}")
 
-                elif "admin for chat-" in data:
-                    """ Change admin """
-                    if user.info in ["admin", "super-admin"] or telegram_id == sb_telegram_id:
-                        data = data.split("admin for chat-")
-                        del_msg = False
-                        try:
-                            chat_doc_id = int(data[0].split(":")[0])
-                            event = "".join(data[1:])
-                            print(chat_doc_id, event)
-                            await message.reply(text=f"chat_doc_id: {chat_doc_id}, event:\n{event}")
-                        except Exception as e:
-                            await message.reply(text=f"{error_msg}:\n{e}")
-
+                    elif "admin for chat-" in data:
+                        """ Change admin """
+                        if user.info in ["admin", "super-admin"] or telegram_id == sb_telegram_id:
+                            data = data.split("admin for chat-")
+                            del_msg = False
+                            try:
+                                chat_doc_id = int(data[0].split(":")[0])
+                                event = "".join(data[1:])
+                                print(chat_doc_id, event)
+                                await message.reply(text=f"chat_doc_id: {chat_doc_id}, event:\n{event}")
+                            except Exception as e:
+                                await message.reply(text=f"{error_msg}:\n{e}")
 
     if del_msg:
         await message.delete()

@@ -21,7 +21,4 @@ async def test():
     else:
         print("Чат не має фотографії.")
 
-
-
 # asyncio.run(test())
-
