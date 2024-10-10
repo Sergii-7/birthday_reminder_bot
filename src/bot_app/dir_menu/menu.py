@@ -16,7 +16,6 @@ logger = get_logger(__name__)
 
 class Menu:
     """ Menu buttons """
-
     async def start_command(self, user: User, message_text: str = None):
         """ Перевіряємо користувача та або даємо йому головне меню або запитуємо у нього додаткові дані """
         if user.phone_number:
