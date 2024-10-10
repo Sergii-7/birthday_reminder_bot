@@ -7,7 +7,8 @@ from config import media_file_path, get_chat_id_bot, sb_telegram_id
 from src.bot_app.create_bot import bot
 from src.sql.models import User, Chat
 from src.bot_app.dir_menu.buttons_for_menu import (buttons_for_user, b_add_group, b_remove_panel, b_my_groups,
-                                                   b_contact, b_web_app_birthday, buttons_for_chat_settings)
+                                                   b_contact, b_web_app_birthday, buttons_for_chat_settings,
+                                                   buttons_for_admin_command)
 from src.bot_app.bot_service import get_chat_info, get_user_info
 from src.sql import func_db
 from src.service.loggers.py_logger_tel_bot import get_logger
@@ -198,9 +199,8 @@ class Settings:
         :param photo: (str) example: 'admin_panel.jpg'
         :return: None
         """
-        b_yes = InlineKeyboardButton(text="Tak ✔️", switch_inline_query_current_chat=self.text_to_insert)
-        b_not = InlineKeyboardButton(text="Hi 🙅", callback_data="0:m")
-        reply_markup = InlineKeyboardMarkup(inline_keyboard=[[b_yes, b_not]])
+        reply_markup = InlineKeyboardMarkup(
+            inline_keyboard=[buttons_for_admin_command(text_to_insert=self.text_to_insert)])
         if photo:
             try:
                 photo = FSInputFile(path=f"{media_file_path}{photo}")
