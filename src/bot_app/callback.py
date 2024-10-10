@@ -1,5 +1,5 @@
 from aiogram.types import CallbackQuery
-from config import sb_telegram_id
+from config import sb_telegram_id, bot_link
 from src.bot_app.create_bot import dp
 from src.bot_app.dir_menu.menu import Menu, AdminMenu, SetChat
 from src.sql import func_db
@@ -52,9 +52,10 @@ async def callback_run(callback_query: CallbackQuery):
                     command, chat_pk = data[0], int(data[-1])
                     chat = await func_db.get_chat_with_user(pk=chat_pk)
                     if chat and chat.status:
+                        await callback_query.answer(text=command)
                         await SetChat().get_command(user=user, chat=chat, command=command)
                     else:
-                        text = "🤬 Ви або Телеграм бот не мають доступу до цієї групи!"
+                        text = "🤬 Ви або Телеграм-бот не мають доступу до цієї групи!"
                         await callback_query.answer(text=text, show_alert=True)
                         await callback_query.message.delete()
             else:

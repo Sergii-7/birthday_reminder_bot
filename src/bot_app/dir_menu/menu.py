@@ -6,8 +6,8 @@ from aiogram.types import ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeybo
 from config import media_file_path, get_chat_id_bot, sb_telegram_id
 from src.bot_app.create_bot import bot
 from src.sql.models import User, Chat
-from src.bot_app.dir_menu.buttons_for_menu import (b1, b2, b3, b_add_group, b_remove_panel, b_my_groups, b_contact,
-                                                   b_web_app_birthday)
+from src.bot_app.dir_menu.buttons_for_menu import (buttons_for_user, b_add_group, b_remove_panel, b_my_groups,
+                                                   b_contact, b_web_app_birthday, buttons_for_chat_settings)
 from src.bot_app.bot_service import get_chat_info, get_user_info
 from src.sql import func_db
 from src.service.loggers.py_logger_tel_bot import get_logger
@@ -48,7 +48,7 @@ class Menu:
     async def get_main_menu(self, user: User, message_text: str = None, pause: Union[int, float] = None):
         """ Даємо користувачу головне меню """
         ''' menu for everybody (data users) '''
-        buttons = [b for b in [b1, b2, b3]]
+        buttons = buttons_for_user()
         if user.info in ['admin', 'super-admin']:
             buttons.append(b_my_groups(role=user.info))
             if user.info == 'super-admin' or user.telegram_id == sb_telegram_id:
@@ -130,26 +130,12 @@ class AdminMenu:
 
     async def edit_sms_with_chat(self, user: User, chat_pk: int, role: str, message_id: int):
         """ Get chat settings """
-        buttons = list()
         chat = await func_db.get_chat_with_user(pk=chat_pk)
         admin = chat.user
         chat_info = await get_chat_info(admin=admin, chat=chat, get_photo=False)
         chat_data, text = chat_info['chat_data'], chat_info['text']
         """ Додати панель налаштувань якщо статус активний і фото """
-        buttons.append([InlineKeyboardButton(
-            text="💳 Номер вашої карти 💳", callback_data=f"0:{role}:set:card:{chat.id}")])
-        buttons.append([InlineKeyboardButton(
-            text="🧔🏼 Користувачі чатів 👨‍🦱", callback_data=f"0:{role}:set:users:{chat.id}")])
-        buttons.append([InlineKeyboardButton(
-            text="🎆 Створити подію 🎇", callback_data=f"0:{role}:set:holiday:{chat.id}")])
-        buttons.append([InlineKeyboardButton(
-            text="💰 Звіт по внескам 💰", callback_data=f"0:{role}:set:report:{chat.id}")])
-        if user.info == 'super-admin' or user.telegram_id == sb_telegram_id:
-            buttons.append(b_add_group)
-        buttons.append([InlineKeyboardButton(
-            text="☢️ Передати права адміна ☣️", callback_data=f"0:{role}:set:change_admin:{chat.id}")])
-        buttons.append([InlineKeyboardButton(text="🫣 сховати панель 🫣", callback_data="0:x")])
-        reply_markup = InlineKeyboardMarkup(inline_keyboard=buttons)
+        reply_markup = InlineKeyboardMarkup(inline_keyboard=buttons_for_chat_settings(role=role, chat_doc_id=chat.id))
         await bot.send_message(chat_id=user.telegram_id, text=text, reply_markup=reply_markup)
         await bot.delete_message(chat_id=user.telegram_id, message_id=message_id)
 
@@ -212,9 +198,9 @@ class Settings:
         :param photo: (str) example: 'admin_panel.jpg'
         :return: None
         """
-        b1 = InlineKeyboardButton(text="Tak ✔️", switch_inline_query_current_chat=self.text_to_insert)
-        b2 = InlineKeyboardButton(text="Hi 🙅", callback_data="0:m")
-        reply_markup = InlineKeyboardMarkup(inline_keyboard=[[b1, b2]])
+        b_yes = InlineKeyboardButton(text="Tak ✔️", switch_inline_query_current_chat=self.text_to_insert)
+        b_not = InlineKeyboardButton(text="Hi 🙅", callback_data="0:m")
+        reply_markup = InlineKeyboardMarkup(inline_keyboard=[[b_yes, b_not]])
         if photo:
             try:
                 photo = FSInputFile(path=f"{media_file_path}{photo}")
