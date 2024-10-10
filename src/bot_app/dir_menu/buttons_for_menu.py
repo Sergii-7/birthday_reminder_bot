@@ -45,10 +45,13 @@ def buttons_for_chat_settings(role: str, chat_doc_id: int) -> List[List[InlineKe
     return buttons
 
 
+def b_chat_settings(role: str, chat_doc_id: int) -> List[InlineKeyboardButton]:
+    return [InlineKeyboardButton(text="⚙️ налаштування ⚙️", callback_data=f"0:{role}_set_chat_{chat_doc_id}")]
+
+
 def buttons_for_admin_command(text_to_insert: str) -> List[InlineKeyboardButton]:
     """ buttons for 'class Settings().admin_commands()' """
     b_yes = InlineKeyboardButton(text="Tak ✔️", switch_inline_query_current_chat=text_to_insert)
     b_not = InlineKeyboardButton(text="Hi 🙅", callback_data="0:m")
     return [b_yes, b_not]
-
 

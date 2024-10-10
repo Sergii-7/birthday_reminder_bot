@@ -47,7 +47,7 @@ async def callback_run(callback_query: CallbackQuery):
                     type_menu = data
                     await admin_menu.get_chats_list(user=user, message_id=message_id, type_menu=type_menu, role=role)
                 elif ":set:" in data:
-                    """ Налаштуваня чату """
+                    """ Налаштування чату """
                     data = data.replace(":set:", "").split(":")
                     command, chat_pk = data[0], int(data[-1])
                     chat = await func_db.get_chat_with_user(pk=chat_pk)

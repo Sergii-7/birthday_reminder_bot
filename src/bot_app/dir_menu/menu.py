@@ -2,13 +2,11 @@ from asyncio import sleep as asyncio_sleep
 import os
 from typing import Union
 from aiogram.exceptions import TelegramBadRequest
-from aiogram.types import ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton, FSInputFile
+from aiogram.types import ReplyKeyboardMarkup, InlineKeyboardMarkup, FSInputFile
 from config import media_file_path, get_chat_id_bot, sb_telegram_id
 from src.bot_app.create_bot import bot
 from src.sql.models import User, Chat
-from src.bot_app.dir_menu.buttons_for_menu import (buttons_for_user, b_add_group, b_remove_panel, b_my_groups,
-                                                   b_contact, b_web_app_birthday, buttons_for_chat_settings,
-                                                   buttons_for_admin_command)
+from src.bot_app.dir_menu.buttons_for_menu import *
 from src.bot_app.bot_service import get_chat_info, get_user_info
 from src.sql import func_db
 from src.service.loggers.py_logger_tel_bot import get_logger
@@ -98,8 +96,7 @@ class AdminMenu:
                     admin = await func_db.get_user_by_id(user_id=chat.user_id)
                     chat_info = await get_chat_info(admin=admin, chat=chat, get_photo=True)
                     chat_data, text, photo = chat_info['chat_data'], chat_info['text'], chat_info['photo']
-                    buttons.append([InlineKeyboardButton(
-                        text="⚙️ налаштування ⚙️", callback_data=f"0:{role}_set_chat_{chat.id}")])
+                    buttons.append(b_chat_settings(role=role, chat_doc_id=chat.id))
                     reply_markup = InlineKeyboardMarkup(inline_keyboard=buttons)
                     if photo:
                         await bot.send_photo(
