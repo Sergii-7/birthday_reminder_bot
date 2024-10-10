@@ -2,7 +2,7 @@ import os
 import re
 from aiogram import F
 from aiogram.types import Message, FSInputFile, InputMediaDocument
-from src.service.service_tools import check_card_number, correct_time
+from src.service.service_tools import check_card_number, validate_phone
 from src.bot_app.bot_service import check_user_in_group
 from src.bot_app.create_bot import bot, dp
 from src.sql import func_db
@@ -96,20 +96,18 @@ async def working(message: Message):
 
                     elif "admin for chat-" in data:
                         """ Change admin """
-                        if user.info in ["admin", "super-admin"] or telegram_id == sb_telegram_id:
-                            data = data.replace("admin for chat-", "", 1)
-                            try:
-                                chat_doc_id = int(data[0].split(":")[0])
-                                phone_number = "".join(data[2:]).strip()
+                        data = data.replace("admin for chat-", "", 1)
+                        try:
+                            chat_doc_id = int(data[0].split(":")[0])
+                            phone_number = "".join(data[2:]).strip()
+                            phone_number = validate_phone(phone_number=phone_number)
+                            if phone_number:
                                 await message.reply(text=f"{chat_doc_id}\n{phone_number}")
-                            except Exception as e:
-                                await message.reply(text=f"{error_msg}:\n{e}")
+                            else:
+                                raise ValueError("phone_number is not valid")
+                        except Exception as e:
+                            await message.reply(text=f"{error_msg}:\n{e}")
 
-                    elif "set title for event-" in data:
-                        ...
-
-                    elif "set amount for event-" in data:
-                        ...
     if del_msg:
         await message.delete()
         await menu.start_command(user=user)

@@ -29,6 +29,7 @@ MarkupSafe==2.1.5
 multidict==6.1.0
 openai==1.51.0
 packaging==24.1
+phonenumbers==8.13.47
 pillow==10.4.0
 psycopg2-binary==2.9.9
 pydantic==2.9.2

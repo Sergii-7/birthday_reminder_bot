@@ -1,6 +1,7 @@
 from datetime import datetime
 import pytz, secrets, string, random
 from stdnum.luhn import is_valid
+import phonenumbers
 
 
 def correct_time(timezone_: str = 'Europe/Kyiv') -> datetime:
@@ -23,3 +24,15 @@ def check_card_number(card_number: str) -> bool:
         return True
     else:
         return False
+
+
+def validate_phone(phone_number: str) -> str | None:
+    """ Перевіряємо валідність номера телефону. """
+    try:
+        parsed_number = phonenumbers.parse(number=phone_number, region=None)
+        formatted_number = phonenumbers.format_number(parsed_number, phonenumbers.PhoneNumberFormat.E164)
+        if phonenumbers.is_valid_number(parsed_number):
+            return formatted_number
+    except:
+        pass
+    return
