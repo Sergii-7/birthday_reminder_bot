@@ -1,5 +1,5 @@
-from asyncio import sleep as asyncio_sleep
 import os
+from asyncio import sleep as asyncio_sleep
 from typing import Union
 from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import ReplyKeyboardMarkup, InlineKeyboardMarkup, FSInputFile
@@ -166,9 +166,11 @@ class SetChat:
         elif command == 'report':
             ''' "💰 Звіт по внескам 💰": Звіт про надходження коштів від користувачів '''
 
-            """ IN DEVELOPMENT """
-
-            pass
+            """ 
+            IN DEVELOPMENT 
+            
+            """
+            await bot.send_message(chat_id=user.telegram_id, text="Ця функція знаходиться на стадії розробки 🤷")
 
         elif command == 'change_admin':
             ''' "☢️ Передати права адміна ☣️": Запускаємо процес зміни адміна чату '''

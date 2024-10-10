@@ -1,5 +1,4 @@
-import os
-import re
+import os, re
 from aiogram import F
 from aiogram.types import Message, FSInputFile, InputMediaDocument
 from src.service.service_tools import check_card_number

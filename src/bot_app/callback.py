@@ -33,10 +33,20 @@ async def callback_run(callback_query: CallbackQuery):
                 await menu.request_birthday(user=user)
             elif data == '2':
                 ''' Calendar with holidays '''
-                ...
+                """
+                IN DEVELOPMENT
+                
+                """
+                await callback_query.answer(text="Ця функція знаходиться на стадії розробки 🤷", show_alert=True)
+
             elif data == '3':
                 ''' Make payment '''
-                ...
+                """
+                IN DEVELOPMENT
+               
+                """
+                await callback_query.answer(text="Ця функція знаходиться на стадії розробки 🤷", show_alert=True)
+
         elif data.startswith("admin") or data.startswith("super"):
             ''' callback from admin or super-admin '''
             if user.status in ["super-admin", "admin"] or telegram_id == sb_telegram_id:

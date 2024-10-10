@@ -1,4 +1,4 @@
-import asyncio
+from asyncio import sleep
 from datetime import datetime
 from typing import Optional, Union, List
 from aiogram.types import Message
@@ -27,7 +27,7 @@ async def get_doc_by_id(model: str, doc_id: int) -> Optional[Union[User, UserLog
                     return doc
             except Exception as e:
                 logger.error(f"Attempt {n+1}: {e}")
-                await asyncio.sleep(0.5)
+                await sleep(0.5)
     else:
         logger.error(f"Invalid model name provided: {model}")
     return None
@@ -61,6 +61,7 @@ async def check_user(message: Message) -> Optional[User]:
                     return user
         except Exception as e:
             logger.error(f"attempt={n + 1} error: {e}")
+            await sleep(0.5)
     return None
 
 
@@ -77,6 +78,7 @@ async def get_user_by_telegram_id(telegram_id: int) -> Optional[User]:
                 return user
         except Exception as e:
             logger.error(f"attempt={n + 1} error: {e}")
+            await sleep(0.5)
     return None
 
 
@@ -93,6 +95,7 @@ async def get_user_by_id(user_id: int) -> Optional[User]:
                 return user
         except Exception as e:
             logger.error(f"attempt={n + 1} error: {e}")
+            await sleep(0.5)
     return None
 
 
@@ -109,6 +112,7 @@ async def get_user_by_phone(phone_number: str) -> Optional[User]:
                 return user
         except Exception as e:
             logger.error(f"attempt={n + 1} error: {e}")
+            await sleep(0.5)
     return None
 
 
@@ -130,6 +134,7 @@ async def get_user_by_login(telegram_id: int, password: str) -> Optional[Union[U
                     return None
         except Exception as e:
             logger.error(f"attempt={n + 1} error: {e}")
+            await sleep(0.5)
     return None
 
 
@@ -147,6 +152,7 @@ async def get_login_user_by_telegram_id(telegram_id: int) -> Optional[UserLogin]
                     return None
         except Exception as e:
             logger.error(f"attempt={n + 1} error: {e}")
+            await sleep(0.5)
     return None
 
 
@@ -169,6 +175,7 @@ async def update_phone_number(telegram_id: int, phone_number: str) -> Optional[U
                         return None
         except Exception as e:
             logger.error(f"attempt={n + 1} error: {e}")
+            await sleep(0.5)
     return None
 
 
@@ -186,6 +193,7 @@ async def doc_update(
                         return doc
             except Exception as e:
                 logger.error(f'Attempt {n + 1} failed: {e}')
+                await sleep(0.5)
     return False
 
 
@@ -211,6 +219,7 @@ async def get_chat_with_user(pk: int = None, chat_id: int = None) -> Optional[Ch
                 return chat
         except Exception as e:
             logger.error(f"attempt={n + 1} error: {e}")
+            await sleep(0.5)
     return None
 
 
@@ -233,6 +242,7 @@ async def get_chats(user_id: int = None, limit: int = None) -> List[Chat]:
                 return chats
         except Exception as e:
             logger.error(f'Attempt {n + 1} failed: {e}')
+            await sleep(0.5)
     return []
 
 
@@ -249,6 +259,7 @@ async def get_user_chat(chat_id: int, user_telegram_id: int) -> Optional[UserCha
                 return result.scalar_one_or_none()
         except Exception as err:
             logger.error(f"attempt={n+1}: {err}")
+            await sleep(0.5)
     return None
 
 
@@ -263,6 +274,7 @@ async def get_all_users_from_chat(chat_id: int) -> List[UserChat]:
                 return result.scalars().all()
         except Exception as err:
             logger.error(f"attempt={n+1}: {err}")
+            await sleep(0.5)
     return []
 
 
@@ -281,6 +293,7 @@ async def get_holiday_with_chat(holiday_id: int) -> Optional[Holiday]:
                 return holiday
         except Exception as e:
             logger.error(f"attempt={n + 1} error: {e}")
+            await sleep(0.5)
     return None
 
 
