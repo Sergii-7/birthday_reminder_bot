@@ -44,7 +44,7 @@ async def working(message: Message):
             if user.info in ["admin", "super-admin"] or telegram_id == sb_telegram_id:
                 data = message.text.replace(bot_user_name, "").strip()
                 command_data = [
-                    "new card number:", "new chat_id:", "event for chat-", "admin for chat-",
+                    "new card number:", "new chat_id:", "event for chat-", "admin for chat-", "set amount for event-"
                 ]
                 if any(trigger in data for trigger in command_data):
                     del_msg = False
@@ -102,11 +102,15 @@ async def working(message: Message):
                         data = data.replace("event for chat-", "", 1)
                         try:
                             chat_doc_id = int(data[0].split(":")[0])
-                            event = "".join(data[1:])
+                            event = "".join(data[2:])
                             print(chat_doc_id, event)
-                            await message.reply(text=f"chat_doc_id: {chat_doc_id}, event:\n{event}")
+                            await message.reply(text=f"{chat_doc_id}\n{event}")
+
                         except Exception as e:
                             await message.reply(text=f"{error_msg}:\n{e}")
+
+                    elif "set amount for event-" in data:
+                        ...
 
                     elif "admin for chat-" in data:
                         """ Change admin """
@@ -114,9 +118,8 @@ async def working(message: Message):
                             data = data.replace("admin for chat-", "", 1)
                             try:
                                 chat_doc_id = int(data[0].split(":")[0])
-                                event = "".join(data[1:])
-                                print(chat_doc_id, event)
-                                await message.reply(text=f"chat_doc_id: {chat_doc_id}, event:\n{event}")
+                                phone_number = "".join(data[2:])
+                                await message.reply(text=f"{chat_doc_id}\n{phone_number}")
                             except Exception as e:
                                 await message.reply(text=f"{error_msg}:\n{e}")
     if del_msg:
