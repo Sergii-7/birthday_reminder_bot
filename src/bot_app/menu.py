@@ -59,7 +59,9 @@ class Menu:
             callback_data = '0:super:m' if (user.info=='super-admin' or
                                             user.telegram_id==sb_telegram_id) else '0:admin:m'
             buttons.append([InlineKeyboardButton(text="⚙️ Мої групи ⚙️", callback_data=callback_data)])
-
+            if user.info == 'super-admin' or user.telegram_id == sb_telegram_id:
+                buttons.append(
+                    [InlineKeyboardButton(text="👫👫 Додати групу 👫👫", callback_data="0:super_set_chat_0")])
         buttons.append([InlineKeyboardButton(text="🫣 сховати панель 🫣", callback_data="0:x")])
         reply_markup = InlineKeyboardMarkup(inline_keyboard=buttons)
         photo = FSInputFile(path=f"{media_file_path}admin_panel.jpg")
@@ -80,32 +82,6 @@ class AdminMenu:
         text_to_insert = '\nnew chat_id:\n'
         setting = Settings(telegram_id=user.telegram_id, text_sms=text_sms, text_to_insert=text_to_insert)
         await setting.admin_commands(photo="admin_panel.jpg")
-
-    async def edit_sms_with_chat(self, user: User, chat_pk: int, role: str, message_id: int):
-        """ Get chat settings """
-        buttons = list()
-        chat = await func_db.get_chat_with_user(pk=chat_pk)
-        admin = chat.user
-        chat_info = await get_chat_info(admin=admin, chat=chat, get_photo=False)
-        chat_data, text = chat_info['chat_data'], chat_info['text']
-        """ Додати панель налаштувань якщо статус активний і фото """
-        buttons.append([InlineKeyboardButton(
-            text="💳 Номер вашої карти 💳", callback_data=f"0:{role}:set:card:{chat.id}")])
-        buttons.append([InlineKeyboardButton(
-            text="🧔🏼 Користувачі чатів 👨‍🦱", callback_data=f"0:{role}:set:users:{chat.id}")])
-        buttons.append([InlineKeyboardButton(
-            text="🎆 Створити подію 🎇", callback_data=f"0:{role}:set:holiday:{chat.id}")])
-        buttons.append([InlineKeyboardButton(
-            text="💰 Звіт по внескам 💰", callback_data=f"0:{role}:set:report:{chat.id}")])
-        if user.info == 'super-admin' or user.telegram_id == sb_telegram_id:
-            buttons.append([InlineKeyboardButton(text="👫👫 Додати групу 👫👫", callback_data=f"0:super:_set_chat_0")])
-        buttons.append([InlineKeyboardButton(
-            text="☢️ Передати права адміна ☣️", callback_data=f"0:{role}:set:change_admin:{chat.id}")])
-        buttons.append([InlineKeyboardButton(text="🫣 сховати панель 🫣", callback_data="0:x")])
-        reply_markup = InlineKeyboardMarkup(inline_keyboard=buttons)
-        await bot.send_message(chat_id=user.telegram_id, text=text, reply_markup=reply_markup)
-        await bot.delete_message(chat_id=user.telegram_id, message_id=message_id)
-
 
     async def get_chats_list(self, user: User, message_id: int, type_menu: str, role: str = "admin"):
         """ Get special menu for super-admin or admin """
@@ -147,7 +123,7 @@ class AdminMenu:
             else:
                 text = "У вас немає груп 🤷"
                 buttons = list()
-                if role == "super":
+                if role == "super" or user.telegram_id == sb_telegram_id:
                     buttons.append(
                         [InlineKeyboardButton(text="👫👫 Додати групу 👫👫", callback_data="0:super_set_chat_0")])
                 buttons.append([InlineKeyboardButton(text="Головне меню ⤴️", callback_data="0:m")])
@@ -161,6 +137,31 @@ class AdminMenu:
                     await bot.send_photo(
                         chat_id=user.telegram_id, caption=text, photo=photo, reply_markup=reply_markup)
                     await bot.delete_message(chat_id=user.telegram_id, message_id=message_id)
+
+    async def edit_sms_with_chat(self, user: User, chat_pk: int, role: str, message_id: int):
+        """ Get chat settings """
+        buttons = list()
+        chat = await func_db.get_chat_with_user(pk=chat_pk)
+        admin = chat.user
+        chat_info = await get_chat_info(admin=admin, chat=chat, get_photo=False)
+        chat_data, text = chat_info['chat_data'], chat_info['text']
+        """ Додати панель налаштувань якщо статус активний і фото """
+        buttons.append([InlineKeyboardButton(
+            text="💳 Номер вашої карти 💳", callback_data=f"0:{role}:set:card:{chat.id}")])
+        buttons.append([InlineKeyboardButton(
+            text="🧔🏼 Користувачі чатів 👨‍🦱", callback_data=f"0:{role}:set:users:{chat.id}")])
+        buttons.append([InlineKeyboardButton(
+            text="🎆 Створити подію 🎇", callback_data=f"0:{role}:set:holiday:{chat.id}")])
+        buttons.append([InlineKeyboardButton(
+            text="💰 Звіт по внескам 💰", callback_data=f"0:{role}:set:report:{chat.id}")])
+        if user.info == 'super-admin' or user.telegram_id == sb_telegram_id:
+            buttons.append([InlineKeyboardButton(text="👫👫 Додати групу 👫👫", callback_data="0:super_set_chat_0")])
+        buttons.append([InlineKeyboardButton(
+            text="☢️ Передати права адміна ☣️", callback_data=f"0:{role}:set:change_admin:{chat.id}")])
+        buttons.append([InlineKeyboardButton(text="🫣 сховати панель 🫣", callback_data="0:x")])
+        reply_markup = InlineKeyboardMarkup(inline_keyboard=buttons)
+        await bot.send_message(chat_id=user.telegram_id, text=text, reply_markup=reply_markup)
+        await bot.delete_message(chat_id=user.telegram_id, message_id=message_id)
 
 
 class SetChat:
