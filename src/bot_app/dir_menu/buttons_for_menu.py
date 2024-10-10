@@ -29,14 +29,16 @@ def b_my_groups(role: str) -> List[InlineKeyboardButton]:
     return [InlineKeyboardButton(text="⚙️ Мої групи ⚙️", callback_data=f"0:{role}:m")]
 
 
+def b_chat_settings(role: str, chat_doc_id: int) -> List[InlineKeyboardButton]:
+    return [InlineKeyboardButton(text="⚙️ налаштування ⚙️", callback_data=f"0:{role}_set_chat_{chat_doc_id}")]
+
+
 def buttons_for_chat_settings(role: str, chat_doc_id: int) -> List[List[InlineKeyboardButton]]:
     buttons = list()
     buttons.append([InlineKeyboardButton(
         text="💳 Номер вашої карти 💳", callback_data=f"0:{role}:set:card:{chat_doc_id}")])
     buttons.append([InlineKeyboardButton(
         text="🧔🏼 Користувачі чатів 👨‍🦱", callback_data=f"0:{role}:set:users:{chat_doc_id}")])
-    buttons.append([InlineKeyboardButton(
-        text="🎆 Створити подію 🎇", callback_data=f"0:{role}:set:holiday:{chat_doc_id}")])
     buttons.append([InlineKeyboardButton(
         text="💰 Звіт по внескам 💰", callback_data=f"0:{role}:set:report:{chat_doc_id}")])
     buttons.append([InlineKeyboardButton(
@@ -45,8 +47,13 @@ def buttons_for_chat_settings(role: str, chat_doc_id: int) -> List[List[InlineKe
     return buttons
 
 
-def b_chat_settings(role: str, chat_doc_id: int) -> List[InlineKeyboardButton]:
-    return [InlineKeyboardButton(text="⚙️ налаштування ⚙️", callback_data=f"0:{role}_set_chat_{chat_doc_id}")]
+def buttons_for_event_settings(role: str, holiday_pk: int)  -> List[List[InlineKeyboardButton]]:
+    buttons = list()
+    buttons.append([InlineKeyboardButton(
+        text="💸 інша сума внеску (грн) 💸", callback_data=f"0:{role}:event_amount:{holiday_pk}")])
+    buttons.append([InlineKeyboardButton(
+        text="❌ закрити подію ❌", callback_data=f"0:{role}:event_status:{holiday_pk}")])
+    return buttons
 
 
 def buttons_for_admin_command(text_to_insert: str) -> List[InlineKeyboardButton]:

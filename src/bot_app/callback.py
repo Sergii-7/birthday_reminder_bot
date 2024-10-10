@@ -1,7 +1,7 @@
 from aiogram.types import CallbackQuery
 from config import sb_telegram_id, bot_link
 from src.bot_app.create_bot import dp
-from src.bot_app.dir_menu.menu import Menu, AdminMenu, SetChat
+from src.bot_app.dir_menu.menu import Menu, AdminMenu, SetChat, SetEvent
 from src.sql import func_db
 from src.service.loggers.py_logger_tel_bot import get_logger
 
@@ -57,6 +57,12 @@ async def callback_run(callback_query: CallbackQuery):
                         text = "🤬 Ви або Телеграм-бот не мають доступу до цієї групи!"
                         await callback_query.answer(text=text, show_alert=True)
                         await callback_query.message.delete()
+                elif ":event_" in data:
+                    """ Event settings """
+                    data = data.replace(":event_", "", 1).split(":")
+                    command, holiday_id = data[0], int(data[-1])
+                    holiday = await func_db.get_holiday_with_chat(holiday_id=holiday_id)
+                    await SetEvent().get_command(user=user, command=command, holiday=holiday)
             else:
                 await callback_query.answer(text="У вас немає доступу!", show_alert=True)
                 await callback_query.message.delete()

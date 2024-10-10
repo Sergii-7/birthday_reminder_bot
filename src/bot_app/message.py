@@ -2,13 +2,12 @@ import os
 import re
 from aiogram import F
 from aiogram.types import Message, FSInputFile, InputMediaDocument
-from config import sb_telegram_id, bot_user_name
-from src.service.service_tools import check_card_number
+from src.service.service_tools import check_card_number, correct_time
 from src.bot_app.bot_service import check_user_in_group
 from src.bot_app.create_bot import bot, dp
 from src.sql import func_db
-from src.bot_app.dir_menu.menu import Menu, AdminMenu
-from config import file_log_fast_api, file_log_tel_bot, my_banc_card
+from src.bot_app.dir_menu.menu import Menu
+from config import file_log_fast_api, file_log_tel_bot, my_banc_card, sb_telegram_id, bot_user_name
 from src.service.loggers.py_logger_tel_bot import get_logger
 
 logger = get_logger(__name__)
@@ -44,11 +43,10 @@ async def working(message: Message):
             if user.info in ["admin", "super-admin"] or telegram_id == sb_telegram_id:
                 data = message.text.replace(bot_user_name, "").strip()
                 command_data = [
-                    "new card number:", "new chat_id:", "event for chat-", "admin for chat-", "set amount for event-"
+                    "new card number:", "new chat_id:", "admin for chat-", "set amount event-",
                 ]
                 if any(trigger in data for trigger in command_data):
                     del_msg = False
-
                     if "new card number:" in data:
                         """ Update card_number """
                         data = data.replace("new card number:", "").strip()
@@ -71,7 +69,6 @@ async def working(message: Message):
                                     user = await func_db.doc_update(doc=user)
                         else:
                             await message.reply(text=error_msg)
-
                     elif "new chat_id:" in data:
                         """ Create new Chat """
                         if user.info == "super-admin" or telegram_id == sb_telegram_id:
@@ -97,22 +94,6 @@ async def working(message: Message):
                             except Exception as e:
                                 await message.reply(text=f"{error_msg}:\n{e}")
 
-                    elif "event for chat-" in data:
-                        """ Add new event for chat """
-                        data = data.replace("event for chat-", "", 1)
-                        try:
-                            chat_doc_id = int(data[0].split(":")[0])
-                            event = "".join(data[2:]).strip()
-                            chat = await func_db.get_chat_with_user(pk=chat_doc_id)
-                            if await check_user_in_group(telegram_id=telegram_id, chat_id=chat.chat_id):
-                                await message.reply(text=f"{chat_doc_id}\n{event}")
-
-                        except Exception as e:
-                            await message.reply(text=f"{error_msg}:\n{e}")
-
-                    elif "set amount for event-" in data:
-                        ...
-
                     elif "admin for chat-" in data:
                         """ Change admin """
                         if user.info in ["admin", "super-admin"] or telegram_id == sb_telegram_id:
@@ -123,6 +104,12 @@ async def working(message: Message):
                                 await message.reply(text=f"{chat_doc_id}\n{phone_number}")
                             except Exception as e:
                                 await message.reply(text=f"{error_msg}:\n{e}")
+
+                    elif "set title for event-" in data:
+                        ...
+
+                    elif "set amount for event-" in data:
+                        ...
     if del_msg:
         await message.delete()
         await menu.start_command(user=user)

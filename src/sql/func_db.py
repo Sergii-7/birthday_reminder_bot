@@ -1,16 +1,36 @@
+import asyncio
 from datetime import datetime
 from typing import Optional, Union, List
 from aiogram.types import Message
 from sqlalchemy.future import select
 from sqlalchemy.orm import joinedload, selectinload
 from src.sql.connect import DBSession
-from src.sql.models import User, UserLogin, UserChat, Chat, Holiday
+from src.sql.models import User, UserLogin, UserChat, Chat, Holiday, Report
 from src.service.service_tools import correct_time
 from src.service.loggers.py_logger_fast_api import get_logger
 
 logger = get_logger(__name__)
 
 models = {'user': User, 'user_login': UserLogin, 'user_chat': UserChat, 'chat': Chat, 'holiday': Holiday}
+
+
+async def get_doc_by_id(model: str, doc_id: int) -> Optional[Union[User, UserLogin, Chat, Holiday, Report]]:
+    """ Get doc from DataBase by id """
+    if model in models:
+        for n in range(3):
+            try:
+                logger.debug(f"get_doc_by_id(model={model}, doc_id={doc_id})")
+                async with DBSession() as session:
+                    query = select(models[model]).filter_by(id=doc_id)
+                    result = await session.execute(query)
+                    doc = result.scalar()
+                    return doc
+            except Exception as e:
+                logger.error(f"Attempt {n+1}: {e}")
+                await asyncio.sleep(0.5)
+    else:
+        logger.error(f"Invalid model name provided: {model}")
+    return None
 
 
 async def check_user(message: Message) -> Optional[User]:
@@ -228,6 +248,24 @@ async def get_all_users_from_chat(chat_id: int) -> List[UserChat]:
         except Exception as err:
             logger.error(f"attempt={n+1}: {err}")
     return []
+
+
+async def get_holiday_with_chat(holiday_id: int) -> Optional[Holiday]:
+    """ Get Holiday by id (primary key) with the associated chat """
+    for n in range(3):
+        try:
+            logger.debug(f'get_holiday_with_chat(holiday_id={holiday_id})')
+            async with DBSession() as session:
+                # Створюємо запит
+                query = select(Holiday).options(selectinload(Holiday.chat))
+                # Якщо обидва параметри передані, перевіряємо їх одночасно
+                query = query.filter_by(id=holiday_id)
+                result = await session.execute(query)
+                holiday = result.scalar()
+                return holiday
+        except Exception as e:
+            logger.error(f"attempt={n + 1} error: {e}")
+    return None
 
 
 def convert_str_to_datetime_fields(data: dict) -> dict:

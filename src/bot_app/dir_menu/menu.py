@@ -5,7 +5,7 @@ from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import ReplyKeyboardMarkup, InlineKeyboardMarkup, FSInputFile
 from config import media_file_path, get_chat_id_bot, sb_telegram_id
 from src.bot_app.create_bot import bot
-from src.sql.models import User, Chat
+from src.sql.models import User, Chat, Holiday, Report
 from src.bot_app.dir_menu.buttons_for_menu import *
 from src.bot_app.bot_service import get_chat_info, get_user_info
 from src.sql import func_db
@@ -162,14 +162,7 @@ class SetChat:
                 text_users = text_users + f"\n------------\n{user_info}"
             text = text + text_users
             await bot.send_message(chat_id=user.telegram_id, text=text)
-        elif command == 'holiday':
-            ''' "🎆 Створити подію 🎇": Запускаємо процес організації нового свято/події '''
-            text_sms = (f"Якщо ви хочете створити нову подію і зібрати внески від усіх активних "
-                        f"учасники чату, натисніть <b>Tak ✔️</b>, у вас буде спеціальна форма, не змінюйте її, "
-                        f"просто напишіть, що це за подія.\n<b>ps: ліміт 230 символів</b>")
-            text_to_insert = f'\nevent for chat-{chat.id}:\n'
-            setting = Settings(telegram_id=user.telegram_id, text_sms=text_sms, text_to_insert=text_to_insert)
-            await setting.admin_commands(photo="new_event.jpg")
+
         elif command == 'report':
             ''' "💰 Звіт по внескам 💰": Звіт про надходження коштів від користувачів '''
 
@@ -185,6 +178,21 @@ class SetChat:
             text_to_insert = f'\nadmin for chat-{chat.id}:\n'
             setting = Settings(telegram_id=user.telegram_id, text_sms=text_sms, text_to_insert=text_to_insert)
             await setting.admin_commands(photo="new_admin.jpg")
+
+
+class SetEvent:
+    """ Event settings """
+
+    async def get_command(self, user: User, holiday: Holiday, command: str):
+        """ Gen command from admin """
+        if command == 'amount':
+            text_sms = (f"Якщо ви хочете налаштувати іншу суму внеску для учасників чату, натисніть <b>Tak ✔️</b>, "
+                        f"у вас буде спеціальна форма, не змінюйте її, просто напишіть лише нову суму (грн)")
+            text_to_insert = f'\nset amount event-{holiday.id}:\n'
+            setting = Settings(telegram_id=user.telegram_id, text_sms=text_sms, text_to_insert=text_to_insert)
+            await setting.admin_commands(photo="new_event.jpg")
+
+
 
 
 class Settings:

@@ -1,7 +1,7 @@
 import aiohttp
 from PIL import Image
 from io import BytesIO
-from typing import Optional, Dict, Union
+from typing import Optional, Dict, Union, Any
 from aiogram.types import (FSInputFile, ChatMember, InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove,
                            ForceReply)
 from aiogram.enums import ChatMemberStatus
