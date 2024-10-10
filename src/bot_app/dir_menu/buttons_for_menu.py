@@ -38,7 +38,7 @@ def buttons_for_chat_settings(role: str, chat_doc_id: int) -> List[List[InlineKe
     buttons.append([InlineKeyboardButton(
         text="💳 Номер вашої карти 💳", callback_data=f"0:{role}:set:card:{chat_doc_id}")])
     buttons.append([InlineKeyboardButton(
-        text="🧔🏼 Користувачі чатів 👨‍🦱", callback_data=f"0:{role}:set:users:{chat_doc_id}")])
+        text="🧔🏼 Користувачі чату 👨‍🦱", callback_data=f"0:{role}:set:users:{chat_doc_id}")])
     buttons.append([InlineKeyboardButton(
         text="💰 Звіт по внескам 💰", callback_data=f"0:{role}:set:report:{chat_doc_id}")])
     buttons.append([InlineKeyboardButton(
