@@ -87,7 +87,10 @@ class AdminMenu:
         else:
             """ type_menu = ':m" """
             # ⚙️ Мої групи ⚙️
-            chats = await func_db.get_chats()  # get all [Chat] or []
+            if user.telegram_id == sb_telegram_id:
+                chats = await func_db.get_chats()
+            else:
+                chats = await func_db.get_chats(user_id=user.id)  # get all [Chat] or []
             if chats:
                 ''' get 1 chat in 1 SNS '''
                 for chat in chats:

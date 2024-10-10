@@ -49,7 +49,7 @@ async def callback_run(callback_query: CallbackQuery):
 
         elif data.startswith("admin") or data.startswith("super"):
             ''' callback from admin or super-admin '''
-            if user.status in ["super-admin", "admin"] or telegram_id == sb_telegram_id:
+            if user.info in ["super-admin", "admin"] or telegram_id == sb_telegram_id:
                 admin_menu = AdminMenu()
                 role = "super" if user.status == "super-admin" or telegram_id == sb_telegram_id else "admin"
                 data = data[5:]
