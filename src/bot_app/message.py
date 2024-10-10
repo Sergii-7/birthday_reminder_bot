@@ -93,7 +93,7 @@ async def working(message: Message):
                     else:
                         user.info = None
                         user = await func_db.doc_update(doc=user)
-                elif "event for chat-{chat.id}:" in data:
+                elif "event for chat-:" in data:
                     """ Add new event for chat """
                     if user.info == "admin" or telegram_id == sb_telegram_id:
                         data = data.split("event for chat-")
