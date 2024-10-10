@@ -96,6 +96,7 @@ class AdminMenu:
                     chat_info = await get_chat_info(admin=admin, chat=chat, get_photo=True)
                     chat_data, text, photo = chat_info['chat_data'], chat_info['text'], chat_info['photo']
                     buttons.append(b_chat_settings(role=role, chat_doc_id=chat.id))
+                    buttons.append(b_remove_panel)
                     reply_markup = InlineKeyboardMarkup(inline_keyboard=buttons)
                     if photo:
                         await bot.send_photo(
