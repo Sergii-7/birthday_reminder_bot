@@ -4,7 +4,7 @@ from aiogram.types import Message
 from aiogram.filters import Command
 from config import bot_user_name
 from src.bot_app.create_bot import dp, bot
-from src.bot_app.menu import Menu
+from src.bot_app.dir_menu.menu import Menu
 from src.sql.func_db import check_user, update_phone_number
 from src.bot_app.bot_service import check_user_in_every_chat
 from src.service.loggers.py_logger_tel_bot import get_logger

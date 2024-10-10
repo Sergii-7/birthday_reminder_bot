@@ -7,7 +7,7 @@ from src.service.service_tools import check_card_number
 from src.bot_app.bot_service import check_user_in_group
 from src.bot_app.create_bot import bot, dp
 from src.sql import func_db
-from src.bot_app.menu import Menu
+from src.bot_app.dir_menu.menu import Menu
 from config import file_log_fast_api, file_log_tel_bot, my_banc_card
 from src.service.loggers.py_logger_tel_bot import get_logger
 

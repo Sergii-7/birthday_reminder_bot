@@ -1,7 +1,7 @@
 from aiogram.types import CallbackQuery
 from config import sb_telegram_id
 from src.bot_app.create_bot import dp
-from src.bot_app.menu import Menu, AdminMenu, SetChat
+from src.bot_app.dir_menu.menu import Menu, AdminMenu, SetChat
 from src.sql import func_db
 from src.service.loggers.py_logger_tel_bot import get_logger
 

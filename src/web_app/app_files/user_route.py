@@ -4,7 +4,7 @@ from fastapi import Request, status, HTTPException, Form, APIRouter, Response
 from fastapi.responses import HTMLResponse, RedirectResponse
 from create_app import app, limiter, templates
 from src.sql.func_db import get_user_by_login, doc_update
-from src.bot_app.menu import Menu
+from src.bot_app.dir_menu.menu import Menu
 from src.service.service_tools import correct_time
 from src.service.loggers.py_logger_fast_api import get_logger
 
