@@ -8,9 +8,10 @@ from aiogram.enums import ChatMemberStatus
 import os
 from config import media_file_path
 from src.bot_app.create_bot import bot
+from src.bot_app.dir_menu.buttons_for_menu import b_my_groups
 from src.sql.models import User, Chat
-from src.sql.func_db import doc_update, get_chats, get_user_chat, create_new_doc
-from src.service.service_tools import correct_time
+from src.sql.func_db import doc_update, get_chats, get_user_chat, create_new_doc, get_chat_with_user, get_user_by_phone
+from src.service.service_tools import correct_time, validate_phone
 from src.service.loggers.py_logger_tel_bot import get_logger
 
 logger = get_logger(__name__)
@@ -160,6 +161,38 @@ async def send_compressed_image(
                 os.remove(file_path)
     else:
         logger.error("Failed to compress and send image.")
+
+
+async def check_admin(chat_pk: int, telegram_id: int, phone_number: str) -> bool:
+    """ Check new admin by phone_number """
+    chat = await get_chat_with_user(pk=chat_pk)
+    if await check_user_in_group(telegram_id=telegram_id, chat_id=chat.chat_id):
+        phone_number = validate_phone(phone_number=phone_number)
+        if phone_number:
+            new_admin = await get_user_by_phone(phone_number=phone_number)
+            if new_admin:
+                if await check_user_in_group(
+                        telegram_id=new_admin.telegram_id, chat_id=chat.chat_id):
+                    text = (f"Вітаємо, {new_admin.first_name}!\nВи стали новим адміністратором цього чату: "
+                            f"<code>{chat.chat_id}</code>. Налаштуйте свою банківську картку, щоб приймати внески "
+                            f"від учасників чату.")
+                    reply_markup = InlineKeyboardMarkup(inline_keyboard=[b_my_groups(role='admin')])
+                    photo = FSInputFile(path=f"{media_file_path}wellcome_admin.png")
+                    await bot.send_photo(
+                        chat_id=new_admin.telegram_id, photo=photo, caption=text, reply_markup=reply_markup)
+                    new_admin.info = 'admin' if not new_admin.info else new_admin.info
+                    await doc_update(doc=new_admin)
+                    chat.user_id = new_admin.id
+                    await doc_update(doc=chat)
+                    return True
+                else:
+                    raise ValueError("У чаті не знайдено жодного користувача з таким номером телефону!")
+            else:
+                raise ValueError("За цим номером телефону в базі даних немає користувачів!")
+        else:
+            raise ValueError("Не валідний номер телефону!")
+    else:
+        raise ValueError("Ви або Телеграм-бот не маєте доступу до чату!")
 
 
 # import asyncio

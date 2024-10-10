@@ -96,6 +96,22 @@ async def get_user_by_id(user_id: int) -> Optional[User]:
     return None
 
 
+async def get_user_by_phone(phone_number: str) -> Optional[User]:
+    """ Get User from DataBase by phone_number """
+    for n in range(3):
+        try:
+            logger.debug(f'get_user_by_phone(phone_number={phone_number})')
+            async with DBSession() as session:
+                # Формуємо запит
+                query = select(User).filter_by(phone_number=phone_number)
+                result = await session.execute(query)
+                user = result.scalar()
+                return user
+        except Exception as e:
+            logger.error(f"attempt={n + 1} error: {e}")
+    return None
+
+
 async def get_user_by_login(telegram_id: int, password: str) -> Optional[Union[User, UserLogin]]:
     """ Get user and user login from DataBase by 'login' and 'password' """
     for n in range(3):

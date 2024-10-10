@@ -2,8 +2,8 @@ import os
 import re
 from aiogram import F
 from aiogram.types import Message, FSInputFile, InputMediaDocument
-from src.service.service_tools import check_card_number, validate_phone
-from src.bot_app.bot_service import check_user_in_group
+from src.service.service_tools import check_card_number
+from src.bot_app.bot_service import check_user_in_group, check_admin
 from src.bot_app.create_bot import bot, dp
 from src.sql import func_db
 from src.bot_app.dir_menu.menu import Menu
@@ -93,18 +93,17 @@ async def working(message: Message):
                                     await message.reply(text=text)
                             except Exception as e:
                                 await message.reply(text=f"{error_msg}:\n{e}")
-
                     elif "admin for chat-" in data:
                         """ Change admin """
                         data = data.replace("admin for chat-", "", 1)
                         try:
-                            chat_doc_id = int(data[0].split(":")[0])
+                            chat_pk = int(data[0].split(":")[0])
                             phone_number = "".join(data[2:]).strip()
-                            phone_number = validate_phone(phone_number=phone_number)
-                            if phone_number:
-                                await message.reply(text=f"{chat_doc_id}\n{phone_number}")
-                            else:
-                                raise ValueError("phone_number is not valid")
+                            if await check_admin(chat_pk=chat_pk, telegram_id=telegram_id, phone_number=phone_number):
+                                await message.reply(text=success_msg)
+                                if telegram_id != sb_telegram_id or user.info != "super-admin":
+                                    user.info = None
+                                    await func_db.doc_update(doc=user)
                         except Exception as e:
                             await message.reply(text=f"{error_msg}:\n{e}")
 
