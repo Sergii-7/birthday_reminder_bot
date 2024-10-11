@@ -5,7 +5,10 @@ from config import HOST
 """ Buttons for menu """
 
 b_contact = [KeyboardButton(text='поділитися контактом', request_contact=True)]
-b_menu = [InlineKeyboardButton(text="назад до меню ⤴️", callback_data="0:m")]
+''' Даємо головне меню і видаляємо СМС з якого запускається цей callback '''
+b_menu_and_remove_sms = [InlineKeyboardButton(text="назад до меню ⤴️", callback_data="0:m")]
+''' Даємо головне меню але НЕ видаляємо СМС з якого запускається цей callback '''
+b_menu = [InlineKeyboardButton(text="назад до меню ⤴️", callback_data="0:b")]
 b_remove_panel = [InlineKeyboardButton(text="🫣 сховати панель 🫣", callback_data="0:x")]
 b_add_group = [InlineKeyboardButton(text="👫 Додати групу 👫", callback_data="0:super_set_chat_0")]
 

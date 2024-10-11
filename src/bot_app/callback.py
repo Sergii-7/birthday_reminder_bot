@@ -18,11 +18,12 @@ async def callback_run(callback_query: CallbackQuery):
     logger.info(f"callback_query.data: {callback_query.data}, telegram_id: {telegram_id}")
     menu = Menu()
     user = await func_db.get_user_by_telegram_id(telegram_id=telegram_id)
-    if data in ["x", "m"]:
-        ''' Delete sms with menu '''
+    if data in ["x", "m", "b"]:
         await callback_query.answer(text="ok")
-        await callback_query.message.delete()
-        if data == "m":
+        ''' Delete sms with menu '''
+        if data in ["x", "m"]:
+            await callback_query.message.delete()
+        if data in ["m", "b"]:
             ''' Give main_menu to user '''
             await menu.get_main_menu(user=user, pause=0.5)
     else:
@@ -35,9 +36,10 @@ async def callback_run(callback_query: CallbackQuery):
                 await menu.request_birthday(user=user)
             elif data == '2':
                 ''' "📅 Календар подій 📅" '''
-                text = await get_schedule_holidays(user=user)
-                reply_markup = InlineKeyboardMarkup(inline_keyboard=[b_menu])
-                await callback_query.message.answer(text=text, reply_markup=reply_markup)
+                text_list = await get_schedule_holidays(user=user)
+                for text in text_list:
+                    reply_markup = InlineKeyboardMarkup(inline_keyboard=[b_menu]) if text == text_list[-1] else None
+                    await callback_query.message.answer(text=text, reply_markup=reply_markup)
                 await callback_query.message.delete()
             elif data == '3':
                 ''' "💵 Зробити внесок 💵" '''
