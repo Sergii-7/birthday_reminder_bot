@@ -10,6 +10,7 @@ from config import file_log_fast_api, file_log_tel_bot, my_banc_card, sb_telegra
 from src.service.loggers.py_logger_tel_bot import get_logger
 
 logger = get_logger(__name__)
+menu = Menu()
 
 
 @dp.message(F.content_type.in_({'text', 'photo', 'audio', 'voice', 'video', 'document'}))
@@ -18,7 +19,7 @@ async def working(message: Message):
     if chat_id != telegram_id:
         """ User sent message in group with bot """
         return
-    message_id, del_msg, menu = message.message_id, True, Menu()
+    message_id, del_msg = message.message_id, True
     user = await func_db.get_user_by_telegram_id(telegram_id=telegram_id)
     if message.text:
         if message.text == 'log' and telegram_id == sb_telegram_id:

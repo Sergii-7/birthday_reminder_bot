@@ -40,7 +40,7 @@ async def start_command_handler(message: Message):
                 task = asyncio_create_task(check_user_in_every_chat(user=user))
                 ''' Запускаємо перевірку по користувачу - чи належить він до якихось чатів, які у нас є в базі. '''
                 logger.info(f"asyncio_create_task(check_user_in_every_chat for user: {user.telegram_id}): {task}")
-                await message.delete()
+            await message.delete()
 
 
 @dp.message(F.content_type == 'contact')
