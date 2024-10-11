@@ -5,6 +5,7 @@ from config import HOST
 """ Buttons for menu """
 
 b_contact = [KeyboardButton(text='поділитися контактом', request_contact=True)]
+b_menu = [InlineKeyboardButton(text="назад до меню ⤴️", callback_data="0:m")]
 b_remove_panel = [InlineKeyboardButton(text="🫣 сховати панель 🫣", callback_data="0:x")]
 b_add_group = [InlineKeyboardButton(text="👫 Додати групу 👫", callback_data="0:super_set_chat_0")]
 

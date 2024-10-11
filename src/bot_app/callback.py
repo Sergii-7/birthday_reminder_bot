@@ -1,6 +1,7 @@
-from aiogram.types import CallbackQuery
+from aiogram.types import CallbackQuery, InlineKeyboardMarkup
 from config import sb_telegram_id
 from src.bot_app.create_bot import dp
+from src.bot_app.dir_menu.buttons_for_menu import b_menu
 from src.bot_app.dir_menu.menu import Menu, AdminMenu, SetChat, SetEvent
 from src.bot_app.dir_service.calendar_m import get_schedule_holidays
 from src.sql import func_db
@@ -35,7 +36,8 @@ async def callback_run(callback_query: CallbackQuery):
             elif data == '2':
                 ''' "📅 Календар подій 📅" '''
                 text = await get_schedule_holidays(user=user)
-                await callback_query.message.answer(text=text)
+                reply_markup = InlineKeyboardMarkup(inline_keyboard=[b_menu])
+                await callback_query.message.answer(text=text, reply_markup=reply_markup)
                 await callback_query.message.delete()
             elif data == '3':
                 ''' "💵 Зробити внесок 💵" '''
