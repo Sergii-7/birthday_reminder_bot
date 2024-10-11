@@ -24,13 +24,3 @@ async def test():
 # asyncio.run(test())
 
 
-d1 = "01-25"  # 125
-d2 = "03-03"  # 303
-d3 = "12-25"  # 1225
-d4 = "01-23"  # 123
-d5 = "09-25"  # 925
-
-l = [d1, d2, d3, d4, d5]
-new_l = [{'4': 'sdfsdf'}, {2: 'dfsdfsf'}, {3: 'dfsfsfds'}]
-today = "10-11"  # 1011
-

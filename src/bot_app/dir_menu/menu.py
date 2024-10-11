@@ -161,11 +161,19 @@ class SetChat:
             chat_info = await get_chat_info(admin=user, chat=chat, get_photo=False)
             text = f"{chat_info.get('text')}"
             text_users = "\n<b>Зареєстровані користувачі чату:</b>" if chat_users else ""
-            for user_chat in chat_users:
+            sms_list, sms_text = [], ""
+            for n, user_chat in enumerate(start=1, iterable=chat_users):
                 user_info = get_user_info(user=user_chat.user)
-                text_users = text_users + f"\n------------\n{user_info}"
-            text = text + text_users
-            await bot.send_message(chat_id=user.telegram_id, text=text)
+                sms_text += f"\n------------\n{user_info}"
+                if n % 5 == 0:
+                    sms_list.append(sms_text)
+                    sms_text = ""
+            if sms_text:
+                sms_list.append(sms_text)
+            for n, sms in enumerate(start=1, iterable=sms_list):
+                text = text + text_users + sms if n == 1 else sms
+                await bot.send_message(chat_id=user.telegram_id, text=text)
+                await asyncio_sleep(delay=1)
 
         elif command == 'report':
             ''' "💰 Звіт по внескам 💰": Звіт про надходження коштів від користувачів '''

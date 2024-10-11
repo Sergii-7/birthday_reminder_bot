@@ -103,10 +103,10 @@ def get_user_info(user: User, calendar: bool = False) -> str:
     username = f"@{user.username}\n" if user.username else ""
     phone_number = f"телефон <code>{user.phone_number}</code>\n" if user.phone_number else ""
     if calendar:
-        birthday = str(user.birthday)[5:] if user.birthday else 'не вносив дані'
+        birthday = str(user.birthday)[5:] if user.birthday else 'дані не внесені'
         birthday = f"день народження (month-day): <code>{birthday}</code>"
     else:
-        birthday = user.birthday if user.birthday else 'не вносив дані'
+        birthday = user.birthday if user.birthday else 'дані не внесені'
         birthday = f"день народження: <code>{birthday}</code>"
     text = f"<b>{user.first_name}</b>\n{username}{phone_number}{birthday}"
     return text
