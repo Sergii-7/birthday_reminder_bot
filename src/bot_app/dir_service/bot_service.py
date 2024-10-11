@@ -68,12 +68,12 @@ async def get_chat_info(
     if chat.status != status:
         chat.status = status
         chat = await doc_update(doc=chat)
-    status_description = "ГРУПА АКТИВНА" if status else ("<b>⚠️ налаштування не можливі - адмін або "
-                                                         "Телеграм бот не мають доступу до групи</b>")
+    status_description = "ГРУПА АКТИВНА" if status \
+        else "<b>⚠️ налаштування не можливі - адмін або Телеграм бот не мають доступу до групи</b>"
     count_users = "не відомо"
     try:
         if status:
-            count_users = await bot.get_chat_member_count(chat_id=chat.chat_id)
+            count_users = await bot.get_chat_member_count(chat_id=chat.chat_id) - 1  # віднімаємо Телеграм-бота
     except Exception as e:
         logger.error(e)
     title = f"<b>{chat_data.title}</b>\n" if chat_data else ""
