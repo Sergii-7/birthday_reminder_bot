@@ -6,7 +6,7 @@ from aiogram.types import (FSInputFile, ChatMember, InlineKeyboardMarkup, ReplyK
                            ForceReply)
 from aiogram.enums import ChatMemberStatus
 import os
-from config import media_file_path
+from config import media_file_path, bot_link
 from src.bot_app.create_bot import bot
 from src.bot_app.dir_menu.buttons_for_menu import b_my_groups
 from src.sql.models import User, Chat
@@ -105,10 +105,13 @@ def get_user_info(user: User, calendar: bool = False) -> str:
     if calendar:
         birthday = str(user.birthday)[5:] if user.birthday else 'дані не внесені'
         birthday = f"день народження (month-day): <code>{birthday}</code>"
+        link_settings = ""
     else:
         birthday = user.birthday if user.birthday else 'дані не внесені'
         birthday = f"день народження: <code>{birthday}</code>"
-    text = f"<b>{user.first_name}</b>\n{username}{phone_number}{birthday}"
+        desc = "<b>💲 задіяний до зборів 💲</b>" if user.status else "<b>🙅 не задіяний до зборів 🙅</b>"
+        link_settings = f"\n{desc} <a href='{bot_link}?start=set-status-{user.telegram_id}'>ЗМІНИТИ</a>"
+    text = f"<b>{user.first_name}</b>\n{username}{phone_number}{birthday}{link_settings}"
     return text
 
 
