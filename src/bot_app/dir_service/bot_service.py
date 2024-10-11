@@ -9,7 +9,7 @@ import os
 from config import media_file_path, bot_link
 from src.bot_app.create_bot import bot
 from src.bot_app.dir_menu.buttons_for_menu import b_my_groups
-from src.sql.models import User, Chat
+from src.sql.models import User, Chat, UserChat
 from src.sql.func_db import doc_update, get_chats, get_user_chat, create_new_doc, get_chat_with_user, get_user_by_phone
 from src.service.service_tools import correct_time, validate_phone
 from src.service.loggers.py_logger_tel_bot import get_logger
@@ -98,19 +98,19 @@ async def get_chat_info(
     return {"text": text, "chat_data": chat_data, "photo": photo}
 
 
-def get_user_info(user: User, calendar: bool = False) -> str:
+def get_user_info(user: User, user_chat: UserChat = None) -> str:
     """ Get user info from User """
     username = f"@{user.username}\n" if user.username else ""
     phone_number = f"телефон <code>{user.phone_number}</code>\n" if user.phone_number else ""
-    if calendar:
+    if not user_chat:
         birthday = str(user.birthday)[5:] if user.birthday else 'дані не внесені'
         birthday = f"день народження (month-day): <code>{birthday}</code>"
         link_settings = ""
     else:
         birthday = user.birthday if user.birthday else 'дані не внесені'
         birthday = f"день народження: <code>{birthday}</code>"
-        desc = "<b>💲 задіяний до зборів 💲</b>" if user.status else "<b>🙅 не задіяний до зборів 🙅</b>"
-        link_settings = f"\n{desc} <a href='{bot_link}?start=set-status-{user.telegram_id}'>ЗМІНИТИ</a>"
+        desc = "<b>💲 задіяний до зборів</b>" if user_chat.status else "<b>🙅 не задіяний до зборів</b>"
+        link_settings = f"\n{desc} <a href='{bot_link}?start=set-status-{user_chat.id}'>змінити</a>"
     text = f"<b>{user.first_name}</b>\n{username}{phone_number}{birthday}{link_settings}"
     return text
 

@@ -16,7 +16,7 @@ async def get_schedule_holidays(user: User) -> List[str]:
         users = [user]
     sorted_users = sorted(users, key=lambda user_doc: (user_doc.birthday.month, user_doc.birthday.day))
     if len(sorted_users) < 6:
-        text = "".join(f"\n{get_user_info(user=doc, calendar=True)}\n ------------" for doc in sorted_users)
+        text = "".join(f"\n{get_user_info(user=doc, user_chat=None)}\n ------------" for doc in sorted_users)
         calendar_list.append(text)
     else:
         text = ""

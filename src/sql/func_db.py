@@ -224,6 +224,23 @@ async def get_chat_with_user(pk: int = None, chat_id: int = None) -> Optional[Ch
     return None
 
 
+async def get_user_chat_with_user(user_chat_pk: int) -> Optional[UserChat]:
+    """ Get UserChat with User """
+    for n in range(3):
+        try:
+            logger.debug(f"get_user_chat_with_user(user_chat_pk={user_chat_pk})")
+            async with DBSession() as session:
+                stmt = (
+                    select(UserChat)
+                    .options(selectinload(UserChat.user))  # Завантажуємо пов'язаний об'єкт User
+                    .filter(UserChat.id == user_chat_pk)
+                )
+                result = await session.execute(stmt)
+                return result.scalars().first()
+        except Exception as e:
+            logger.error(f"Attempt={n+1}: {e}")
+
+
 async def get_chats(user_id: int = None, limit: int = None) -> List[Chat]:
     """ Get array with object<SQLAlchemy>: 'Chat' by optional user_id and optional limit """
     for n in range(3):

@@ -140,6 +140,15 @@ class AdminMenu:
         await bot.send_message(chat_id=user.telegram_id, text=text, reply_markup=reply_markup)
         await bot.delete_message(chat_id=user.telegram_id, message_id=message_id)
 
+    async def change_user_chat_status(self, admin: User, user_chat_pk: int):
+        """ Set UserChat.status True or False """
+        user_chat = await func_db.get_user_chat_with_user(user_chat_pk=user_chat_pk)
+        user_chat.status = False if user_chat.status else True
+        await func_db.doc_update(doc=user_chat)
+        text = get_user_info(user=user_chat.user, user_chat=user_chat)
+        await bot.send_message(chat_id=admin.telegram_id, text=text)
+
+
 
 class SetChat:
     """ Chat settings for Admins """
@@ -163,7 +172,7 @@ class SetChat:
             text_users = "\n<b>Зареєстровані користувачі чату:</b>" if chat_users else ""
             sms_list, sms_text = [], ""
             for n, user_chat in enumerate(start=1, iterable=chat_users):
-                user_info = get_user_info(user=user_chat.user)
+                user_info = get_user_info(user=user_chat.user, user_chat=user_chat)
                 sms_text += f"\n------------\n{user_info}"
                 if n % 5 == 0:
                     sms_list.append(sms_text)
