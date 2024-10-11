@@ -5,9 +5,9 @@ from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import ReplyKeyboardMarkup, InlineKeyboardMarkup, FSInputFile
 from config import media_file_path, get_chat_id_bot, sb_telegram_id
 from src.bot_app.create_bot import bot
-from src.sql.models import User, Chat, Holiday, Report
+from src.sql.models import User, Chat, Holiday
 from src.bot_app.dir_menu.buttons_for_menu import *
-from src.bot_app.bot_service import get_chat_info, get_user_info
+from src.bot_app.dir_service.bot_service import get_chat_info, get_user_info
 from src.sql import func_db
 from src.service.loggers.py_logger_tel_bot import get_logger
 

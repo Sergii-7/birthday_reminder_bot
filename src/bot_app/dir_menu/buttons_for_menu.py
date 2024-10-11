@@ -6,7 +6,7 @@ from config import HOST
 
 b_contact = [KeyboardButton(text='поділитися контактом', request_contact=True)]
 b_remove_panel = [InlineKeyboardButton(text="🫣 сховати панель 🫣", callback_data="0:x")]
-b_add_group = [InlineKeyboardButton(text="👫👫 Додати групу 👫👫", callback_data="0:super_set_chat_0")]
+b_add_group = [InlineKeyboardButton(text="👫 Додати групу 👫", callback_data="0:super_set_chat_0")]
 
 
 def buttons_for_user() -> List[List[InlineKeyboardButton]]:

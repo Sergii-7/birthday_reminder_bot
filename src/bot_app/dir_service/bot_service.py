@@ -98,13 +98,17 @@ async def get_chat_info(
     return {"text": text, "chat_data": chat_data, "photo": photo}
 
 
-def get_user_info(user: User) -> str:
+def get_user_info(user: User, calendar: bool = False) -> str:
     """ Get user info from User """
     username = f"@{user.username}\n" if user.username else ""
     phone_number = f"телефон <code>{user.phone_number}</code>\n" if user.phone_number else ""
-    # last_name = f"<b>{user.last_name}</b>\n" if user.last_name else ""
-    text = (f"<b>{user.first_name}</b>\n{username}{phone_number}"
-            f"день народження: <code>{user.birthday if user.birthday else 'не вносив дані'}</code>")
+    if calendar:
+        birthday = str(user.birthday)[5:] if user.birthday else 'не вносив дані'
+        birthday = f"день народження (month-day): <code>{birthday}</code>"
+    else:
+        birthday = user.birthday if user.birthday else 'не вносив дані'
+        birthday = f"день народження: <code>{birthday}</code>"
+    text = f"<b>{user.first_name}</b>\n{username}{phone_number}{birthday}"
     return text
 
 

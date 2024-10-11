@@ -2,7 +2,7 @@ import os, re
 from aiogram import F
 from aiogram.types import Message, FSInputFile, InputMediaDocument
 from src.service.service_tools import check_card_number
-from src.bot_app.bot_service import check_user_in_group, check_admin
+from src.bot_app.dir_service.bot_service import check_user_in_group, check_admin
 from src.bot_app.create_bot import bot, dp
 from src.sql import func_db
 from src.bot_app.dir_menu.menu import Menu

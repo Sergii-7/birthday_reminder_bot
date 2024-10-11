@@ -1,7 +1,8 @@
 from aiogram.types import CallbackQuery
-from config import sb_telegram_id, bot_link
+from config import sb_telegram_id
 from src.bot_app.create_bot import dp
 from src.bot_app.dir_menu.menu import Menu, AdminMenu, SetChat, SetEvent
+from src.bot_app.dir_service.calendar_m import get_schedule_holidays
 from src.sql import func_db
 from src.service.loggers.py_logger_tel_bot import get_logger
 
@@ -28,19 +29,16 @@ async def callback_run(callback_query: CallbackQuery):
             ''' callback from user '''
             data = data.replace("user", "")
             if data == '1':
-                ''' Change Birthday '''
+                ''' "🎂 Змінити дату ДР 🎂" '''
                 await callback_query.message.delete()
                 await menu.request_birthday(user=user)
             elif data == '2':
-                ''' Calendar with holidays '''
-                """
-                IN DEVELOPMENT
-                
-                """
-                await callback_query.answer(text="Ця функція знаходиться на стадії розробки 🤷", show_alert=True)
-
+                ''' "📅 Календар подій 📅" '''
+                text = await get_schedule_holidays(user=user)
+                await callback_query.message.answer(text=text)
+                await callback_query.message.delete()
             elif data == '3':
-                ''' Make payment '''
+                ''' "💵 Зробити внесок 💵" '''
                 """
                 IN DEVELOPMENT
                

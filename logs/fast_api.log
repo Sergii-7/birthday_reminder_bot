@@ -3,3 +3,27 @@
 2024-10-09 15:56:00,856 [ERROR] - __main__ - get_chat_with_user(177) - attempt=1 error: Could not determine join condition between parent/child tables on relationship Holiday.report - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
 2024-10-09 15:56:00,858 [ERROR] - __main__ - get_chat_with_user(177) - attempt=2 error: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[Holiday(holidays)]'. Original exception was: Could not determine join condition between parent/child tables on relationship Holiday.report - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
 2024-10-09 15:56:00,858 [ERROR] - __main__ - get_chat_with_user(177) - attempt=3 error: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[Holiday(holidays)]'. Original exception was: Could not determine join condition between parent/child tables on relationship Holiday.report - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2024-10-11 13:40:52,393 [ERROR] - __main__ - get_intersecting_users(37) - Attempt=1: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.InvalidColumnReferenceError'>: SELECT DISTINCT ON expressions must match initial ORDER BY expressions
+[SQL: SELECT DISTINCT ON (users.telegram_id) users.id, users.telegram_id, users.first_name, users.last_name, users.username, users.language_code, users.created_at, users.phone_number, users.birthday, users.status, users.info 
+FROM users JOIN user_chat ON users.telegram_id = user_chat.user_telegram_id 
+WHERE user_chat.chat_id IN (SELECT user_chat.chat_id 
+FROM user_chat 
+WHERE user_chat.user_telegram_id = $1::BIGINT) AND users.telegram_id != $2::BIGINT AND users.birthday IS NOT NULL ORDER BY EXTRACT(month FROM users.birthday), EXTRACT(day FROM users.birthday)]
+[parameters: (620527199, 620527199)]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2024-10-11 13:40:53,160 [ERROR] - __main__ - get_intersecting_users(37) - Attempt=2: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.InvalidColumnReferenceError'>: SELECT DISTINCT ON expressions must match initial ORDER BY expressions
+[SQL: SELECT DISTINCT ON (users.telegram_id) users.id, users.telegram_id, users.first_name, users.last_name, users.username, users.language_code, users.created_at, users.phone_number, users.birthday, users.status, users.info 
+FROM users JOIN user_chat ON users.telegram_id = user_chat.user_telegram_id 
+WHERE user_chat.chat_id IN (SELECT user_chat.chat_id 
+FROM user_chat 
+WHERE user_chat.user_telegram_id = $1::BIGINT) AND users.telegram_id != $2::BIGINT AND users.birthday IS NOT NULL ORDER BY EXTRACT(month FROM users.birthday), EXTRACT(day FROM users.birthday)]
+[parameters: (620527199, 620527199)]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2024-10-11 13:40:53,891 [ERROR] - __main__ - get_intersecting_users(37) - Attempt=3: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.InvalidColumnReferenceError'>: SELECT DISTINCT ON expressions must match initial ORDER BY expressions
+[SQL: SELECT DISTINCT ON (users.telegram_id) users.id, users.telegram_id, users.first_name, users.last_name, users.username, users.language_code, users.created_at, users.phone_number, users.birthday, users.status, users.info 
+FROM users JOIN user_chat ON users.telegram_id = user_chat.user_telegram_id 
+WHERE user_chat.chat_id IN (SELECT user_chat.chat_id 
+FROM user_chat 
+WHERE user_chat.user_telegram_id = $1::BIGINT) AND users.telegram_id != $2::BIGINT AND users.birthday IS NOT NULL ORDER BY EXTRACT(month FROM users.birthday), EXTRACT(day FROM users.birthday)]
+[parameters: (620527199, 620527199)]
+(Background on this error at: https://sqlalche.me/e/20/f405)

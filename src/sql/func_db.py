@@ -1,8 +1,9 @@
 from asyncio import sleep
 from datetime import datetime
-from typing import Optional, Union, List
+from typing import Optional, Union, List, Dict, Any
 from aiogram.types import Message
 from sqlalchemy.future import select
+from sqlalchemy.inspection import inspect
 from sqlalchemy.orm import joinedload, selectinload
 from src.sql.connect import DBSession
 from src.sql.models import User, UserLogin, UserChat, Chat, Holiday, Report
@@ -331,6 +332,21 @@ async def create_new_doc(model: str, data: dict, data_has_datatime: bool = False
     else:
         logger.error(f"Invalid model name provided: {model}")
     return
+
+
+async def object_as_dict(obj: object) -> Dict[str, Any]:
+    """ Перетворюємо object з DataBase на dict """
+    if not hasattr(obj, '__table__'):
+        raise ValueError(f"Expected SQLAlchemy model instance, got {obj.__class__}")
+    result = {}
+    for c in inspect(obj).mapper.column_attrs:
+        value = getattr(obj, c.key)
+        if isinstance(value, datetime):
+            value = value.isoformat()  # Конвертуємо datetime в строку ISO 8601 формату
+        elif isinstance(value, bool):
+            value = value  # Залишаємо булінгове значення як є
+        result[c.key] = value
+    return result
 
 
 # import asyncio
