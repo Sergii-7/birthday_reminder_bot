@@ -88,3 +88,8 @@ class BackgroundTask:
         """ Check holidays reports in DataBase and send info for Admin - start one time per day"""
         logger.info(">>> check_report()")
 
+
+import asyncio
+
+background_task = BackgroundTask()
+asyncio.run(main=background_task.check_users_birthday(days_to_birthday=10))

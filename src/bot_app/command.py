@@ -5,7 +5,7 @@ from aiogram.filters import Command
 from config import bot_user_name, sb_telegram_id
 from src.bot_app.create_bot import dp, bot
 from src.bot_app.dir_menu.menu import Menu, AdminMenu
-from src.sql.func_db import check_user, update_phone_number, get_chats
+from src.sql.func_db import check_user, update_phone_number, get_chats, get_doc_by_id
 from src.bot_app.dir_service.bot_service import check_user_in_every_chat
 from src.service.loggers.py_logger_tel_bot import get_logger
 
@@ -30,14 +30,16 @@ async def start_command_handler(message: Message):
         """ User push '/start' command in private chat with bot """
         user = await check_user(message=message)
         if user:
+            # https://t.me/holiday_organizer_bot?start=set-status-7
             if ("set-status-" in message.text and
                     (user.info in ["admin", "super-admin"] or user.telegram_id==sb_telegram_id)):
                 """ Admin change user_chat.status """
                 user_chat_pk = int(message.text.split("set-status-")[-1])
+                user_chat = await get_doc_by_id(model='user_chat', doc_id=user_chat_pk)
                 admin_chats = await get_chats(user_id=user.id)
                 check_admin = False
                 for chat in admin_chats:
-                    if chat.id == user_chat_pk:
+                    if chat.id == user_chat.chat_id:
                         check_admin = True
                         break
                 if check_admin:

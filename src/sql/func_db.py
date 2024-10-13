@@ -433,7 +433,10 @@ async def object_as_dict(obj: object) -> Dict[str, Any]:
 
 
 # import asyncio
+# from config import sb_telegram_id
+#
 # async def test():
-#     chat = await get_chat_with_user(chat_id=-4546525808)
-#     print(chat.user.telegram_id)
+#     user = await get_user_by_telegram_id(telegram_id=sb_telegram_id)
+#     print(user.birthday)
+#
 # asyncio.run(test())
