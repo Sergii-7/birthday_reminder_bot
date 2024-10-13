@@ -206,9 +206,8 @@ class SetChat:
 
 class SetEvent:
     """ Event settings """
-
     async def get_command(self, user: User, holiday: Holiday, command: str):
-        """ Gen command from admin """
+        """ Get command from admin """
         if command == 'amount':
             text_sms = (f"Якщо ви хочете налаштувати іншу суму внеску для учасників чату, натисніть <b>Tak ✔️</b>, "
                         f"у вас буде спеціальна форма, не змінюйте її, просто напишіть лише нову суму (грн)")

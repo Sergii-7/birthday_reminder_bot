@@ -1,9 +1,13 @@
 from asyncio import create_task
 from datetime import date, timedelta
+from aiogram.types import InlineKeyboardMarkup
 
+from src.bot_app.dir_menu.buttons_for_menu import buttons_for_event_settings
 from config import amount
 from src.dir_schedule.some_tools import AskingMoney, GreetingsUser
-from src.sql.func_db import get_chats, get_all_users_from_chat, get_holiday, create_new_doc
+from src.sql.func_db import get_chats, get_all_users_from_chat, get_holiday, create_new_doc, get_doc_by_id
+from src.sql.models import Chat, User
+from src.bot_app.create_bot import bot
 from src.service.service_tools import correct_time
 from src.service.loggers.py_logger_tel_bot import get_logger
 
@@ -43,15 +47,26 @@ class BackgroundTask:
                                        task = create_task(greet_user.start_greet(user_chat=user_chat))
                                        logger.info(f"GreetingsUser().start_greet(): {task}")
                                    else:
-                                       holiday = await get_holiday(user_pk=user.id, chat_pk=user_chat.chat_id)
+                                       chat: Chat = await get_doc_by_id(model='chat', doc_id=user_chat.chat_id)
+                                       holiday = await get_holiday(user_pk=chat.user.id, chat_pk=chat.id)
                                        if not holiday:
-                                           holiday_data = {"user_id": user.id, "chat_id": user_chat.chat_id,
-                                                           "date_event": user.birthday, "amount": amount}
+                                           info = f"<b>{user.first_name}</b>\n<code>{user.phone_number}</code>"
+                                           holiday_data = {
+                                               "user_id": user.id, "chat_id": chat.id,
+                                               "date_event": user.birthday, "amount": amount, "info": info
+                                           }
                                            await create_new_doc(model='holiday', data=holiday_data)
-                                           holiday = await get_holiday(user_pk=user.id, chat_pk=user_chat.chat_id)
+                                           holiday = await get_holiday(user_pk=chat.user.id, chat_pk=chat.id)
                                        if days_to_birthday > 7:
-                                           """Admin set Holiday in DataBase"""
-                                           ...
+                                           """Send panel for Admin to set Holiday in DataBase"""
+                                           admin: User = await get_doc_by_id(model='user', doc_id=chat.user_id)
+                                           text = (f"Іменинник/іменинниця:\n{holiday.info}\n\n"
+                                                   f"<code>{holiday.date_event}</code>\n\nсума внеску: "
+                                                   f"<b>{holiday.amount}</b>")
+                                           buttons = buttons_for_event_settings(role=admin.info, holiday=holiday)
+                                           reply_markup = InlineKeyboardMarkup(inline_keyboard=buttons)
+                                           await bot.send_message(
+                                               chat_id=admin.telegram_id, text=text, reply_markup=reply_markup)
                                        else:
                                            """ days_to_birthday < 8 """
                                            if holiday.status:

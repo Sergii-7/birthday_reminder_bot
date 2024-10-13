@@ -1,5 +1,7 @@
 from aiogram.types import InlineKeyboardButton, KeyboardButton
 from typing import List, Dict
+
+from src.sql.models import Holiday
 from config import HOST
 
 """ Buttons for menu """
@@ -51,12 +53,16 @@ def buttons_for_chat_settings(role: str, chat_doc_id: int) -> List[List[InlineKe
     return buttons
 
 
-def buttons_for_event_settings(role: str, holiday_pk: int)  -> List[List[InlineKeyboardButton]]:
+def buttons_for_event_settings(role: str, holiday: Holiday) -> List[List[InlineKeyboardButton]]:
+    """Buttons for Admin to set Holiday"""
     buttons = list()
     buttons.append([InlineKeyboardButton(
-        text="💸 інша сума внеску (грн) 💸", callback_data=f"0:{role}:event_amount:{holiday_pk}")])
-    buttons.append([InlineKeyboardButton(
-        text="❌ закрити подію ❌", callback_data=f"0:{role}:event_status:{holiday_pk}")])
+        text="Змінити сума внеску (грн) 💸", callback_data=f"0:{role}:event_amount:{holiday.id}")])
+    if holiday.status:
+        b = [InlineKeyboardButton(text="❌ Закрити подію ❌", callback_data=f"0:{role}:event_status:{holiday.id}")]
+    else:
+        b = [InlineKeyboardButton(text="🚀 Активувати подію 🚀", callback_data=f"0:{role}:event_status:{holiday.id}")]
+    buttons.append(b)
     return buttons
 
 
@@ -65,4 +71,5 @@ def buttons_for_admin_command(text_to_insert: str) -> List[InlineKeyboardButton]
     b_yes = InlineKeyboardButton(text="Tak ✔️", switch_inline_query_current_chat=text_to_insert)
     b_not = InlineKeyboardButton(text="Hi 🙅", callback_data="0:x")
     return [b_yes, b_not]
+
 
