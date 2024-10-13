@@ -5,7 +5,7 @@ from aiogram.filters import Command
 from config import bot_user_name, sb_telegram_id
 from src.bot_app.create_bot import dp, bot
 from src.bot_app.dir_menu.menu import Menu, AdminMenu
-from src.sql.func_db import check_user, update_phone_number
+from src.sql.func_db import check_user, update_phone_number, get_chats
 from src.bot_app.dir_service.bot_service import check_user_in_every_chat
 from src.service.loggers.py_logger_tel_bot import get_logger
 
@@ -34,7 +34,14 @@ async def start_command_handler(message: Message):
                     (user.info in ["admin", "super-admin"] or user.telegram_id==sb_telegram_id)):
                 """ Admin change user_chat.status """
                 user_chat_pk = int(message.text.split("set-status-")[-1])
-                await admin_menu.change_user_chat_status(admin=user, user_chat_pk=user_chat_pk)
+                admin_chats = await get_chats(user_id=user.id)
+                check_admin = False
+                for chat in admin_chats:
+                    if chat.id == user_chat_pk:
+                        check_admin = True
+                        break
+                if check_admin:
+                    await admin_menu.change_user_chat_status(admin=user, user_chat_pk=user_chat_pk)
             else:
                 await menu.start_command(user=user, message_text=message.text)
                 task = asyncio_create_task(check_user_in_every_chat(user=user))
@@ -49,8 +56,7 @@ async def get_phone_number(message: Message):
     phone_number = message.contact.phone_number
     telegram_id = message.contact.user_id
     await bot.send_message(chat_id=telegram_id, text=f'{phone_number}\n✔️')
-    if phone_number[0] != '+':
-        phone_number = f"+{phone_number}"
+    phone_number = f"+{phone_number}" if phone_number[0] != '+' else phone_number
     user = await update_phone_number(telegram_id=telegram_id, phone_number=phone_number)
     if user:
         logger.info(f'User:{telegram_id} gave his phone:{phone_number}')

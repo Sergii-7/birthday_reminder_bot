@@ -2,6 +2,9 @@ import os
 from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
+"""Сума внеску (грн)"""
+amount = 500
+
 """ Отримуємо абсолютний шлях до кореневої директорії проекту """
 project_root = os.path.dirname(os.path.abspath(__file__))
 

@@ -1,6 +1,7 @@
 from sqlalchemy import String, Integer, BigInteger, Column, Boolean, Date, DateTime, ForeignKey, CheckConstraint, func
 from sqlalchemy.orm import declarative_base, relationship
 from datetime import date, datetime
+from config import amount as amount_data
 from src.service.service_tools import correct_time, generate_users_password
 
 Base = declarative_base()
@@ -78,9 +79,9 @@ class Holiday(Base):
     id: int = Column(type_=Integer, primary_key=True)
     user_id: int = Column(Integer, ForeignKey('users.id'), nullable=True)
     chat_id: int = Column(Integer, ForeignKey('chats.id'), nullable=False)
-    info: str = Column(type_=String, nullable=False)
+    info: str = Column(type_=String, nullable=True, default=None)
     date_event: date = Column(type_=Date, nullable=False)
-    amount: int = Column(type_=Integer, nullable=False, default=500)
+    amount: int = Column(type_=Integer, nullable=False, default=amount_data)  # 500 (int)
     status: bool = Column(type_=Boolean, nullable=False, default=False)
     created_at: datetime = Column(type_=DateTime, nullable=False, default=correct_time)
     user = relationship("User", back_populates="holidays")
@@ -98,3 +99,12 @@ class Report(Base):
     user = relationship("User", back_populates="report")
     chat = relationship("Chat", back_populates="report")
     holidays = relationship("Holiday", back_populates="report")
+
+
+class SystemData(Base):
+    __tablename__ = "system_data"
+    id: int = Column(type_=Integer, primary_key=True)
+    title: int = Column(type_=String(30), nullable=False, unique=True)
+    data_digital: int = Column(type_=BigInteger, nullable=True, default=None)
+    data_text: str = Column(type_=String, nullable=True, default=None)
+    data_status: bool = Column(type_=Boolean, nullable=True, default=None)

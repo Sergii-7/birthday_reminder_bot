@@ -147,9 +147,10 @@ async def download_and_compress_image(
 async def send_compressed_image(
         chat_id: int, url: str, caption: str=None, filename: str="compressed_image.jpg", disable_notification=True,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]]=None
-):
+) -> bool:
     """Відправляє стиснене зображення через Telegram"""
     # temp_filename = "compressed_image.jpg" - Ім'я тимчасового файлу
+    res = False
     file_path = await download_and_compress_image(url=url, filename=filename)
     if file_path:
         try:
@@ -160,6 +161,7 @@ async def send_compressed_image(
                 reply_markup=reply_markup,
                 disable_notification=disable_notification
             )
+            res = True
         except Exception as e:
             logger.error(f"Error sending image: {e}")
         finally:
@@ -168,6 +170,7 @@ async def send_compressed_image(
                 os.remove(file_path)
     else:
         logger.error("Failed to compress and send image.")
+    return res
 
 
 async def check_admin(chat_pk: int, telegram_id: int, phone_number: str) -> bool:

@@ -2,9 +2,11 @@ from asyncio import sleep
 from datetime import datetime
 from typing import Optional, Union, List, Dict, Any
 from aiogram.types import Message
+from sqlalchemy import and_
 from sqlalchemy.future import select
 from sqlalchemy.inspection import inspect
 from sqlalchemy.orm import joinedload, selectinload
+
 from src.sql.connect import DBSession
 from src.sql.models import User, UserLogin, UserChat, Chat, Holiday, Report
 from src.service.service_tools import correct_time
@@ -12,10 +14,12 @@ from src.service.loggers.py_logger_fast_api import get_logger
 
 logger = get_logger(__name__)
 
-models = {'user': User, 'user_login': UserLogin, 'user_chat': UserChat, 'chat': Chat, 'holiday': Holiday}
+models = {
+    'user': User, 'user_login': UserLogin, 'user_chat': UserChat, 'chat': Chat, 'holiday': Holiday, 'report': Report
+}
 
 
-async def get_doc_by_id(model: str, doc_id: int) -> Optional[Union[User, UserLogin, Chat, Holiday, Report]]:
+async def get_doc_by_id(model: str, doc_id: int) -> Optional[Union[User, UserLogin, UserChat, Chat, Holiday, Report]]:
     """ Get doc from DataBase by id """
     if model in models:
         for n in range(3):
@@ -208,7 +212,7 @@ async def get_chat_with_user(pk: int = None, chat_id: int = None) -> Optional[Ch
             async with DBSession() as session:
                 # Створюємо запит
                 query = select(Chat).options(selectinload(Chat.user))
-                # Якщо обидва параметри передані, перевіряємо їх одночасно
+                # Якщо обидва параметри передані, передаємо їх одночасно
                 if pk and chat_id:
                     query = query.filter_by(id=pk, chat_id=chat_id)
                 elif pk:
@@ -239,9 +243,30 @@ async def get_user_chat_with_user(user_chat_pk: int) -> Optional[UserChat]:
                 return result.scalars().first()
         except Exception as e:
             logger.error(f"Attempt={n+1}: {e}")
+            await sleep(0.5)
+    return None
 
 
-async def get_chats(user_id: int = None, limit: int = None) -> List[Chat]:
+async def get_users(filter_by_birthday: bool = False) -> List[User]:
+    """ Get all users from DataBase, optionally filter by non-null birthday """
+    for n in range(3):
+        try:
+            logger.debug("get_all_users()")
+            async with DBSession() as session:
+                query = select(User)
+                # Додаємо фільтр, якщо це необхідно
+                if filter_by_birthday:
+                    query = query.where(User.birthday.isnot(None))
+                result = await session.execute(query)
+                users = result.scalars().all()  # Отримуємо список users
+                return users
+        except Exception as e:
+            logger.error(f"Attempt={n + 1}: {e}")
+            await sleep(0.5)
+    return []
+
+
+async def get_chats(user_id: int = None, status: bool = None, limit: int = None) -> List[Chat]:
     """ Get array with object<SQLAlchemy>: 'Chat' by optional user_id and optional limit """
     for n in range(3):
         try:
@@ -252,6 +277,9 @@ async def get_chats(user_id: int = None, limit: int = None) -> List[Chat]:
                 # Якщо передано user_id, додаємо фільтрацію
                 if user_id:
                     query = query.filter_by(user_id=user_id)
+                # Якщо передано status, додаємо фільтрацію
+                if status is not None:
+                    query = query.filter_by(status=status)
                 # Додаємо ліміт, якщо він переданий
                 if limit:
                     query = query.limit(limit)
@@ -282,7 +310,7 @@ async def get_user_chat(chat_id: int, user_telegram_id: int) -> Optional[UserCha
 
 
 async def get_all_users_from_chat(chat_id: int) -> List[UserChat]:
-    """ Get all Users from UserChat by 'chat.id' with associated User """
+    """ Get all users from UserChat by 'chat.id' with associated User """
     for n in range(3):
         try:
             logger.debug(f"get_all_users_from_chat(chat_id={chat_id})")
@@ -312,6 +340,44 @@ async def get_holiday_with_chat(holiday_id: int) -> Optional[Holiday]:
         except Exception as e:
             logger.error(f"attempt={n + 1} error: {e}")
             await sleep(0.5)
+    return None
+
+
+async def get_holiday(user_pk: int, chat_pk: int):
+    """Get Holiday by user_pk (ForeignKey) and chat_pk (ForeignKey)"""
+    for n in range(3):
+        try:
+            logger.debug(f'get_holiday(user_pk={user_pk}, chat_pk={chat_pk})')
+            async with DBSession() as session:
+                query = select(Holiday).where(and_(Holiday.user_id == user_pk, Holiday.chat_id == chat_pk))
+                result = await session.execute(query)
+                holiday = result.scalar()
+                return holiday
+        except Exception as e:
+            logger.error(f"attempt={n + 1} error: {e}")
+            await sleep(0.5)
+    return None
+
+
+async def get_report(user_pk: int, chat_pk: int, holiday_pk: int) -> Optional[Report]:
+    """Find Report in DataBase and return it or return None if not found."""
+    for n in range(3):
+        try:
+            logger.debug(f"get_report(user_pk={user_pk}, chat_pk={chat_pk}, holiday_pk={holiday_pk})")
+            async with DBSession() as session:
+                query = select(Report).where(
+                    and_(
+                        Report.user_id == user_pk,
+                        Report.chat_id == chat_pk,
+                        Report.holiday_id == holiday_pk
+                    )
+                )
+                result = await session.execute(query)
+                report = result.scalar_one_or_none()
+                return report
+        except Exception as e:
+            logger.error(f"Attempt {n+1}: {e}")
+            await sleep(0.5)  # Додаємо затримку перед повторною спробою
     return None
 
 

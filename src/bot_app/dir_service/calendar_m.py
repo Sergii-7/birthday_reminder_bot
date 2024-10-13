@@ -1,4 +1,5 @@
 from typing import List
+
 from src.sql.models import User
 from src.sql.complex_func_db import get_intersecting_users
 from src.bot_app.dir_service.bot_service import get_user_info
@@ -21,7 +22,7 @@ async def get_schedule_holidays(user: User) -> List[str]:
     else:
         text = ""
         for n, doc in enumerate(start=1, iterable=users):
-            text += f"\n{get_user_info(user=doc, calendar=True)}\n ------------"
+            text += f"\n{get_user_info(user=doc, user_chat=None)}\n ------------"
             if n % 5 == 0:
                 calendar_list.append(text)
                 text = ""

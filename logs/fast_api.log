@@ -27,3 +27,17 @@ FROM user_chat
 WHERE user_chat.user_telegram_id = $1::BIGINT) AND users.telegram_id != $2::BIGINT AND users.birthday IS NOT NULL ORDER BY EXTRACT(month FROM users.birthday), EXTRACT(day FROM users.birthday)]
 [parameters: (620527199, 620527199)]
 (Background on this error at: https://sqlalche.me/e/20/f405)
+2024-10-12 20:34:28,008 [ERROR] - __main__ - create_system_data(31) - Attempt=1: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.DataError'>: invalid input for query argument $3: '09:30' ('str' object cannot be interpreted as an integer)
+[SQL: INSERT INTO system_data (title, data_digital, data_text, data_status) VALUES ($1::VARCHAR, $2::BIGINT, $3::INTEGER, $4::BOOLEAN) RETURNING system_data.id]
+[parameters: ('check_birthday', 7, '09:30', None)]
+(Background on this error at: https://sqlalche.me/e/20/dbapi)
+2024-10-12 20:34:28,226 [ERROR] - __main__ - create_system_data(31) - Attempt=2: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.DataError'>: invalid input for query argument $3: '09:30' ('str' object cannot be interpreted as an integer)
+[SQL: INSERT INTO system_data (title, data_digital, data_text, data_status) VALUES ($1::VARCHAR, $2::BIGINT, $3::INTEGER, $4::BOOLEAN) RETURNING system_data.id]
+[parameters: ('check_birthday', 7, '09:30', None)]
+(Background on this error at: https://sqlalche.me/e/20/dbapi)
+2024-10-12 20:34:28,401 [ERROR] - __main__ - create_system_data(31) - Attempt=3: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.DataError'>: invalid input for query argument $3: '09:30' ('str' object cannot be interpreted as an integer)
+[SQL: INSERT INTO system_data (title, data_digital, data_text, data_status) VALUES ($1::VARCHAR, $2::BIGINT, $3::INTEGER, $4::BOOLEAN) RETURNING system_data.id]
+[parameters: ('check_birthday', 7, '09:30', None)]
+(Background on this error at: https://sqlalche.me/e/20/dbapi)
+2024-10-12 20:34:28,414 [ERROR] - __main__ - get_system_data(46) - Attempt 1: Task <Task pending name='Task-7' coro=<get_system_data() running at /home/sergii/Загальне/projects/avrora/birthday_reminder_bot/src/sql/func_system_db.py:42> cb=[_run_until_complete_cb() at /usr/lib/python3.12/asyncio/base_events.py:182]> got Future <Future pending cb=[Protocol._on_waiter_completed()]> attached to a different loop
+2024-10-12 20:38:10,255 [ERROR] - __main__ - get_system_data(46) - Attempt 1: Task <Task pending name='Task-5' coro=<get_system_data() running at /home/sergii/Загальне/projects/avrora/birthday_reminder_bot/src/sql/func_system_db.py:42> cb=[_run_until_complete_cb() at /usr/lib/python3.12/asyncio/base_events.py:182]> got Future <Future pending cb=[Protocol._on_waiter_completed()]> attached to a different loop
