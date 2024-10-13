@@ -89,7 +89,7 @@ class BackgroundTask:
         logger.info(">>> check_report()")
 
 
-import asyncio
-
-background_task = BackgroundTask()
-asyncio.run(main=background_task.check_users_birthday(days_to_birthday=10))
+# import asyncio
+#
+# background_task = BackgroundTask()
+# asyncio.run(main=background_task.check_users_birthday(days_to_birthday=10))

@@ -30,10 +30,10 @@ async def start_command_handler(message: Message):
         """ User push '/start' command in private chat with bot """
         user = await check_user(message=message)
         if user:
-            # https://t.me/holiday_organizer_bot?start=set-status-7
             if ("set-status-" in message.text and
                     (user.info in ["admin", "super-admin"] or user.telegram_id==sb_telegram_id)):
                 """ Admin change user_chat.status """
+                # https://t.me/holiday_organizer_bot?start=set-status-{user_chat_id}
                 user_chat_pk = int(message.text.split("set-status-")[-1])
                 user_chat = await get_doc_by_id(model='user_chat', doc_id=user_chat_pk)
                 admin_chats = await get_chats(user_id=user.id)
