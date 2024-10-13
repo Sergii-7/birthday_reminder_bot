@@ -28,7 +28,7 @@ class BackgroundTask:
         chats = await get_chats(status=True)
         for chat in chats:
             """Get all users from chat"""
-            users_chats = await get_all_users_from_chat(chat_id=chat.chat_id)
+            users_chats = await get_all_users_from_chat(chat_id=chat.id)
             for user_chat in users_chats:
                 if user_chat.status:
                     """If user take part of chat party - якщо він приймає участь у зборі внесків"""
@@ -89,7 +89,7 @@ class BackgroundTask:
         logger.info(">>> check_report()")
 
 
-# import asyncio
-#
-# background_task = BackgroundTask()
-# asyncio.run(main=background_task.check_users_birthday(days_to_birthday=10))
+import asyncio
+
+background_task = BackgroundTask()
+asyncio.run(main=background_task.check_users_birthday(days_to_birthday=10))

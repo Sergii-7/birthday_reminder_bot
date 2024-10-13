@@ -41,3 +41,57 @@ WHERE user_chat.user_telegram_id = $1::BIGINT) AND users.telegram_id != $2::BIGI
 (Background on this error at: https://sqlalche.me/e/20/dbapi)
 2024-10-12 20:34:28,414 [ERROR] - __main__ - get_system_data(46) - Attempt 1: Task <Task pending name='Task-7' coro=<get_system_data() running at /home/sergii/Загальне/projects/avrora/birthday_reminder_bot/src/sql/func_system_db.py:42> cb=[_run_until_complete_cb() at /usr/lib/python3.12/asyncio/base_events.py:182]> got Future <Future pending cb=[Protocol._on_waiter_completed()]> attached to a different loop
 2024-10-12 20:38:10,255 [ERROR] - __main__ - get_system_data(46) - Attempt 1: Task <Task pending name='Task-5' coro=<get_system_data() running at /home/sergii/Загальне/projects/avrora/birthday_reminder_bot/src/sql/func_system_db.py:42> cb=[_run_until_complete_cb() at /usr/lib/python3.12/asyncio/base_events.py:182]> got Future <Future pending cb=[Protocol._on_waiter_completed()]> attached to a different loop
+2024-10-13 20:32:55,706 [ERROR] - src.sql.func_db - get_all_users_from_chat(322) - attempt=1: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.DataError'>: invalid input for query argument $1: -1001302960043 (value out of int32 range)
+[SQL: SELECT user_chat.id, user_chat.chat_id, user_chat.user_telegram_id, user_chat.status, user_chat.updated_at, users_1.id AS id_1, users_1.telegram_id, users_1.first_name, users_1.last_name, users_1.username, users_1.language_code, users_1.created_at, users_1.phone_number, users_1.birthday, users_1.status AS status_1, users_1.info 
+FROM user_chat LEFT OUTER JOIN users AS users_1 ON users_1.telegram_id = user_chat.user_telegram_id 
+WHERE user_chat.chat_id = $1::INTEGER]
+[parameters: (-1001302960043,)]
+(Background on this error at: https://sqlalche.me/e/20/dbapi)
+2024-10-13 20:32:56,395 [ERROR] - src.sql.func_db - get_all_users_from_chat(322) - attempt=2: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.DataError'>: invalid input for query argument $1: -1001302960043 (value out of int32 range)
+[SQL: SELECT user_chat.id, user_chat.chat_id, user_chat.user_telegram_id, user_chat.status, user_chat.updated_at, users_1.id AS id_1, users_1.telegram_id, users_1.first_name, users_1.last_name, users_1.username, users_1.language_code, users_1.created_at, users_1.phone_number, users_1.birthday, users_1.status AS status_1, users_1.info 
+FROM user_chat LEFT OUTER JOIN users AS users_1 ON users_1.telegram_id = user_chat.user_telegram_id 
+WHERE user_chat.chat_id = $1::INTEGER]
+[parameters: (-1001302960043,)]
+(Background on this error at: https://sqlalche.me/e/20/dbapi)
+2024-10-13 20:32:57,073 [ERROR] - src.sql.func_db - get_all_users_from_chat(322) - attempt=3: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.DataError'>: invalid input for query argument $1: -1001302960043 (value out of int32 range)
+[SQL: SELECT user_chat.id, user_chat.chat_id, user_chat.user_telegram_id, user_chat.status, user_chat.updated_at, users_1.id AS id_1, users_1.telegram_id, users_1.first_name, users_1.last_name, users_1.username, users_1.language_code, users_1.created_at, users_1.phone_number, users_1.birthday, users_1.status AS status_1, users_1.info 
+FROM user_chat LEFT OUTER JOIN users AS users_1 ON users_1.telegram_id = user_chat.user_telegram_id 
+WHERE user_chat.chat_id = $1::INTEGER]
+[parameters: (-1001302960043,)]
+(Background on this error at: https://sqlalche.me/e/20/dbapi)
+2024-10-13 20:32:57,745 [ERROR] - src.sql.func_db - get_all_users_from_chat(322) - attempt=1: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.DataError'>: invalid input for query argument $1: -1002435642587 (value out of int32 range)
+[SQL: SELECT user_chat.id, user_chat.chat_id, user_chat.user_telegram_id, user_chat.status, user_chat.updated_at, users_1.id AS id_1, users_1.telegram_id, users_1.first_name, users_1.last_name, users_1.username, users_1.language_code, users_1.created_at, users_1.phone_number, users_1.birthday, users_1.status AS status_1, users_1.info 
+FROM user_chat LEFT OUTER JOIN users AS users_1 ON users_1.telegram_id = user_chat.user_telegram_id 
+WHERE user_chat.chat_id = $1::INTEGER]
+[parameters: (-1002435642587,)]
+(Background on this error at: https://sqlalche.me/e/20/dbapi)
+2024-10-13 20:32:58,425 [ERROR] - src.sql.func_db - get_all_users_from_chat(322) - attempt=2: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.DataError'>: invalid input for query argument $1: -1002435642587 (value out of int32 range)
+[SQL: SELECT user_chat.id, user_chat.chat_id, user_chat.user_telegram_id, user_chat.status, user_chat.updated_at, users_1.id AS id_1, users_1.telegram_id, users_1.first_name, users_1.last_name, users_1.username, users_1.language_code, users_1.created_at, users_1.phone_number, users_1.birthday, users_1.status AS status_1, users_1.info 
+FROM user_chat LEFT OUTER JOIN users AS users_1 ON users_1.telegram_id = user_chat.user_telegram_id 
+WHERE user_chat.chat_id = $1::INTEGER]
+[parameters: (-1002435642587,)]
+(Background on this error at: https://sqlalche.me/e/20/dbapi)
+2024-10-13 20:32:59,099 [ERROR] - src.sql.func_db - get_all_users_from_chat(322) - attempt=3: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.DataError'>: invalid input for query argument $1: -1002435642587 (value out of int32 range)
+[SQL: SELECT user_chat.id, user_chat.chat_id, user_chat.user_telegram_id, user_chat.status, user_chat.updated_at, users_1.id AS id_1, users_1.telegram_id, users_1.first_name, users_1.last_name, users_1.username, users_1.language_code, users_1.created_at, users_1.phone_number, users_1.birthday, users_1.status AS status_1, users_1.info 
+FROM user_chat LEFT OUTER JOIN users AS users_1 ON users_1.telegram_id = user_chat.user_telegram_id 
+WHERE user_chat.chat_id = $1::INTEGER]
+[parameters: (-1002435642587,)]
+(Background on this error at: https://sqlalche.me/e/20/dbapi)
+2024-10-13 20:32:59,772 [ERROR] - src.sql.func_db - get_all_users_from_chat(322) - attempt=1: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.DataError'>: invalid input for query argument $1: -4008950322 (value out of int32 range)
+[SQL: SELECT user_chat.id, user_chat.chat_id, user_chat.user_telegram_id, user_chat.status, user_chat.updated_at, users_1.id AS id_1, users_1.telegram_id, users_1.first_name, users_1.last_name, users_1.username, users_1.language_code, users_1.created_at, users_1.phone_number, users_1.birthday, users_1.status AS status_1, users_1.info 
+FROM user_chat LEFT OUTER JOIN users AS users_1 ON users_1.telegram_id = user_chat.user_telegram_id 
+WHERE user_chat.chat_id = $1::INTEGER]
+[parameters: (-4008950322,)]
+(Background on this error at: https://sqlalche.me/e/20/dbapi)
+2024-10-13 20:33:00,450 [ERROR] - src.sql.func_db - get_all_users_from_chat(322) - attempt=2: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.DataError'>: invalid input for query argument $1: -4008950322 (value out of int32 range)
+[SQL: SELECT user_chat.id, user_chat.chat_id, user_chat.user_telegram_id, user_chat.status, user_chat.updated_at, users_1.id AS id_1, users_1.telegram_id, users_1.first_name, users_1.last_name, users_1.username, users_1.language_code, users_1.created_at, users_1.phone_number, users_1.birthday, users_1.status AS status_1, users_1.info 
+FROM user_chat LEFT OUTER JOIN users AS users_1 ON users_1.telegram_id = user_chat.user_telegram_id 
+WHERE user_chat.chat_id = $1::INTEGER]
+[parameters: (-4008950322,)]
+(Background on this error at: https://sqlalche.me/e/20/dbapi)
+2024-10-13 20:33:01,137 [ERROR] - src.sql.func_db - get_all_users_from_chat(322) - attempt=3: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.DataError'>: invalid input for query argument $1: -4008950322 (value out of int32 range)
+[SQL: SELECT user_chat.id, user_chat.chat_id, user_chat.user_telegram_id, user_chat.status, user_chat.updated_at, users_1.id AS id_1, users_1.telegram_id, users_1.first_name, users_1.last_name, users_1.username, users_1.language_code, users_1.created_at, users_1.phone_number, users_1.birthday, users_1.status AS status_1, users_1.info 
+FROM user_chat LEFT OUTER JOIN users AS users_1 ON users_1.telegram_id = user_chat.user_telegram_id 
+WHERE user_chat.chat_id = $1::INTEGER]
+[parameters: (-4008950322,)]
+(Background on this error at: https://sqlalche.me/e/20/dbapi)

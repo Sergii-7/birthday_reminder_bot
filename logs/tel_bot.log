@@ -1,1 +1,2 @@
 2024-09-24 22:03:58,737 [INFO] - src.web_app.app_files.telegram_route - on_shutdown(22) - Bot webhook has been delete.
+2024-10-13 20:32:54,444 [INFO] - __main__ - check_users_birthday(24) - >>> check_users_birthday()
