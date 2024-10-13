@@ -24,7 +24,7 @@ class BackgroundTask:
         logger.info(f">>> check_users_birthday()")
         date_today_str = str(correct_time())[:10]
         date_today: date = date.fromisoformat(date_today_str)
-        to_birthday_list = ({n: str(date_today + timedelta(days=n))[5:]} for n in range(1, days_to_birthday+1))
+        to_birthday_list = [{n: str(date_today + timedelta(days=n))[5:]} for n in range(1, days_to_birthday+1)]
         chats = await get_chats(status=True)
         for chat in chats:
             """Get all users from chat"""
@@ -33,63 +33,65 @@ class BackgroundTask:
                 if user_chat.status:
                     """If user take part of chat party - якщо він приймає участь у зборі внесків"""
                     user = user_chat.user
+                    # print(user.first_name, user.birthday)
                     if user.birthday:
                         for data_birthday in to_birthday_list:
                             for key, value in data_birthday.items():
                                 days_to_birthday: int = key  # 0 | 1 | 2 ...
                                 birthday_str: str = value    # '10-19'
                                 if str(user.birthday)[5:] == birthday_str:
-                                   if days_to_birthday == 0:
-                                       """User has birthday today - AI sends greetings to the user personally 
-                                       and in the group"""
-                                       logger.info(f"user: {user.first_name}|{user.telegram_id} has birthday today.")
-                                       greet_user = GreetingsUser()
-                                       task = create_task(greet_user.start_greet(user_chat=user_chat))
-                                       logger.info(f"GreetingsUser().start_greet(): {task}")
-                                   else:
-                                       chat: Chat = await get_doc_by_id(model='chat', doc_id=user_chat.chat_id)
-                                       holiday = await get_holiday(user_pk=chat.user.id, chat_pk=chat.id)
-                                       if not holiday:
-                                           info = f"<b>{user.first_name}</b>\n<code>{user.phone_number}</code>"
-                                           holiday_data = {
-                                               "user_id": user.id, "chat_id": chat.id,
-                                               "date_event": user.birthday, "amount": amount, "info": info
-                                           }
-                                           await create_new_doc(model='holiday', data=holiday_data)
-                                           holiday = await get_holiday(user_pk=chat.user.id, chat_pk=chat.id)
-                                       if days_to_birthday > 7:
-                                           """Send panel for Admin to set Holiday in DataBase"""
-                                           admin: User = await get_doc_by_id(model='user', doc_id=chat.user_id)
-                                           text = (f"Іменинник/іменинниця:\n{holiday.info}\n\n"
-                                                   f"<code>{holiday.date_event}</code>\n\nсума внеску: "
-                                                   f"<b>{holiday.amount}</b>")
-                                           buttons = buttons_for_event_settings(role=admin.info, holiday=holiday)
-                                           reply_markup = InlineKeyboardMarkup(inline_keyboard=buttons)
-                                           await bot.send_message(
-                                               chat_id=admin.telegram_id, text=text, reply_markup=reply_markup)
-                                       else:
-                                           """ days_to_birthday < 8 """
-                                           if holiday.status:
-                                               """ Подія активна """
-                                               """User has birthday in int: 'days_to_birthday' - we send another users 
-                                               the admin card with request for transferring money"""
-                                               logger.info(
-                                                   f"user: {user.first_name}|{user.telegram_id} has birthday in "
-                                                   f"{days_to_birthday} days."
-                                               )
-                                               money_asker = AskingMoney()
-                                               task = create_task(money_asker.start_asking(
-                                                   birthday_user=user, users_chats=users_chats,
-                                                   days_to_birthday=days_to_birthday, holiday=holiday)
-                                               )
-                                               logger.info(f"AskingMoney().send_asking(): {task}")
+                                    # print(True)
+                                    if days_to_birthday == 0:
+                                        """User has birthday today - AI sends greetings to the user personally 
+                                        and in the group"""
+                                        logger.info(f"user: {user.first_name}|{user.telegram_id} has birthday today.")
+                                        greet_user = GreetingsUser()
+                                        task = create_task(greet_user.start_greet(user_chat=user_chat))
+                                        logger.info(f"GreetingsUser().start_greet(): {task}")
+                                    else:
+                                        chat: Chat = await get_doc_by_id(model='chat', doc_id=user_chat.chat_id)
+                                        holiday = await get_holiday(user_pk=chat.user_id, chat_pk=chat.id)
+                                        if not holiday:
+                                            info = f"<b>{user.first_name}</b>\n<code>{user.phone_number}</code>"
+                                            holiday_data = {
+                                                "user_id": user.id, "chat_id": chat.id,
+                                                "date_event": user.birthday, "amount": amount, "info": info
+                                            }
+                                            await create_new_doc(model='holiday', data=holiday_data)
+                                            holiday = await get_holiday(user_pk=chat.user_id, chat_pk=chat.id)
+                                        if days_to_birthday > 7:
+                                            """Send panel for Admin to set Holiday in DataBase"""
+                                            admin: User = await get_doc_by_id(model='user', doc_id=chat.user_id)
+                                            text = (f"<u>Іменинник/іменинниця:</u>\n{holiday.info}\nДата Народження: "
+                                                    f"<code>{holiday.date_event}</code>\nсума внеску: "
+                                                    f"<b>{holiday.amount}</b>")
+                                            buttons = buttons_for_event_settings(role=admin.info, holiday=holiday)
+                                            reply_markup = InlineKeyboardMarkup(inline_keyboard=buttons)
+                                            await bot.send_message(
+                                                chat_id=admin.telegram_id, text=text, reply_markup=reply_markup)
+                                        else:
+                                            """ days_to_birthday < 8 """
+                                            if holiday.status:
+                                                """ Подія активна """
+                                                """User has birthday in int: 'days_to_birthday' - we send another users 
+                                                the admin card with request for transferring money"""
+                                                logger.info(
+                                                    f"user: {user.first_name}|{user.telegram_id} has birthday in "
+                                                    f"{days_to_birthday} days."
+                                                )
+                                                money_asker = AskingMoney()
+                                                task = create_task(money_asker.start_asking(
+                                                    birthday_user=user, users_chats=users_chats,
+                                                    days_to_birthday=days_to_birthday, holiday=holiday)
+                                                )
+                                                logger.info(f"AskingMoney().send_asking(): {task}")
+        # await asyncio.sleep(600)
 
     async def check_reports(self, ):
         """ Check holidays reports in DataBase and send info for Admin - start one time per day"""
         logger.info(">>> check_report()")
 
 
-import asyncio
-
-background_task = BackgroundTask()
-asyncio.run(main=background_task.check_users_birthday(days_to_birthday=10))
+# import asyncio
+# background_task = BackgroundTask()
+# asyncio.run(main=background_task.check_users_birthday(days_to_birthday=10))
