@@ -1,12 +1,14 @@
 from asyncio import create_task
 from datetime import date, timedelta
+from typing import Optional
+
 from aiogram.types import InlineKeyboardMarkup
 
 from src.bot_app.dir_menu.buttons_for_menu import buttons_for_event_settings
 from config import amount
 from src.dir_schedule.some_tools import AskingMoney, GreetingsUser
 from src.sql.func_db import get_chats, get_all_users_from_chat, get_holiday, create_new_doc, get_doc_by_id
-from src.sql.models import Chat, User
+from src.sql.models import Chat, User, Holiday
 from src.bot_app.create_bot import bot
 from src.service.service_tools import correct_time
 from src.service.loggers.py_logger_tel_bot import get_logger
@@ -24,7 +26,7 @@ class BackgroundTask:
         logger.info(f">>> check_users_birthday()")
         date_today_str = str(correct_time())[:10]
         date_today: date = date.fromisoformat(date_today_str)
-        to_birthday_list = [{n: str(date_today + timedelta(days=n))[5:]} for n in range(1, days_to_birthday+1)]
+        to_birthday_list = [{n: str(date_today + timedelta(days=n))[5:]} for n in range(1, days_to_birthday + 1)]
         chats = await get_chats(status=True)
         for chat in chats:
             """Get all users from chat"""
@@ -49,12 +51,17 @@ class BackgroundTask:
                                         task = create_task(greet_user.start_greet(user_chat=user_chat))
                                         logger.info(f"GreetingsUser().start_greet(): {task}")
                                     else:
+
                                         chat: Chat = await get_doc_by_id(model='chat', doc_id=user_chat.chat_id)
-                                        holiday = await get_holiday(user_pk=chat.user_id, chat_pk=chat.id)
+                                        holiday: Optional[Holiday] = await get_holiday(
+                                            user_pk=chat.user_id, chat_pk=chat.id)
                                         if not holiday:
+                                            """По дефолту новий holiday.status==True, тобто подія активна, 
+                                            щоб інші користувачі НЕ отримували СМС з проханням зробити внесок
+                                            - Адмін має ЗАКРИТИ подію"""
                                             info = f"<b>{user.first_name}</b>\n<code>{user.phone_number}</code>"
                                             holiday_data = {
-                                                "user_id": user.id, "chat_id": chat.id,
+                                                "user_id": user.id, "chat_id": chat.id, "status": True,
                                                 "date_event": user.birthday, "amount": amount, "info": info
                                             }
                                             await create_new_doc(model='holiday', data=holiday_data)

@@ -117,7 +117,7 @@ class AskingMoney:
 
     async def to_user(
             self, get_text_ai: str, get_image_ai: str, user: User, title: str, amount: int,
-            birthday_user_name: str, days_to_birthday: int):
+            birthday_user_name: str, days_to_birthday: int, card_number: str):
         """ AI sends Greetings to the user group """
         logger.debug(f">>> AskingMoney().to_user()")
         data_from_ai = await ResponseTextAI(prompt_for_ai=get_text_ai).get_content()
@@ -132,6 +132,7 @@ class AskingMoney:
         if isinstance(data_image, dict) and "image_url" in data_image:
             image_url = data_image["image_url"]
             filename = f"image_for_{user.id}.jpg"
+            text = text + f"\n\nкарта для перерахування внеску: <code>{card_number}</code>"
             await send_compressed_image(
                 chat_id=user.telegram_id, filename=filename, caption=text,
                 disable_notification=False, url=image_url, reply_markup=None
@@ -171,7 +172,7 @@ class AskingMoney:
                             await self.to_user(
                                 get_text_ai=get_text_ai, get_image_ai=get_image_ai, user=user_chat.user, title=title,
                                 amount=holiday.amount, birthday_user_name=birthday_user.first_name,
-                                days_to_birthday=days_to_birthday
+                                days_to_birthday=days_to_birthday, card_number=chat.card_number
                             )
                         except Exception as e:
                             logger.error(e)
