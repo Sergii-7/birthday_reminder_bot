@@ -1,10 +1,10 @@
 from asyncio import sleep
 from aiogram.types import InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply
-from typing import List, Dict, Union, Optional
+from typing import List, Dict, Union, Optional, Any
 
 from src.bot_app.create_bot import bot
 from src.bot_app.dir_service.bot_service import send_compressed_image
-from src.sql.models import User, UserChat, Chat, Holiday
+from src.sql.models import User, UserChat, Chat, Holiday, Report
 from src.sql.func_db import get_doc_by_id, get_report, create_new_doc
 from src.dir_open_ai.open_ai_tools import ResponseTextAI, ResponseImageAI
 from src.service.loggers.py_logger_tel_bot import get_logger
@@ -149,12 +149,13 @@ class AskingMoney:
                 if user_chat.user_telegram_id != birthday_user.telegram_id:
                     """Order the text and image from AI for user"""
                     chat: Optional[Chat] = await get_doc_by_id(model='chat', doc_id=user_chat.chat_id)
-                    report = await get_report(user_pk=user_chat.user.id, chat_pk=chat.id, holiday_pk=holiday.id)
+                    report: Report = await get_report(user_pk=user_chat.user.id, chat_pk=chat.id, holiday_pk=holiday.id)
                     if report:
                         ask_money = False if report.status else True
                     else:
                         ask_money = True
-                        report = {"user_id": user_chat.user.id, "chat_id": chat.id, "holiday_id": holiday.id}
+                        report: Dict[str, Any] = {
+                            "user_id": user_chat.user.id, "chat_id": chat.id, "holiday_id": holiday.id}
                         await create_new_doc(model='report', data=report)
                         # report = await get_report(user_pk=user_chat.user.id, chat_pk=chat.id, holiday_pk=holiday.id)
                     if ask_money:
