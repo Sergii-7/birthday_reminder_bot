@@ -53,7 +53,7 @@ class BackgroundTask:
                                         holiday: Optional[Holiday] = await get_holiday(
                                             user_pk=chat.user_id, chat_pk=chat.id)
                                         if not holiday:
-                                            """По дефолту новий holiday.status==True, тобто подія активна, 
+                                            """По дефолту новий holiday.status=True, тобто подія активна, 
                                             щоб інші користувачі НЕ отримували СМС з проханням зробити внесок
                                             - Адмін має ЗАКРИТИ подію"""
                                             info = f"<b>{user.first_name}</b>\n<code>{user.phone_number}</code>"
@@ -62,7 +62,7 @@ class BackgroundTask:
                                                 "date_event": user.birthday, "amount": amount, "info": info
                                             }
                                             await create_new_doc(model='holiday', data=holiday_data)
-                                            holiday = await get_holiday(user_pk=chat.user_id, chat_pk=chat.id)
+                                            holiday: Holiday = await get_holiday(user_pk=chat.user_id, chat_pk=chat.id)
                                         if days_to_birthday > 7:
                                             """Send panel for Admin to set Holiday in DataBase"""
                                             await panel_set_holidays(chat=chat, holiday=holiday)

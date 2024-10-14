@@ -29,21 +29,22 @@ async def panel_make_payment(user: User, callback_query: CallbackQuery):
     if chats:
         text, text_list = str(), list()
         for n, chat in enumerate(start=1, iterable=chats):
-            holiday: Holiday = await get_holiday(user_pk=user.id, chat_pk=chat.id)
-            report: Optional[Report] = await get_report(user_pk=user.id, chat_pk=chat.id, holiday_pk=holiday.id)
-            if report:
-                if not report.status:
-                    """User has financial debt before this chat"""
-                    title = await DataAI().get_title(chat=chat)
-                    if n < 6:
-                        text += (f"\n\nчат: <b>{title}</b>\n"
-                                 f"<u>Іменинник/іменинниця:</u>\n{holiday.info}\n"
-                                 f"Дата Народження: <code>{holiday.date_event}</code>\n"
-                                 f"сума внеску: <b>{holiday.amount}</b>\n"
-                                 f"\n\nкарта для перерахування внеску: <code>{chat.card_number}</code>")
-                    else:
-                        text_list.append(text)
-                        text = ""
+            holiday: Optional[Holiday] = await get_holiday(user_pk=user.id, chat_pk=chat.id)
+            if holiday:
+                report: Optional[Report] = await get_report(user_pk=user.id, chat_pk=chat.id, holiday_pk=holiday.id)
+                if report:
+                    if not report.status:
+                        """User has financial debt before this chat"""
+                        title = await DataAI().get_title(chat=chat)
+                        if n < 6:
+                            text += (f"\n\nчат: <b>{title}</b>\n"
+                                     f"<u>Іменинник/іменинниця:</u>\n{holiday.info}\n"
+                                     f"Дата Народження: <code>{holiday.date_event}</code>\n"
+                                     f"сума внеску: <b>{holiday.amount}</b>\n"
+                                     f"\n\nкарта для перерахування внеску: <code>{chat.card_number}</code>")
+                        else:
+                            text_list.append(text)
+                            text = ""
         if text:
             text_list.append(text)
         if text_list:
