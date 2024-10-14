@@ -115,8 +115,8 @@ async def working(message: Message):
                         data = data.replace("set amount event-", "", 1)
                         try:
                             data = data.split(':')
-                            amount_data = int(data[0])
-                            holiday_id = int(data[1])
+                            amount_data = int(data[1])
+                            holiday_id = int(data[0])
                             holiday: Optional[Holiday] = await func_db.get_holiday_with_chat(holiday_id=holiday_id)
                             if holiday:
                                 chat: Chat = holiday.chat
@@ -125,7 +125,7 @@ async def working(message: Message):
                                 await message.reply(text=success_msg)
                                 await panel_set_holidays(chat=chat, holiday=holiday)
                             else:
-                                raise ValueError(f"Дані не валідні!")
+                                raise ValueError(f"Документ не знайдено в базі даних!")
                         except Exception as e:
                             await message.reply(text=f"{error_msg}:\n{e}")
 
