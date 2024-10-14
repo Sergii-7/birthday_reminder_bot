@@ -56,6 +56,7 @@ def buttons_for_chat_settings(role: str, chat_doc_id: int) -> List[List[InlineKe
 def buttons_for_event_settings(role: str, holiday: Holiday) -> List[List[InlineKeyboardButton]]:
     """Buttons for Admin to set Holiday"""
     buttons = list()
+    role = "super" if role == "super-admin" else role  # "admin"
     buttons.append([InlineKeyboardButton(
         text="Змінити сума внеску (грн) 💸", callback_data=f"0:{role}:event_amount:{holiday.id}")])
     if holiday.status:
