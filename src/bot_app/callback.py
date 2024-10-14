@@ -77,7 +77,8 @@ async def callback_run(callback_query: CallbackQuery):
                     data = data.replace(":event_", "", 1).split(":")
                     command, holiday_id = data[0], int(data[-1])
                     holiday = await func_db.get_holiday_with_chat(holiday_id=holiday_id)
-                    await SetEvent().get_command(user=user, command=command, holiday=holiday)
+                    await SetEvent().get_command(
+                        user=user, command=command, holiday=holiday, callback_query=callback_query)
             else:
                 await callback_query.answer(text="У вас немає доступу!", show_alert=True)
                 await callback_query.message.delete()
