@@ -299,7 +299,10 @@ async def get_user_chat(chat_id: int, user_telegram_id: int) -> Optional[UserCha
             logger.debug(f"get_user_chat(chat_id={chat_id}, user_telegram_id={user_telegram_id})")
             async with DBSession() as session:
                 query = select(UserChat).filter(
-                    (UserChat.chat_id == chat_id) & (UserChat.user_telegram_id == user_telegram_id)
+                    and_(
+                        UserChat.chat_id == chat_id,
+                        UserChat.user_telegram_id == user_telegram_id
+                    )
                 )
                 result = await session.execute(query)
                 return result.scalar_one_or_none()

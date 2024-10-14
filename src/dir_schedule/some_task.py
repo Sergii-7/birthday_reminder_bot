@@ -10,6 +10,7 @@ from src.dir_schedule.some_tools import AskingMoney, GreetingsUser
 from src.sql.func_db import get_chats, get_all_users_from_chat, get_holiday, create_new_doc, get_doc_by_id
 from src.sql.models import Chat, User, Holiday
 from src.bot_app.create_bot import bot
+from src.dir_schedule.some_tools import DataAI
 from src.service.service_tools import correct_time
 from src.service.loggers.py_logger_tel_bot import get_logger
 
@@ -68,10 +69,12 @@ class BackgroundTask:
                                             holiday = await get_holiday(user_pk=chat.user_id, chat_pk=chat.id)
                                         if days_to_birthday > 7:
                                             """Send panel for Admin to set Holiday in DataBase"""
+                                            title = await DataAI().get_title(chat=chat)
                                             admin: User = await get_doc_by_id(model='user', doc_id=chat.user_id)
-                                            text = (f"<u>Іменинник/іменинниця:</u>\n{holiday.info}\nДата Народження: "
-                                                    f"<code>{holiday.date_event}</code>\nсума внеску: "
-                                                    f"<b>{holiday.amount}</b>")
+                                            text = (f"чат: <b>{title}</b>\n"
+                                                    f"<u>Іменинник/іменинниця:</u>\n{holiday.info}\n"
+                                                    f"Дата Народження: <code>{holiday.date_event}</code>\n"
+                                                    f"сума внеску: <b>{holiday.amount}</b>")
                                             buttons = buttons_for_event_settings(role=admin.info, holiday=holiday)
                                             reply_markup = InlineKeyboardMarkup(inline_keyboard=buttons)
                                             await bot.send_message(

@@ -43,7 +43,7 @@ async def check_user_in_every_chat(user: User) -> Dict[str, int]:
         if await check_user_in_group(telegram_id=user.telegram_id, chat_id=chat.chat_id):
             user_chat = await get_user_chat(chat_id=chat.id, user_telegram_id=user.telegram_id)
             if user_chat:
-                user_chat.status = True
+                # user_chat.status = True
                 user_chat.updated_at = correct_time()
                 r = await doc_update(doc=user_chat)
                 updated_user_chat = updated_user_chat + 1 if r else updated_user_chat
