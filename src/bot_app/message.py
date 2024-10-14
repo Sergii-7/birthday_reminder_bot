@@ -1,12 +1,16 @@
 import os, re
+from typing import Optional
 from aiogram import F
 from aiogram.types import Message, FSInputFile, InputMediaDocument
+
+from src.bot_app.dir_menu.send_panel import panel_set_holidays
 from src.service.service_tools import check_card_number
 from src.bot_app.dir_service.bot_service import check_user_in_group, check_admin
 from src.bot_app.create_bot import bot, dp
 from src.sql import func_db
+from src.sql.models import Holiday, User, Chat
 from src.bot_app.dir_menu.menu import Menu
-from config import file_log_fast_api, file_log_tel_bot, my_banc_card, sb_telegram_id, bot_user_name
+from config import file_log_fast_api, file_log_tel_bot, my_banc_card, sb_telegram_id, bot_user_name, amount
 from src.service.loggers.py_logger_tel_bot import get_logger
 
 logger = get_logger(__name__)
@@ -20,7 +24,7 @@ async def working(message: Message):
         """ User sent message in group with bot """
         return
     message_id, del_msg = message.message_id, True
-    user = await func_db.get_user_by_telegram_id(telegram_id=telegram_id)
+    user: User = await func_db.get_user_by_telegram_id(telegram_id=telegram_id)
     if message.text:
         if message.text == 'log' and telegram_id == sb_telegram_id:
             log_files = [file_log_fast_api, file_log_tel_bot]  # Список файлів з логами
@@ -104,6 +108,24 @@ async def working(message: Message):
                                 if telegram_id != sb_telegram_id or user.info != "super-admin":
                                     user.info = None
                                     await func_db.doc_update(doc=user)
+                        except Exception as e:
+                            await message.reply(text=f"{error_msg}:\n{e}")
+                    elif "set amount event-" in data:
+                        """ Change amount for event """
+                        data = data.replace("set amount event-", "", 1)
+                        try:
+                            data = data.split(':')
+                            amount_data = int(data[0])
+                            holiday_id = int(data[1])
+                            holiday: Optional[Holiday] = await func_db.get_holiday_with_chat(holiday_id=holiday_id)
+                            if holiday:
+                                chat: Chat = holiday.chat
+                                holiday.amount = amount_data
+                                await func_db.doc_update(doc=holiday)
+                                await message.reply(text=success_msg)
+                                await panel_set_holidays(chat=chat, holiday=holiday)
+                            else:
+                                raise ValueError(f"Дані не валідні!")
                         except Exception as e:
                             await message.reply(text=f"{error_msg}:\n{e}")
 
