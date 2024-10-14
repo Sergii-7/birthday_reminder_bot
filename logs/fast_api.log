@@ -101,3 +101,5 @@ WHERE user_chat.chat_id = $1::INTEGER]
 2024-10-14 19:57:29,106 [INFO] - src.sql.func_db - create_new_doc(411) - created_new_doc(table=holiday): new_doc.id=4
 2024-10-14 19:57:30,706 [INFO] - src.sql.func_db - create_new_doc(411) - created_new_doc(table=holiday): new_doc.id=5
 2024-10-14 19:57:32,114 [INFO] - src.sql.func_db - create_new_doc(411) - created_new_doc(table=holiday): new_doc.id=6
+2024-10-14 20:20:24,440 [INFO] - src.sql.func_db - create_new_doc(414) - created_new_doc(table=holiday): new_doc.id=7
+2024-10-14 20:20:26,334 [INFO] - src.sql.func_db - create_new_doc(414) - created_new_doc(table=holiday): new_doc.id=8

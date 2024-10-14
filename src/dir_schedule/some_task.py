@@ -95,7 +95,7 @@ class BackgroundTask:
                                                     days_to_birthday=days_to_birthday, holiday=holiday)
                                                 )
                                                 logger.info(f"AskingMoney().send_asking(): {task}")
-        # await asyncio.sleep(600)
+        # await asyncio.sleep(60)
 
     async def check_reports(self, ):
         """ Check holidays reports in DataBase and send info for Admin - start one time per day"""
