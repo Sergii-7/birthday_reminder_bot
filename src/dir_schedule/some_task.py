@@ -23,7 +23,7 @@ class BackgroundTask:
         logger.info(f">>> check_users_birthday()")
         date_today_str = str(correct_time())[:10]
         date_today: date = date.fromisoformat(date_today_str)
-        to_birthday_list = [{n: str(date_today + timedelta(days=n))[5:]} for n in range(1, days_to_birthday + 1)]
+        to_birthday_list = [{n: str(date_today + timedelta(days=n))[5:]} for n in range(days_to_birthday + 1)]
         chats = await get_chats(status=True)
         for chat in chats:
             """Get all users from chat"""
@@ -32,21 +32,22 @@ class BackgroundTask:
                 if user_chat.status:
                     """If user take part of chat party - якщо він приймає участь у зборі внесків"""
                     user = user_chat.user
-                    # print(user.first_name, user.birthday)
                     if user.birthday:
                         for data_birthday in to_birthday_list:
                             for key, value in data_birthday.items():
                                 days_to_birthday: int = key  # 0 | 1 | 2 ...
                                 birthday_str: str = value    # '10-19'
                                 if str(user.birthday)[5:] == birthday_str:
-                                    # print(True)
                                     if days_to_birthday == 0:
                                         """User has birthday today - AI sends greetings to the user personally 
                                         and in the group"""
                                         logger.info(f"user: {user.first_name}|{user.telegram_id} has birthday today.")
                                         greet_user = GreetingsUser()
-                                        task = create_task(greet_user.start_greet(user_chat=user_chat))
-                                        logger.info(f"GreetingsUser().start_greet(): {task}")
+                                        try:
+                                            task = create_task(greet_user.start_greet(user_chat=user_chat))
+                                            logger.info(f"GreetingsUser().start_greet(): {task}")
+                                        except Exception as e:
+                                            logger.error(e)
                                     else:
                                         chat: Chat = await get_doc_by_id(model='chat', doc_id=user_chat.chat_id)
                                         holiday: Optional[Holiday] = await get_holiday(
@@ -77,12 +78,16 @@ class BackgroundTask:
                                                     f"{days_to_birthday} days."
                                                 )
                                                 money_asker = AskingMoney()
-                                                task = create_task(money_asker.start_asking(
-                                                    birthday_user=user, users_chats=users_chats,
-                                                    days_to_birthday=days_to_birthday, holiday=holiday)
-                                                )
-                                                logger.info(f"AskingMoney().send_asking(): {task}")
-        # await asyncio.sleep(600)
+                                                try:
+                                                    task = create_task(money_asker.start_asking(
+                                                        birthday_user=user, users_chats=users_chats,
+                                                        days_to_birthday=days_to_birthday, holiday=holiday)
+                                                    )
+                                                    logger.info(f"AskingMoney().send_asking(): {task}")
+                                                except Exception as e:
+                                                    logger.error(e)
+
+
 
 
 # import asyncio

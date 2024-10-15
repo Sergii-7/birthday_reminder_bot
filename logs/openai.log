@@ -1,17 +1,2 @@
 2024-10-06 16:26:34,932 [INFO] - __main__ - get_response(52) - Start ResponseImageAI()
-2024-10-06 16:31:44,919 [INFO] - __main__ - get_image_from_ai(18) - Start get_image_from_ai
-2024-10-06 16:38:03,964 [INFO] - __main__ - get_image_from_ai(18) - Start get_image_from_ai
-2024-10-06 17:59:40,405 [INFO] - __main__ - get_content(37) - Start ResponseTextAI()
-2024-10-06 18:25:16,679 [INFO] - __main__ - get_content(37) - Start ResponseTextAI()
-2024-10-07 15:15:55,326 [INFO] - __main__ - get_content(37) - Start ResponseTextAI()
-2024-10-07 17:29:00,668 [INFO] - __main__ - get_content(37) - Start ResponseTextAI()
-2024-10-07 17:30:30,540 [INFO] - __main__ - get_content(37) - Start ResponseTextAI()
-2024-10-07 17:35:31,964 [INFO] - __main__ - get_content(37) - Start ResponseTextAI()
-2024-10-07 17:35:38,461 [INFO] - __main__ - get_response(107) - Start ResponseImageAI()
-2024-10-07 17:35:38,468 [ERROR] - __main__ - get_response(125) - Connection error.
-2024-10-07 17:36:16,709 [INFO] - __main__ - get_response(107) - Start ResponseImageAI()
-2024-10-07 17:37:25,370 [INFO] - __main__ - get_image_from_ai(63) - Start get_image_from_ai
-2024-10-15 16:33:42,342 [INFO] - src.dir_open_ai.open_ai_tools - get_content(37) - Start ResponseTextAI()
-2024-10-15 16:33:50,927 [INFO] - src.dir_open_ai.open_ai_tools - get_image_from_ai(63) - Start get_image_from_ai
-2024-10-15 16:58:55,270 [INFO] - src.dir_open_ai.open_ai_tools - get_content(37) - Start ResponseTextAI()
-2024-10-15 16:59:04,971 [INFO] - src.dir_open_ai.open_ai_tools - get_image_from_ai(63) - Start get_image_from_ai
+
