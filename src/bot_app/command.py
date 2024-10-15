@@ -63,8 +63,9 @@ async def start_command_handler(message: Message):
                     if check_admin:
                         user_to_change: User = await get_doc_by_id(model='user', doc_id=report.user_id)
                         user_chat: UserChat = await get_user_chat(
-                            chat_id=chat.chat_id, user_telegram_id=user_to_change.telegram_id)
-                        text = text_payment_info_with_set_link(report=report, user_chat=user_chat, user=user_to_change)
+                            chat_id=chat.id, user_telegram_id=user_to_change.telegram_id)
+                        text = await text_payment_info_with_set_link(
+                            report=report, user_chat=user_chat, user=user_to_change)
                         await bot.send_message(chat_id=user.telegram_id, text=text)
             else:
                 await menu.start_command(user=user, message_text=message.text)
