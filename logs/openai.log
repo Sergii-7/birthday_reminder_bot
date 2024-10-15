@@ -11,3 +11,7 @@
 2024-10-07 17:35:38,468 [ERROR] - __main__ - get_response(125) - Connection error.
 2024-10-07 17:36:16,709 [INFO] - __main__ - get_response(107) - Start ResponseImageAI()
 2024-10-07 17:37:25,370 [INFO] - __main__ - get_image_from_ai(63) - Start get_image_from_ai
+2024-10-15 16:33:42,342 [INFO] - src.dir_open_ai.open_ai_tools - get_content(37) - Start ResponseTextAI()
+2024-10-15 16:33:50,927 [INFO] - src.dir_open_ai.open_ai_tools - get_image_from_ai(63) - Start get_image_from_ai
+2024-10-15 16:58:55,270 [INFO] - src.dir_open_ai.open_ai_tools - get_content(37) - Start ResponseTextAI()
+2024-10-15 16:59:04,971 [INFO] - src.dir_open_ai.open_ai_tools - get_image_from_ai(63) - Start get_image_from_ai

@@ -42,7 +42,7 @@ class ResponseTextAI:
                 temperature=temperature
             )
             # print(response)
-            print(response.choices[0].message.content)
+            # print(response.choices[0].message.content)
             return {
                 "content": response.choices[0].message.content,
                 "prompt_tokens": response.usage.prompt_tokens,

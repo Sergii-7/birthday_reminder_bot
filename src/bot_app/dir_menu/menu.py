@@ -1,5 +1,6 @@
 import os
 from asyncio import sleep as asyncio_sleep
+from time import pthread_getcpuclockid
 from typing import Union, List, Optional, Any
 from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import ReplyKeyboardMarkup, InlineKeyboardMarkup, FSInputFile, CallbackQuery
@@ -188,37 +189,42 @@ class SetChat:
                 await asyncio_sleep(delay=1)
         elif command == 'report':
             ''' "💰 Звіт по внескам 💰": Звіт про надходження коштів від користувачів чату '''
-            text_list, text, is_report = list(), str(), False
             title = await DataAI().get_title(chat=chat)
+            holiday_list, text_list, is_report = list(), list(), False
             users_chats: List[UserChat] = await func_db.get_all_users_from_chat(chat_id=chat.id)
-            for n, user_chat in enumerate(start=1, iterable=users_chats):
-                holiday: Optional[Holiday] = await func_db.get_holiday(user_pk=user_chat.user.id, chat_pk=chat.id)
-                if holiday and holiday.status:
-                    text = (f"чат: <b>{title}</b>\n"
-                            f"<u>Іменинник/іменинниця:</u>\n{holiday.info}\n"
-                            f"Дата Народження: <code>{holiday.date_event}</code>\n"
-                            f"сума внеску: <b>{holiday.amount}</b>")
-                    text_list.append(text)
-                    text = ""
-                    report: Optional[Report] = await func_db.get_report(
-                        user_pk=user_chat.user.id, chat_pk=chat.id, holiday_pk=holiday.id)
-                    if report:
-                        is_report = True
-                        text += f"\n{text_payment_info_with_set_link(report=report, user_chat=user_chat)}"
-                        n += 1
-                        if n % 6 == 0:
+            for n in [1, 2]:
+                if n == 1:
+                    for user_chat in users_chats:
+                        holiday: Optional[Holiday] = await func_db.get_holiday(
+                            user_pk=user_chat.user.id, chat_pk=chat.id)
+                        if holiday and holiday.status:
+                            holiday_list.append(holiday)
+                            text = (f"чат: <b>{title}</b>\n"
+                                    f"<u>Іменинник/іменинниця:</u>\n{holiday.info}\n"
+                                    f"Дата Народження: <code>{holiday.date_event}</code>\n"
+                                    f"сума внеску: <b>{holiday.amount}</b>")
                             text_list.append(text)
-                            text = ""
-            if text:
-                text_list.append(text)
+                else:
+                    for user_chat in users_chats:
+                        if holiday_list:
+                            for holiday in holiday_list:
+                                report: Optional[Report] = await func_db.get_report(
+                                    user_pk=user_chat.user.id, chat_pk=chat.id, holiday_pk=holiday.id)
+                                if report:
+                                    is_report = True
+                                    text = await text_payment_info_with_set_link(report=report, user_chat=user_chat)
+                                    text_list.append(f"\n{text}")
             if text_list:
                 for sms in text_list:
-                    if is_report:
+                    if not is_report and sms == text_list[-1]:
+                        ''' Не має звітів по користувачам чату '''
+                        sms = f"{sms}\n\n<b>На даний момент немає боргів серед користувачів чату.</b>"
+                    try:
                         await bot.send_message(chat_id=user.telegram_id, text=sms)
                         await asyncio_sleep(delay=1)
-                    else:
-                        ''' Не має звітів по користувачам чату '''
-                        sms = sms + f"\n\n<b>На даний момент немає боргів серед користувачів чату.</b>"
+                    except Exception as e:
+                        logger.error(f"Attempt={n + 1}: {e}")
+                        await asyncio_sleep(delay=5)
                         await bot.send_message(chat_id=user.telegram_id, text=sms)
             else:
                 text = f"На даний момент немає боргів серед користувачів чату: {title}."
@@ -277,3 +283,11 @@ class Settings:
         else:
             await bot.send_message(chat_id=self.telegram_id, text=self.text_sms, reply_markup=reply_markup)
 
+
+
+# async def test():
+#     user: User = await func_db.get_user_by_telegram_id(telegram_id=sb_telegram_id)
+#     chat: Chat = await func_db.get_doc_by_id(model='chat', doc_id=2)
+#     await SetChat().get_command(user=user, chat=chat, command='report')
+# import asyncio
+# asyncio.run(main=test())

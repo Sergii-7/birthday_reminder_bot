@@ -14,7 +14,7 @@ logger = get_logger(__name__)
 
 
 class BackgroundTask:
-    """ class for start background task """
+    """Class for start background task"""
     def __init__(self):
         pass
 
@@ -48,10 +48,9 @@ class BackgroundTask:
                                         task = create_task(greet_user.start_greet(user_chat=user_chat))
                                         logger.info(f"GreetingsUser().start_greet(): {task}")
                                     else:
-
                                         chat: Chat = await get_doc_by_id(model='chat', doc_id=user_chat.chat_id)
                                         holiday: Optional[Holiday] = await get_holiday(
-                                            user_pk=chat.user_id, chat_pk=chat.id)
+                                            user_pk=user.id, chat_pk=chat.id)
                                         if not holiday:
                                             """По дефолту новий holiday.status=True, тобто подія активна, 
                                             щоб інші користувачі НЕ отримували СМС з проханням зробити внесок
@@ -62,11 +61,12 @@ class BackgroundTask:
                                                 "date_event": user.birthday, "amount": amount, "info": info
                                             }
                                             await create_new_doc(model='holiday', data=holiday_data)
-                                            holiday: Holiday = await get_holiday(user_pk=chat.user_id, chat_pk=chat.id)
-                                        if days_to_birthday > 7:
-                                            """Send panel for Admin to set Holiday in DataBase"""
-                                            await panel_set_holidays(chat=chat, holiday=holiday)
-                                        else:
+
+                                        holiday: Holiday = await get_holiday(user_pk=user.id, chat_pk=chat.id)
+                                        """Send panel for Admin to set Holiday in DataBase"""
+                                        await panel_set_holidays(chat=chat, holiday=holiday)
+
+                                        if days_to_birthday < 8:
                                             """ days_to_birthday < 8 """
                                             if holiday.status:
                                                 """ Подія активна """
@@ -82,7 +82,7 @@ class BackgroundTask:
                                                     days_to_birthday=days_to_birthday, holiday=holiday)
                                                 )
                                                 logger.info(f"AskingMoney().send_asking(): {task}")
-        # await asyncio.sleep(60)
+        # await asyncio.sleep(600)
 
 
 # import asyncio
