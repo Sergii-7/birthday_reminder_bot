@@ -8,7 +8,7 @@ from config import bot_user_name, sb_telegram_id
 from src.bot_app.create_bot import dp, bot
 from src.bot_app.dir_menu.menu import Menu, AdminMenu
 from src.bot_app.dir_menu.send_panel import text_payment_info_with_set_link
-from src.sql.func_db import check_user, update_phone_number, get_chats, get_doc_by_id, get_user_chat
+from src.sql.func_db import check_user, update_phone_number, get_chats, get_doc_by_id, get_user_chat, doc_update
 from src.sql.models import Report, UserChat, Chat, User
 from src.bot_app.dir_service.bot_service import check_user_in_every_chat
 from src.service.loggers.py_logger_tel_bot import get_logger
@@ -64,6 +64,8 @@ async def start_command_handler(message: Message):
                         user_to_change: User = await get_doc_by_id(model='user', doc_id=report.user_id)
                         user_chat: UserChat = await get_user_chat(
                             chat_id=chat.id, user_telegram_id=user_to_change.telegram_id)
+                        report.status = False if report.status else True
+                        report = await doc_update(doc=report)
                         text = await text_payment_info_with_set_link(
                             report=report, user_chat=user_chat, user=user_to_change)
                         await bot.send_message(chat_id=user.telegram_id, text=text)

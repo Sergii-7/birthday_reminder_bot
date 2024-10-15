@@ -185,7 +185,8 @@ async def update_phone_number(telegram_id: int, phone_number: str) -> Optional[U
 
 
 async def doc_update(
-        doc: Union[User, UserLogin, Chat, Holiday]) -> Union[bool, Union[User, UserLogin, Chat, Holiday]]:
+        doc: Union[User, UserLogin, UserChat, Chat, Holiday, Report]
+) -> Union[bool, Union[User, UserLogin, UserChat, Chat, Holiday, Report]]:
     """ Оновлюємо будь-який object в якому ми робили ті чи інші зміни """
     if doc:
         for n in range(3):
