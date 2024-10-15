@@ -187,38 +187,41 @@ class SetChat:
                 await bot.send_message(chat_id=user.telegram_id, text=text)
                 await asyncio_sleep(delay=1)
         elif command == 'report':
-            ''' "💰 Звіт по внескам 💰": Звіт про надходження коштів від користувачів '''
-            # Get all reports connecting with Admin:
-            chats: List[Chat] = await func_db.get_chats(user_id=user.id)
-            text_list = list()
-            for chat in chats:
-                n, text = 1, str()
-                users_chats: List[UserChat] = await func_db.get_all_users_from_chat(chat_id=chat.id)
-                for user_chat in users_chats:
-                    holiday: Optional[Holiday] = await func_db.get_holiday(user_pk=user_chat.user.id, chat_pk=chat.id)
-                    if holiday and holiday.status:
-                        title = await DataAI().get_title(chat=chat)
-                        text += (f"\n\nчат: <b>{title}</b>\n"
-                                 f"<u>Іменинник/іменинниця:</u>\n{holiday.info}\n"
-                                 f"Дата Народження: <code>{holiday.date_event}</code>\n"
-                                 f"сума внеску: <b>{holiday.amount}</b>")
-                        n += 1
-                        report: Optional[Report] = await func_db.get_report(
-                            user_pk=user_chat.user.id, chat_pk=chat.id, holiday_pk=holiday.id)
-                        if report:
-                            text += f"\n{text_payment_info_with_set_link(report=report, user_chat=user_chat)}"
-                            n += 1
-                            if n % 6 == 0:
-                                text_list.append(text)
-                                text = ""
-                if text:
+            ''' "💰 Звіт по внескам 💰": Звіт про надходження коштів від користувачів чату '''
+            text_list, text, is_report = list(), str(), False
+            title = await DataAI().get_title(chat=chat)
+            users_chats: List[UserChat] = await func_db.get_all_users_from_chat(chat_id=chat.id)
+            for n, user_chat in enumerate(start=1, iterable=users_chats):
+                holiday: Optional[Holiday] = await func_db.get_holiday(user_pk=user_chat.user.id, chat_pk=chat.id)
+                if holiday and holiday.status:
+                    text = (f"чат: <b>{title}</b>\n"
+                            f"<u>Іменинник/іменинниця:</u>\n{holiday.info}\n"
+                            f"Дата Народження: <code>{holiday.date_event}</code>\n"
+                            f"сума внеску: <b>{holiday.amount}</b>")
                     text_list.append(text)
+                    text = ""
+                    report: Optional[Report] = await func_db.get_report(
+                        user_pk=user_chat.user.id, chat_pk=chat.id, holiday_pk=holiday.id)
+                    if report:
+                        is_report = True
+                        text += f"\n{text_payment_info_with_set_link(report=report, user_chat=user_chat)}"
+                        n += 1
+                        if n % 6 == 0:
+                            text_list.append(text)
+                            text = ""
+            if text:
+                text_list.append(text)
             if text_list:
                 for sms in text_list:
-                    await bot.send_message(chat_id=user.telegram_id, text=sms)
-                    await asyncio_sleep(delay=1)
+                    if is_report:
+                        await bot.send_message(chat_id=user.telegram_id, text=sms)
+                        await asyncio_sleep(delay=1)
+                    else:
+                        ''' Не має звітів по користувачам чату '''
+                        sms = sms + f"\n\nНа даний момент немає боргів серед користувачів чату: {title}."
+                        await bot.send_message(chat_id=user.telegram_id, text=sms)
             else:
-                text = "На даний момент у немає боргів серед користувачів груп."
+                text = f"На даний момент немає боргів серед користувачів чату: {title}."
                 await callback_query.answer(text=text, show_alert=True)
         elif command == 'change_admin':
             ''' "☢️ Передати права адміна ☣️": Запускаємо процес зміни адміна чату '''
