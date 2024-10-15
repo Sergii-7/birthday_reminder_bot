@@ -218,7 +218,7 @@ class SetChat:
                         await asyncio_sleep(delay=1)
                     else:
                         ''' Не має звітів по користувачам чату '''
-                        sms = sms + f"\n\nНа даний момент немає боргів серед користувачів чату: {title}."
+                        sms = sms + f"\n\n<b>На даний момент немає боргів серед користувачів чату.</b>"
                         await bot.send_message(chat_id=user.telegram_id, text=sms)
             else:
                 text = f"На даний момент немає боргів серед користувачів чату: {title}."
