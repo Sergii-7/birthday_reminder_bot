@@ -2,11 +2,12 @@ from asyncio import sleep
 from aiogram.types import InlineKeyboardMarkup, CallbackQuery
 from typing import List, Optional
 
+from config import bot_link
 from src.bot_app.create_bot import bot
 from src.bot_app.dir_menu.buttons_for_menu import buttons_for_event_settings
 from src.dir_schedule.some_tools import DataAI
 from src.sql.func_db import get_doc_by_id, get_chats, get_report, get_holiday
-from src.sql.models import User, Chat, Holiday, Report
+from src.sql.models import User, Chat, Holiday, Report, UserChat
 
 
 async def panel_set_holidays(chat: Chat, holiday: Holiday):
@@ -36,13 +37,12 @@ async def panel_make_payment(user: User, callback_query: CallbackQuery):
                     if not report.status:
                         """User has financial debt before this chat"""
                         title = await DataAI().get_title(chat=chat)
-                        if n < 6:
-                            text += (f"\n\nчат: <b>{title}</b>\n"
-                                     f"<u>Іменинник/іменинниця:</u>\n{holiday.info}\n"
-                                     f"Дата Народження: <code>{holiday.date_event}</code>\n"
-                                     f"сума внеску: <b>{holiday.amount}</b>\n"
-                                     f"\n\nкарта для перерахування внеску: <code>{chat.card_number}</code>")
-                        else:
+                        text += (f"\n\nчат: <b>{title}</b>\n"
+                                 f"<u>Іменинник/іменинниця:</u>\n{holiday.info}\n"
+                                 f"Дата Народження: <code>{holiday.date_event}</code>\n"
+                                 f"сума внеску: <b>{holiday.amount}</b>\n"
+                                 f"карта для перерахування внеску: <code>{chat.card_number}</code>")
+                        if n % 5 == 0:
                             text_list.append(text)
                             text = ""
         if text:
@@ -59,3 +59,16 @@ async def panel_make_payment(user: User, callback_query: CallbackQuery):
         text = "Ви не належите до жодного чату, до якого можете робити внесок."
         await callback_query.answer(text=text, show_alert=True)
     await callback_query.message.delete()
+
+
+async def text_payment_info_with_set_link(report: Report, user_chat: UserChat, user: User = None) -> str:
+    """Info text for Admin about User payment history with link - change report.status"""
+    user: User = user_chat.user if not user else user
+    username = f"@{user.username}\n" if user.username else ""
+    phone_number = f"телефон <code>{user.phone_number}</code>\n" if user.phone_number else ""
+    birthday = str(user.birthday)[5:] if user.birthday else 'дані не внесені'
+    birthday = f"день народження (month-day): <code>{birthday}</code>"
+    desc = "<b>🎉 вже робив внесок 🥳</b>" if report.status else "<b>🤬 ще не зробив внесок 😡</b>"
+    link_settings = f"\n{desc} <a href='{bot_link}?start=set-report-{report.id}'>змінити</a>"
+    text = f"<b>{user.first_name}</b>\n{username}{phone_number}{birthday}{link_settings}"
+    return text

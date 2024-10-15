@@ -1,11 +1,15 @@
 from asyncio import create_task as asyncio_create_task
+from typing import List
+
 from aiogram import F
 from aiogram.types import Message
 from aiogram.filters import Command
 from config import bot_user_name, sb_telegram_id
 from src.bot_app.create_bot import dp, bot
 from src.bot_app.dir_menu.menu import Menu, AdminMenu
-from src.sql.func_db import check_user, update_phone_number, get_chats, get_doc_by_id
+from src.bot_app.dir_menu.send_panel import text_payment_info_with_set_link
+from src.sql.func_db import check_user, update_phone_number, get_chats, get_doc_by_id, get_user_chat
+from src.sql.models import Report, UserChat, Chat, User
 from src.bot_app.dir_service.bot_service import check_user_in_every_chat
 from src.service.loggers.py_logger_tel_bot import get_logger
 
@@ -30,20 +34,38 @@ async def start_command_handler(message: Message):
         """ User push '/start' command in private chat with bot """
         user = await check_user(message=message)
         if user:
-            if ("set-status-" in message.text and
+            command_data = ["set-report-", "set-status-"]
+            if (any(trigger in message.text for trigger in command_data) and
                     (user.info in ["admin", "super-admin"] or user.telegram_id==sb_telegram_id)):
-                """ Admin change user_chat.status """
-                # https://t.me/holiday_organizer_bot?start=set-status-{user_chat_id}
-                user_chat_pk = int(message.text.split("set-status-")[-1])
-                user_chat = await get_doc_by_id(model='user_chat', doc_id=user_chat_pk)
-                admin_chats = await get_chats(user_id=user.id)
+                admin_chats: List[Chat] = await get_chats(user_id=user.id)
                 check_admin = False
-                for chat in admin_chats:
-                    if chat.id == user_chat.chat_id:
-                        check_admin = True
-                        break
-                if check_admin:
-                    await admin_menu.change_user_chat_status(admin=user, user_chat_pk=user_chat_pk)
+                if "set-status-" in message.text:
+                    """ Admin change user_chat.status """
+                    # https://t.me/holiday_organizer_bot?start=set-status-{user_chat_id}
+                    user_chat_pk = int(message.text.split("set-status-")[-1])
+                    user_chat: UserChat = await get_doc_by_id(model='user_chat', doc_id=user_chat_pk)
+                    for chat in admin_chats:
+                        if chat.id == user_chat.chat_id:
+                            check_admin = True
+                            break
+                    if check_admin:
+                        await admin_menu.change_user_chat_status(admin=user, user_chat_pk=user_chat_pk)
+                elif "set-report-" in message.text:
+                    """ Admin change report.status """
+                    # https://t.me/holiday_organizer_bot?start=set-report-{report_id}
+                    report_id = int(message.text.split("set-report-")[-1])
+                    report: Report = await get_doc_by_id(model='report', doc_id=report_id)
+                    chat: Chat = await get_doc_by_id(model='chat', doc_id=report.chat_id)
+                    for chat_ in admin_chats:
+                        if chat_.id == chat.id:
+                            check_admin = True
+                            break
+                    if check_admin:
+                        user_to_change: User = await get_doc_by_id(model='user', doc_id=report.user_id)
+                        user_chat: UserChat = await get_user_chat(
+                            chat_id=chat.chat_id, user_telegram_id=user_to_change.telegram_id)
+                        text = text_payment_info_with_set_link(report=report, user_chat=user_chat, user=user_to_change)
+                        await bot.send_message(chat_id=user.telegram_id, text=text)
             else:
                 await menu.start_command(user=user, message_text=message.text)
                 task = asyncio_create_task(check_user_in_every_chat(user=user))

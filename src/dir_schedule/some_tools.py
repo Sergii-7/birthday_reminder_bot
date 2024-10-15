@@ -1,6 +1,4 @@
-from asyncio import sleep
-from aiogram.types import InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply
-from typing import List, Dict, Union, Optional, Any
+from typing import List, Dict, Optional, Any
 
 from src.bot_app.create_bot import bot
 from src.bot_app.dir_service.bot_service import send_compressed_image

@@ -66,7 +66,8 @@ async def callback_run(callback_query: CallbackQuery):
                     command, chat_pk = data[0], int(data[-1])
                     chat: Chat = await func_db.get_chat_with_user(pk=chat_pk)
                     if chat and chat.status:
-                        await SetChat().get_command(user=user, chat=chat, command=command)
+                        await SetChat().get_command(
+                            user=user, chat=chat, command=command, callback_query=callback_query)
                     else:
                         text = "🤬 Ви або Телеграм-бот не мають доступу до цієї групи!"
                         await callback_query.answer(text=text, show_alert=True)

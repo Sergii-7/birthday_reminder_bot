@@ -95,7 +95,7 @@ async def get_chat_info(
                     photo = FSInputFile(file_path)
         except Exception as e:
             logger.error(e)
-    return {"text": text, "chat_data": chat_data, "photo": photo}
+    return {"text": text, "chat_data": chat_data, "photo": photo, "title": title}
 
 
 def get_user_info(user: User, user_chat: UserChat = None) -> str:

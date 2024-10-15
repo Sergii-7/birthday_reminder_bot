@@ -1,13 +1,14 @@
 import os
 from asyncio import sleep as asyncio_sleep
-from typing import Union
+from typing import Union, List, Optional, Any
 from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import ReplyKeyboardMarkup, InlineKeyboardMarkup, FSInputFile, CallbackQuery
 
 from config import media_file_path, get_chat_id_bot, sb_telegram_id
 from src.bot_app.create_bot import bot
-from src.bot_app.dir_menu.send_panel import panel_set_holidays
-from src.sql.models import User, Chat, Holiday
+from src.bot_app.dir_menu.send_panel import panel_set_holidays, text_payment_info_with_set_link
+from src.dir_schedule.some_tools import DataAI
+from src.sql.models import User, Chat, UserChat, Report
 from src.bot_app.dir_menu.buttons_for_menu import *
 from src.bot_app.dir_service.bot_service import get_chat_info, get_user_info
 from src.sql import func_db
@@ -154,7 +155,7 @@ class AdminMenu:
 
 class SetChat:
     """ Chat settings for Admins """
-    async def get_command(self, user: User, chat: Chat, command: str):
+    async def get_command(self, user: User, chat: Chat, command: str, callback_query: CallbackQuery = None):
         """ Execute the admin command """
         if command == 'card':
             ''' "💳 номер вашої карти 💳" - Запускаємо процес зміни номеру банківської карти '''
@@ -185,17 +186,40 @@ class SetChat:
                 text = text + text_users + sms if n == 1 else sms
                 await bot.send_message(chat_id=user.telegram_id, text=text)
                 await asyncio_sleep(delay=1)
-
         elif command == 'report':
             ''' "💰 Звіт по внескам 💰": Звіт про надходження коштів від користувачів '''
-
-            """ 
-            IN DEVELOPMENT 
-            
-            """
-            await bot.send_message(
-                chat_id=user.telegram_id, text="Функція <b>Звіт по внескам</b> знаходиться на стадії розробки 🤷")
-
+            # Get all reports connecting with Admin:
+            chats: List[Chat] = await func_db.get_chats(user_id=user.id)
+            text_list = list()
+            for chat in chats:
+                n, text = 1, str()
+                users_chats: List[UserChat] = await func_db.get_all_users_from_chat(chat_id=chat.id)
+                for user_chat in users_chats:
+                    holiday: Optional[Holiday] = await func_db.get_holiday(user_pk=user_chat.user.id, chat_pk=chat.id)
+                    if holiday and holiday.status:
+                        title = await DataAI().get_title(chat=chat)
+                        text += (f"\n\nчат: <b>{title}</b>\n"
+                                 f"<u>Іменинник/іменинниця:</u>\n{holiday.info}\n"
+                                 f"Дата Народження: <code>{holiday.date_event}</code>\n"
+                                 f"сума внеску: <b>{holiday.amount}</b>")
+                        n += 1
+                        report: Optional[Report] = await func_db.get_report(
+                            user_pk=user_chat.user.id, chat_pk=chat.id, holiday_pk=holiday.id)
+                        if report:
+                            text += f"\n{text_payment_info_with_set_link(report=report, user_chat=user_chat)}"
+                            n += 1
+                            if n % 6 == 0:
+                                text_list.append(text)
+                                text = ""
+                if text:
+                    text_list.append(text)
+            if text_list:
+                for sms in text_list:
+                    await bot.send_message(chat_id=user.telegram_id, text=sms)
+                    await asyncio_sleep(delay=1)
+            else:
+                text = "На даний момент у немає боргів серед користувачів груп."
+                await callback_query.answer(text=text, show_alert=True)
         elif command == 'change_admin':
             ''' "☢️ Передати права адміна ☣️": Запускаємо процес зміни адміна чату '''
             text_sms = (f"Якщо ви хочете передати свої повноваження адміністратора збору внесків "

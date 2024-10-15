@@ -5,7 +5,7 @@ from typing import Optional
 from config import amount
 from src.bot_app.dir_menu.send_panel import panel_set_holidays
 from src.dir_schedule.some_tools import AskingMoney, GreetingsUser
-from src.sql.func_db import get_chats, get_all_users_from_chat, get_holiday, create_new_doc, get_doc_by_id, get_report
+from src.sql.func_db import get_chats, get_all_users_from_chat, get_holiday, create_new_doc, get_doc_by_id
 from src.sql.models import Chat, Holiday
 from src.service.service_tools import correct_time
 from src.service.loggers.py_logger_tel_bot import get_logger
@@ -83,10 +83,6 @@ class BackgroundTask:
                                                 )
                                                 logger.info(f"AskingMoney().send_asking(): {task}")
         # await asyncio.sleep(60)
-
-    async def check_reports(self, ):
-        """ Check holidays reports in DataBase and send info for Admin - start one time per day"""
-        logger.info(">>> check_report()")
 
 
 # import asyncio
