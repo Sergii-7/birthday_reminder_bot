@@ -1,4 +1,3 @@
-from pyexpat.errors import messages
 from typing import Optional, List, Dict, Any, Union
 from openai.types.chat import ChatCompletion
 from src.dir_open_ai.connect import client
@@ -15,16 +14,14 @@ class ResponseTextAI:
             self, role: str = None, prompt_for_ai: Optional[str] = None,
             messages_for_ai: Optional[List[Dict[str, Any]]] = None):
         """ Create messages for AI """
-        if not prompt_for_ai and not messages_for_ai:
-            self.messages = None
-        elif prompt_for_ai:
+        if prompt_for_ai:
             role = role if role else "Ти корисний помічник, який допомагає мені з будь-якими питаннями."
             self.messages = [
                 {"role": "system", "content": role},
                 {"role": "user", "content": prompt_for_ai}
             ]
         else:
-            self.messages = messages
+            self.messages = messages_for_ai
 
     async def get_content(
             self, model: str = "gpt-4-turbo-2024-04-09", max_tokens: int = 500, temperature: float = 0

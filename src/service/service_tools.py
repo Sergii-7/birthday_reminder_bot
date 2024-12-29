@@ -3,6 +3,8 @@ import pytz, secrets, string, random
 from stdnum.luhn import is_valid
 import phonenumbers
 
+from src.sql.models import User
+
 
 def correct_time(timezone_: str = 'Europe/Kyiv') -> datetime:
     """ Back time now 'Europe/Kyiv': object=datetime """
@@ -36,3 +38,16 @@ def validate_phone(phone_number: str) -> str | None:
     except:
         pass
     return
+
+
+def user_data(user: User, is_birthday: bool = True) -> str:
+    """Create text data about User by Data from Telegram."""
+    last_name = f"\n{user.last_name}" if user.last_name else ""
+    username = f"\n@{user.username}" if user.username else ""
+    phone_number = f"\n{user.phone_number}" if user.phone_number else ""
+    if is_birthday:
+        birthday = f"\nдата народження (місяць-день): {str(user.birthday)[5:]}" if user.birthday else ""
+        data_text = f"<u>іменинник(іменинниця)</u>:\n{user.first_name}{last_name}{username}{phone_number}{birthday}"
+    else:
+        data_text = f"{user.first_name}{last_name}{username}{phone_number}"
+    return data_text

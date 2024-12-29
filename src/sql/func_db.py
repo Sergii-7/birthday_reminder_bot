@@ -5,7 +5,7 @@ from aiogram.types import Message
 from sqlalchemy import and_
 from sqlalchemy.future import select
 from sqlalchemy.inspection import inspect
-from sqlalchemy.orm import joinedload, selectinload
+from sqlalchemy.orm import joinedload, selectinload, SQLORMExpression
 
 from src.sql.connect import DBSession
 from src.sql.models import User, UserLogin, UserChat, Chat, Holiday, Report
@@ -15,7 +15,7 @@ from src.service.loggers.py_logger_fast_api import get_logger
 logger = get_logger(__name__)
 
 models = {
-    'user': User, 'user_login': UserLogin, 'user_chat': UserChat, 'chat': Chat, 'holiday': Holiday, 'report': Report
+    'user': User, 'user_login': UserLogin, 'user_chat': UserChat, 'chat': Chat, 'holiday': Holiday, 'report': Report,
 }
 
 
@@ -434,6 +434,24 @@ async def object_as_dict(obj: object) -> Dict[str, Any]:
             value = value  # Залишаємо булінгове значення як є
         result[c.key] = value
     return result
+
+
+async def get_all_docs(model: str) -> List[Union[User, UserLogin, UserChat, Chat, Holiday, Report]]:
+    """Get all docs from PostgreSQL DataBase from table 'model'."""
+    if model not in models:
+        logger.error(f"model: {model} is invalid!")
+        return []
+    model: Union[User, UserLogin, UserChat, Chat, Holiday, Report] = models[model]
+    try:
+        logger.debug(f"get docs from {model.__tablename__}")
+        async with DBSession() as session:
+            query = select(model)
+            result = await session.execute(query)
+            docs = result.scalars().all()  # Отримуємо список docs
+            return docs
+    except SQLORMExpression as e:
+        logger.error(msg=str(e))
+    return []
 
 
 # import asyncio

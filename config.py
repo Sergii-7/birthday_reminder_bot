@@ -19,6 +19,9 @@ media_file_path = os.path.join(project_root, 'src/media/')
 """ DataBase 'birthday_bot' on Linux Ubuntu in Digital Ocean """
 URI_DB = os.environ.get('UBUNTU_URI_DB')
 
+"""Connect to DataBase 'BirthdayBot' on MongoDB."""
+MONGO_URI = os.environ.get('MONGO_URI')
+
 """ API_KEY_OPENAI # для підключення model="gpt-4.0" """
 API_KEY_OPENAI = os.environ.get('API_KEY_OPENAI')
 

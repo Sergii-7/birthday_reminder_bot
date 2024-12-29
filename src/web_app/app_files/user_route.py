@@ -128,19 +128,12 @@ async def get_birthday(request: Request, birthday: str = Form(...)):
         res = "User.birthday updated successfully!" if user_login else "Error in updating User.birthday!"
         logger.info(res)
         # Відправляємо HTML з повідомленням і скриптом для закриття Web App
-        return HTMLResponse(content="""
-                    <html>
-                        <head>
-                            <script src="https://telegram.org/js/telegram-web-app.js"></script> <!-- Підключення Telegram Web App API -->
-                        </head>
-                        <body>
-                            <script>
-                                alert('Дата народження успішно оновлена!');
-                                Telegram.WebApp.close(); // Закриває Telegram Web App
-                            </script>
-                        </body>
-                    </html>
-                """)
+        return HTMLResponse(content="""<html><head>
+        <script src="https://telegram.org/js/telegram-web-app.js"></script> <!-- Підключення Telegram Web App API -->
+        </head><body><script>
+            alert('Дата народження успішно оновлена!');
+            Telegram.WebApp.close(); // Закриває Telegram Web App
+        </script></body></html>""")
     else:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
 

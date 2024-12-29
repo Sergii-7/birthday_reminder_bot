@@ -5,6 +5,7 @@ from src.bot_app.dir_service.bot_service import send_compressed_image
 from src.sql.models import User, UserChat, Chat, Holiday, Report
 from src.sql.func_db import get_doc_by_id, get_report, create_new_doc
 from src.dir_open_ai.open_ai_tools import ResponseTextAI, ResponseImageAI
+from src.service.service_tools import user_data
 from src.service.loggers.py_logger_tel_bot import get_logger
 
 logger = get_logger(__name__)
@@ -40,16 +41,19 @@ class DataAI:
         return text
 
     def get_prompt_for_asking_money(
-            self, first_name: str, title: str, amount: int, birthday_user_name: str, days_to_birthday: int
+            self, first_name: str, title: str, amount: int, birthday_user_name: str, days_to_birthday: int,
+            user_data: Optional[str] = None, user_birthday_data: Optional[str] = None
     ) -> Dict[str, str]:
         """Get prompt for asking money from member of chat"""
-        get_text_ai = (f"Напиши дружнє і чемне повідомлення для {first_name} від імені команди {title}. "
+        user_data = user_data if user_data else first_name
+        user_birthday_data = user_birthday_data if user_birthday_data else birthday_user_name
+        get_text_ai = (f"Напиши дружнє і чемне повідомлення для\n{user_data}\nвід імені команди {title}. "
                        f"У повідомленні попроси його скинутися {amount} грн, бо всі члени команди збирають гроші, щоб "
-                       f"зробити подарунок для {birthday_user_name}, у якого день народження за {days_to_birthday} "
+                       f"зробити подарунок для {user_birthday_data}, у якого день народження за {days_to_birthday} "
                        f"днів. Повідомлення повинно бути легким і доброзичливим, а також містити подяку за підтримку. "
                        f"Має бути лише повідомлення і нічого зайвого.")
-        get_image_ai = (f"Зробіть зображення, в якому команда {title} просить колегу {first_name} скинутися {amount} "
-                        f"грн, бо всі члени команди збирають гроші, щоб зробити подарунок для {birthday_user_name}.")
+        get_image_ai = (f"Зробіть зображення, в якому команда {title} просить колегу\n{user_data}\nскинутися {amount} "
+                        f"грн, бо всі члени команди збирають гроші, щоб зробити подарунок для\n{user_birthday_data}.")
         return {"get_text_ai": get_text_ai, "get_image_ai": get_image_ai}
 
     def if_error_ai_get_text_for_asking_money(
@@ -115,7 +119,7 @@ class AskingMoney:
 
     async def to_user(
             self, get_text_ai: str, get_image_ai: str, user: User, title: str, amount: int,
-            birthday_user_name: str, days_to_birthday: int, card_number: str):
+            birthday_user_name: str, days_to_birthday: int, card_number: str, birthday_user: Optional[User] = None):
         """ AI sends Greetings to the user group """
         logger.debug(f">>> AskingMoney().to_user()")
         data_from_ai = await ResponseTextAI(prompt_for_ai=get_text_ai).get_content()
@@ -125,12 +129,15 @@ class AskingMoney:
             text = DataAI().if_error_ai_get_text_for_asking_money(
                 first_name=user.first_name, title=title, amount=amount, birthday_user_name=birthday_user_name,
                 days_to_birthday=days_to_birthday)
-
+        if birthday_user:
+            cv = user_data(user=birthday_user, is_birthday=True)
+            text = text + f"\n\n{cv}\nкарта для перерахування внеску: <code>{card_number}</code>"
+        else:
+            text = text + f"\n\nкарта для перерахування внеску: <code>{card_number}</code>"
         data_image = await ResponseImageAI().get_image_from_ai(prompt_for_ai=get_image_ai)
         if isinstance(data_image, dict) and "image_url" in data_image:
             image_url = data_image["image_url"]
             filename = f"image_for_{user.id}.jpg"
-            text = text + f"\n\nкарта для перерахування внеску: <code>{card_number}</code>"
             await send_compressed_image(
                 chat_id=user.telegram_id, filename=filename, caption=text,
                 disable_notification=False, url=image_url, reply_markup=None
@@ -162,7 +169,9 @@ class AskingMoney:
                         title = await data_for_ai.get_title(chat=chat)
                         prompts_ai = data_for_ai.get_prompt_for_asking_money(
                             first_name=user_chat.user.first_name, title=title, amount=holiday.amount,
-                            birthday_user_name=birthday_user.first_name, days_to_birthday=days_to_birthday
+                            birthday_user_name=birthday_user.first_name, days_to_birthday=days_to_birthday,
+                            user_data=user_data(user=user_chat.user, is_birthday=False),
+                            user_birthday_data=user_data(user=birthday_user, is_birthday=True)
                         )
                         get_text_ai = prompts_ai["get_text_ai"]
                         get_image_ai = prompts_ai["get_image_ai"]

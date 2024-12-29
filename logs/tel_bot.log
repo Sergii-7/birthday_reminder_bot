@@ -1,1 +1,50 @@
 2024-09-24 22:03:58,737 [INFO] - src.web_app.app_files.telegram_route - on_shutdown(22) - Bot webhook has been delete.
+2024-12-28 18:31:58,217 [INFO] - __main__ - insert_user(148) - InsertOneResult(ObjectId('677027fe60f46512594a0bd6'), acknowledged=True)
+2024-12-28 18:34:37,105 [ERROR] - __main__ - insert_user(128) - User with this telegram_id: 123 already exists.
+2024-12-28 19:03:14,781 [INFO] - __main__ - insert_user(148) - User with _id: 67702f527cd8dced73c589e1 created=True
+2024-12-28 20:16:30,640 [INFO] - src.mongo_db.model - insert_user(147) - User with ObjectId: 6770407e87512dc9b074b1a3 created=True
+2024-12-28 20:16:30,772 [INFO] - src.mongo_db.model - insert_user(147) - User with ObjectId: 6770407e87512dc9b074b1a4 created=True
+2024-12-28 20:24:55,390 [ERROR] - src.mongo_db.model - insert_user(128) - User with this telegram_id: 632117641 already exists.
+2024-12-28 20:24:55,448 [ERROR] - src.mongo_db.model - insert_user(128) - User with this telegram_id: 909076309 already exists.
+2024-12-28 20:24:55,579 [INFO] - src.mongo_db.model - insert_user(147) - User with ObjectId: 677042779cff83a95b384aac created=True
+2024-12-28 20:24:55,695 [INFO] - src.mongo_db.model - insert_user(147) - User with ObjectId: 677042779cff83a95b384aad created=True
+2024-12-28 20:24:55,810 [INFO] - src.mongo_db.model - insert_user(147) - User with ObjectId: 677042779cff83a95b384aae created=True
+2024-12-28 20:24:55,927 [INFO] - src.mongo_db.model - insert_user(147) - User with ObjectId: 677042779cff83a95b384aaf created=True
+2024-12-28 20:24:56,043 [INFO] - src.mongo_db.model - insert_user(147) - User with ObjectId: 677042779cff83a95b384ab0 created=True
+2024-12-28 20:24:56,158 [INFO] - src.mongo_db.model - insert_user(147) - User with ObjectId: 677042789cff83a95b384ab1 created=True
+2024-12-28 20:24:56,275 [INFO] - src.mongo_db.model - insert_user(147) - User with ObjectId: 677042789cff83a95b384ab2 created=True
+2024-12-28 20:24:56,389 [INFO] - src.mongo_db.model - insert_user(147) - User with ObjectId: 677042789cff83a95b384ab3 created=True
+2024-12-28 20:24:56,509 [INFO] - src.mongo_db.model - insert_user(147) - User with ObjectId: 677042789cff83a95b384ab4 created=True
+2024-12-28 20:24:56,625 [INFO] - src.mongo_db.model - insert_user(147) - User with ObjectId: 677042789cff83a95b384ab5 created=True
+2024-12-28 20:24:56,741 [INFO] - src.mongo_db.model - insert_user(147) - User with ObjectId: 677042789cff83a95b384ab6 created=True
+2024-12-28 20:24:56,869 [INFO] - src.mongo_db.model - insert_user(147) - User with ObjectId: 677042789cff83a95b384ab7 created=True
+2024-12-28 20:24:56,983 [INFO] - src.mongo_db.model - insert_user(147) - User with ObjectId: 677042789cff83a95b384ab8 created=True
+2024-12-28 20:24:57,099 [INFO] - src.mongo_db.model - insert_user(147) - User with ObjectId: 677042799cff83a95b384ab9 created=True
+2024-12-28 20:24:57,213 [INFO] - src.mongo_db.model - insert_user(147) - User with ObjectId: 677042799cff83a95b384aba created=True
+2024-12-28 20:24:57,329 [INFO] - src.mongo_db.model - insert_user(147) - User with ObjectId: 677042799cff83a95b384abb created=True
+2024-12-28 20:24:57,446 [INFO] - src.mongo_db.model - insert_user(147) - User with ObjectId: 677042799cff83a95b384abc created=True
+2024-12-28 20:24:57,560 [INFO] - src.mongo_db.model - insert_user(147) - User with ObjectId: 677042799cff83a95b384abd created=True
+2024-12-28 20:24:57,673 [INFO] - src.mongo_db.model - insert_user(147) - User with ObjectId: 677042799cff83a95b384abe created=True
+2024-12-28 20:24:57,797 [INFO] - src.mongo_db.model - insert_user(147) - User with ObjectId: 677042799cff83a95b384abf created=True
+2024-12-28 21:55:05,730 [INFO] - src.mongo_db.model - insert_user(57) - User created with ID 6770579933ac478d10ed63dc
+2024-12-28 21:55:05,834 [INFO] - src.mongo_db.model - insert_user(57) - User created with ID 6770579933ac478d10ed63dd
+2024-12-28 21:55:05,937 [INFO] - src.mongo_db.model - insert_user(57) - User created with ID 6770579933ac478d10ed63de
+2024-12-28 21:55:06,040 [INFO] - src.mongo_db.model - insert_user(57) - User created with ID 6770579933ac478d10ed63df
+2024-12-28 21:55:06,143 [INFO] - src.mongo_db.model - insert_user(57) - User created with ID 6770579a33ac478d10ed63e0
+2024-12-28 21:55:06,249 [INFO] - src.mongo_db.model - insert_user(57) - User created with ID 6770579a33ac478d10ed63e1
+2024-12-28 21:55:06,353 [INFO] - src.mongo_db.model - insert_user(57) - User created with ID 6770579a33ac478d10ed63e2
+2024-12-28 21:55:06,460 [INFO] - src.mongo_db.model - insert_user(57) - User created with ID 6770579a33ac478d10ed63e3
+2024-12-28 21:55:06,565 [INFO] - src.mongo_db.model - insert_user(57) - User created with ID 6770579a33ac478d10ed63e4
+2024-12-28 21:55:06,677 [INFO] - src.mongo_db.model - insert_user(57) - User created with ID 6770579a33ac478d10ed63e5
+2024-12-28 21:55:06,784 [INFO] - src.mongo_db.model - insert_user(57) - User created with ID 6770579a33ac478d10ed63e6
+2024-12-28 21:55:06,889 [INFO] - src.mongo_db.model - insert_user(57) - User created with ID 6770579a33ac478d10ed63e7
+2024-12-28 21:55:06,994 [INFO] - src.mongo_db.model - insert_user(57) - User created with ID 6770579a33ac478d10ed63e8
+2024-12-28 21:55:07,100 [INFO] - src.mongo_db.model - insert_user(57) - User created with ID 6770579b33ac478d10ed63e9
+2024-12-28 21:55:07,206 [INFO] - src.mongo_db.model - insert_user(57) - User created with ID 6770579b33ac478d10ed63ea
+2024-12-28 21:55:07,319 [INFO] - src.mongo_db.model - insert_user(57) - User created with ID 6770579b33ac478d10ed63eb
+2024-12-28 21:55:07,425 [INFO] - src.mongo_db.model - insert_user(57) - User created with ID 6770579b33ac478d10ed63ec
+2024-12-28 21:55:07,533 [INFO] - src.mongo_db.model - insert_user(57) - User created with ID 6770579b33ac478d10ed63ed
+2024-12-28 21:55:07,640 [INFO] - src.mongo_db.model - insert_user(57) - User created with ID 6770579b33ac478d10ed63ee
+2024-12-28 21:55:07,745 [INFO] - src.mongo_db.model - insert_user(57) - User created with ID 6770579b33ac478d10ed63ef
+2024-12-28 21:55:07,856 [INFO] - src.mongo_db.model - insert_user(57) - User created with ID 6770579b33ac478d10ed63f0
+2024-12-28 21:55:07,960 [INFO] - src.mongo_db.model - insert_user(57) - User created with ID 6770579b33ac478d10ed63f1
