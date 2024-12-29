@@ -5,7 +5,7 @@ from src.bot_app.dir_service.bot_service import send_compressed_image
 from src.sql.models import User, UserChat, Chat, Holiday, Report
 from src.sql.func_db import get_doc_by_id, get_report, create_new_doc
 from src.dir_open_ai.open_ai_tools import ResponseTextAI, ResponseImageAI
-from src.service.service_tools import user_data
+from src.service.create_data import user_data
 from src.service.loggers.py_logger_tel_bot import get_logger
 
 logger = get_logger(__name__)
