@@ -6,7 +6,8 @@ from config import bot_link
 from src.bot_app.create_bot import bot
 from src.bot_app.dir_menu.buttons_for_menu import buttons_for_event_settings
 from src.dir_schedule.some_tools import DataAI
-from src.sql.func_db import get_doc_by_id, get_chats, get_report, get_holiday
+from src.service.create_data import user_data
+from src.sql.func_db import get_doc_by_id, get_user_reports
 from src.sql.models import User, Chat, Holiday, Report, UserChat
 
 
@@ -26,37 +27,35 @@ async def panel_set_holidays(chat: Chat, holiday: Holiday):
 
 async def panel_make_payment(user: User, callback_query: CallbackQuery):
     """User check debt before his chats"""
-    chats: List[Chat] = await get_chats(user_id=user.id)
-    if chats:
-        text, text_list = str(), list()
-        for n, chat in enumerate(start=1, iterable=chats):
-            holiday: Optional[Holiday] = await get_holiday(user_pk=user.id, chat_pk=chat.id)
-            if holiday:
-                report: Optional[Report] = await get_report(user_pk=user.id, chat_pk=chat.id, holiday_pk=holiday.id)
-                if report:
-                    if not report.status:
-                        """User has financial debt before this chat"""
-                        title = await DataAI().get_title(chat=chat)
-                        text += (f"\n\nчат: <b>{title}</b>\n"
-                                 f"<u>Іменинник/іменинниця:</u>\n{holiday.info}\n"
-                                 f"Дата Народження: <code>{holiday.date_event}</code>\n"
-                                 f"сума внеску: <b>{holiday.amount}</b>\n"
-                                 f"карта для перерахування внеску: <code>{chat.card_number}</code>")
-                        if n % 5 == 0:
-                            text_list.append(text)
-                            text = ""
-        if text:
-            text_list.append(text)
-        if text_list:
-            for sms in text_list:
-                await bot.send_message(chat_id=user.telegram_id, text=sms)
-                await sleep(delay=1)
-            return
+    reports: List[Report] = await get_user_reports(user_id=user.id, status=False)
+    if reports is not None:
+        if reports:
+            text, text_list = str(), list()
+            for n, report in enumerate(start=1, iterable=reports):
+                holiday: Optional[Holiday] = report.holidays
+                chat: Optional[Chat] = report.chat
+                b_user: Optional[User] = await get_doc_by_id(model='user', doc_id=report.holidays.user_id)
+                if holiday and b_user and chat:
+                    """User has financial debt before this chat"""
+                    title = await DataAI().get_title(chat=chat)
+                    text += (f"\n\nчат: <b>{title}</b>\n{user_data(user=b_user, is_birthday=True)}\n"
+                             f"карта для перерахування внеску: <code>{chat.card_number}</code>")
+                    if n % 5 == 0:
+                        text_list.append(text)
+                        text = ""
+            if text:
+                text_list.append(text)
+            if text_list:
+                for sms in text_list:
+                    await bot.send_message(chat_id=user.telegram_id, text=sms)
+                    await sleep(delay=1)
+                return
+
         else:
             text = "На даний момент у вас немає боргів перед групами."
             await callback_query.answer(text=text, show_alert=True)
     else:
-        text = "Ви не належите до жодного чату, до якого можете робити внесок."
+        text = "ERROR: Щось пішло не так 🤬!"
         await callback_query.answer(text=text, show_alert=True)
     await callback_query.message.delete()
 
@@ -72,3 +71,20 @@ async def text_payment_info_with_set_link(report: Report, user_chat: UserChat, u
     link_settings = f"\n{desc} <a href='{bot_link}?start=set-report-{report.id}'>змінити</a>"
     text = f"<b>{user.first_name}</b>\n{username}{phone_number}{birthday}{link_settings}"
     return text
+
+
+# async def testing():
+#     """Testing this module."""
+#     user_id = 3 # SB
+#     user = await get_doc_by_id(model='user', doc_id=user_id)
+#     print(user)
+#     reports = await get_user_reports(user_id=user.id, status=False)
+#     for report in reports:
+#         print(report.holidays.user_id)
+#         b_user = await get_doc_by_id(model='user', doc_id=report.holidays.user_id)
+#         print(report.holidays.date_event, b_user.birthday)
+#         print(report.chat.chat_id)
+
+
+# import asyncio
+# asyncio.run(main=testing())

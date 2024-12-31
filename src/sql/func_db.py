@@ -454,6 +454,29 @@ async def get_all_docs(model: str) -> List[Union[User, UserLogin, UserChat, Chat
     return []
 
 
+async def get_user_reports(user_id: int, status: Optional[bool] = None) -> Optional[List[Report]]:
+    """
+    Отримати всі репорти для користувача за user_id.
+    :param user_id: ID користувача для пошуку репортів.
+    :param status: Фільтрація за статусом (True/False). Якщо None, статус не враховується.
+    :return: Список об'єктів Report.
+    """
+    try:
+        logger.debug(f"user_id={user_id}, status={status}")
+        async with DBSession() as session:
+            query = select(Report).options(
+                joinedload(Report.chat),
+                joinedload(Report.holidays),
+            ).where(Report.user_id == user_id)
+            if status is not None:
+                query = query.where(Report.status == status)
+            result = await session.execute(query)
+            return result.scalars().all()
+    except SQLORMExpression as e:
+        logger.error(msg=e)
+    return
+
+
 # import asyncio
 # from config import sb_telegram_id
 #
