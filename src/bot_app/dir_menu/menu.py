@@ -191,49 +191,47 @@ class SetChat:
         elif command == 'report':
             ''' "💰 Звіт по внескам 💰": Звіт про надходження коштів від користувачів чату '''
             title = await DataAI().get_title(chat=chat)
-            holiday_list, text_list, is_report = list(), list(), False
+            sms_list, is_report = list(), False
             users_chats: List[UserChat] = await func_db.get_all_users_from_chat(chat_id=chat.id)
-            for n in [1, 2]:
-                if n == 1:
-                    for user_chat in users_chats:
-                        holiday: Optional[Holiday] = await func_db.get_holiday(
-                            user_pk=user_chat.user.id, chat_pk=chat.id
+            for user_chat in users_chats:
+                holiday: Optional[Holiday] = await func_db.get_holiday(user_pk=user_chat.user.id, chat_pk=chat.id)
+                if holiday and holiday.status:
+                    b_user: Optional[User] = await func_db.get_doc_by_id(model='user', doc_id=holiday.user_id)
+                    if b_user:
+                        text_chat = (f"чат: <b>{title}</b>\n{user_data(user=b_user, is_birthday=True)}"
+                                     f"\nсума внеску: <b>{holiday.amount}</b>")
+                    else:
+                        text_chat = (f"чат: <b>{title}</b>\n"
+                                     f"<u>Іменинник/іменинниця:</u>\n{holiday.info}\n"
+                                     f"Дата Народження: <code>{holiday.date_event}</code>\n"
+                                     f"сума внеску: <b>{holiday.amount}</b>")
+                    sms_list.append(text_chat)
+                    text_sms, number = str(), 0
+                    for user_ch in users_chats:
+                        report: Optional[Report] = await func_db.get_report(
+                            user_pk=user_ch.user.id, chat_pk=chat.id, holiday_pk=holiday.id
                         )
-                        b_user: Optional[User] = await func_db.get_doc_by_id(
-                            model='user', doc_id=holiday.user_id
-                        ) if holiday else None
-                        if holiday and holiday.status:
-                            holiday_list.append(holiday)
-                            if b_user:
-                                text = (f"чат: <b>{title}</b>\n{user_data(user=b_user, is_birthday=True)}"
-                                        f"\nсума внеску: <b>{holiday.amount}</b>")
+                        if report:
+                            number += 1
+                            is_report = True
+                            if number > 5:
+                                sms_list.append(text_sms)
+                                text_sms, number = str(), 0
                             else:
-                                text = (f"чат: <b>{title}</b>\n"
-                                        f"<u>Іменинник/іменинниця:</u>\n{holiday.info}\n"
-                                        f"Дата Народження: <code>{holiday.date_event}</code>\n"
-                                        f"сума внеску: <b>{holiday.amount}</b>")
-                            text_list.append(text)
-                else:
-                    for user_chat in users_chats:
-                        if holiday_list:
-                            for holiday in holiday_list:
-                                report: Optional[Report] = await func_db.get_report(
-                                    user_pk=user_chat.user.id, chat_pk=chat.id, holiday_pk=holiday.id
-                                )
-                                if report:
-                                    is_report = True
-                                    text = await text_payment_info_with_set_link(report=report, user_chat=user_chat)
-                                    text_list.append(f"\n{text}")
-            if text_list:
-                for sms in text_list:
-                    if not is_report and sms == text_list[-1]:
+                                text_payment = await text_payment_info_with_set_link(report=report, user_chat=user_ch)
+                                text_sms += f"\n----------\n{text_payment}"
+                    if text_sms:
+                        sms_list.append(text_sms)
+            if sms_list:
+                for sms in sms_list:
+                    if not is_report and sms == sms_list[-1]:
                         ''' Не має звітів по користувачам чату '''
                         sms = f"{sms}\n\n<b>На даний момент немає боргів серед користувачів чату.</b>"
                     try:
                         await bot.send_message(chat_id=user.telegram_id, text=sms)
                         await asyncio_sleep(delay=1)
                     except Exception as e:
-                        logger.error(f"Attempt={n + 1}: {e}")
+                        logger.error(str(e))
                         await asyncio_sleep(delay=5)
                         await bot.send_message(chat_id=user.telegram_id, text=sms)
             else:
