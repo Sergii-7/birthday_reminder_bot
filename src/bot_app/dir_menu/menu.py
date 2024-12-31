@@ -9,6 +9,7 @@ from config import media_file_path, get_chat_id_bot, sb_telegram_id
 from src.bot_app.create_bot import bot
 from src.bot_app.dir_menu.send_panel import panel_set_holidays, text_payment_info_with_set_link
 from src.dir_schedule.some_tools import DataAI
+from src.service.create_data import user_data
 from src.sql.models import User, Chat, UserChat, Report
 from src.bot_app.dir_menu.buttons_for_menu import *
 from src.bot_app.dir_service.bot_service import get_chat_info, get_user_info
@@ -196,20 +197,27 @@ class SetChat:
                 if n == 1:
                     for user_chat in users_chats:
                         holiday: Optional[Holiday] = await func_db.get_holiday(
-                            user_pk=user_chat.user.id, chat_pk=chat.id)
+                            user_pk=user_chat.user.id, chat_pk=chat.id
+                        )
+                        b_user: Optional[User] = await func_db.get_doc_by_id(model='user', doc_id=holiday.user_id)
                         if holiday and holiday.status:
                             holiday_list.append(holiday)
-                            text = (f"чат: <b>{title}</b>\n"
-                                    f"<u>Іменинник/іменинниця:</u>\n{holiday.info}\n"
-                                    f"Дата Народження: <code>{holiday.date_event}</code>\n"
-                                    f"сума внеску: <b>{holiday.amount}</b>")
+                            if b_user:
+                                text = (f"чат: <b>{title}</b>\n{user_data(user=b_user, is_birthday=True)}"
+                                        f"\nсума внеску: <b>{holiday.amount}</b>")
+                            else:
+                                text = (f"чат: <b>{title}</b>\n"
+                                        f"<u>Іменинник/іменинниця:</u>\n{holiday.info}\n"
+                                        f"Дата Народження: <code>{holiday.date_event}</code>\n"
+                                        f"сума внеску: <b>{holiday.amount}</b>")
                             text_list.append(text)
                 else:
                     for user_chat in users_chats:
                         if holiday_list:
                             for holiday in holiday_list:
                                 report: Optional[Report] = await func_db.get_report(
-                                    user_pk=user_chat.user.id, chat_pk=chat.id, holiday_pk=holiday.id)
+                                    user_pk=user_chat.user.id, chat_pk=chat.id, holiday_pk=holiday.id
+                                )
                                 if report:
                                     is_report = True
                                     text = await text_payment_info_with_set_link(report=report, user_chat=user_chat)
