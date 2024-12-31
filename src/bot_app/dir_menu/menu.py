@@ -214,12 +214,11 @@ class SetChat:
                         if report:
                             number += 1
                             is_report = True
-                            if number > 5:
+                            text_payment = await text_payment_info_with_set_link(report=report, user_chat=user_ch)
+                            text_sms += f"\n----------\n{text_payment}"
+                            if number % 5 == 0:
                                 sms_list.append(text_sms)
-                                text_sms, number = str(), 0
-                            else:
-                                text_payment = await text_payment_info_with_set_link(report=report, user_chat=user_ch)
-                                text_sms += f"\n----------\n{text_payment}"
+                                text_sms = str()
                     if text_sms:
                         sms_list.append(text_sms)
             if sms_list:
@@ -292,10 +291,3 @@ class Settings:
             await bot.send_message(chat_id=self.telegram_id, text=self.text_sms, reply_markup=reply_markup)
 
 
-
-# async def test():
-#     user: User = await func_db.get_user_by_telegram_id(telegram_id=sb_telegram_id)
-#     chat: Chat = await func_db.get_doc_by_id(model='chat', doc_id=2)
-#     await SetChat().get_command(user=user, chat=chat, command='report')
-# import asyncio
-# asyncio.run(main=test())
