@@ -15,10 +15,12 @@ async def panel_set_holidays(chat: Chat, holiday: Holiday):
     """Send panel for Admin to set Holiday in DataBase"""
     title = await DataAI().get_title(chat=chat)
     admin: User = await get_doc_by_id(model='user', doc_id=chat.user_id)
-    text = (f"чат: <b>{title}</b>\n"
-            f"<u>Іменинник/іменинниця:</u>\n{holiday.info}\n"
-            f"Дата Народження: <code>{holiday.date_event}</code>\n"
-            f"сума внеску: <b>{holiday.amount}</b>")
+    b_user: Optional[User] = await get_doc_by_id(model='user', doc_id=holiday.user_id)
+    if b_user:
+        text = f"чат: <b>{title}</b>\n{user_data(user=b_user, is_birthday=True)}\nсума внеску: <b>{holiday.amount}</b>"
+    else:
+        text = (f"чат: <b>{title}</b>\n<u>Іменинник/іменинниця:</u>\n{holiday.info}\n"
+                f"Дата Народження: <code>{holiday.date_event}</code>\nсума внеску: <b>{holiday.amount}</b>")
     buttons = buttons_for_event_settings(role=admin.info, holiday=holiday)
     reply_markup = InlineKeyboardMarkup(inline_keyboard=buttons)
     await bot.send_message(
@@ -50,7 +52,6 @@ async def panel_make_payment(user: User, callback_query: CallbackQuery):
                     await bot.send_message(chat_id=user.telegram_id, text=sms)
                     await sleep(delay=1)
                 return
-
         else:
             text = "На даний момент у вас немає боргів перед групами."
             await callback_query.answer(text=text, show_alert=True)
@@ -73,18 +74,4 @@ async def text_payment_info_with_set_link(report: Report, user_chat: UserChat, u
     return text
 
 
-# async def testing():
-#     """Testing this module."""
-#     user_id = 3 # SB
-#     user = await get_doc_by_id(model='user', doc_id=user_id)
-#     print(user)
-#     reports = await get_user_reports(user_id=user.id, status=False)
-#     for report in reports:
-#         print(report.holidays.user_id)
-#         b_user = await get_doc_by_id(model='user', doc_id=report.holidays.user_id)
-#         print(report.holidays.date_event, b_user.birthday)
-#         print(report.chat.chat_id)
 
-
-# import asyncio
-# asyncio.run(main=testing())
