@@ -199,7 +199,9 @@ class SetChat:
                         holiday: Optional[Holiday] = await func_db.get_holiday(
                             user_pk=user_chat.user.id, chat_pk=chat.id
                         )
-                        b_user: Optional[User] = await func_db.get_doc_by_id(model='user', doc_id=holiday.user_id)
+                        b_user: Optional[User] = await func_db.get_doc_by_id(
+                            model='user', doc_id=holiday.user_id
+                        ) if holiday else None
                         if holiday and holiday.status:
                             holiday_list.append(holiday)
                             if b_user:
