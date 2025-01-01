@@ -57,12 +57,19 @@ class DataAI:
         return {"get_text_ai": get_text_ai, "get_image_ai": get_image_ai}
 
     def if_error_ai_get_text_for_asking_money(
-            self, first_name: str, title: str, amount: int, birthday_user_name: str, days_to_birthday: int) -> str:
-        """If error with AI - create own content for asking money"""
-        text = (f"Привіт, {first_name}!\n\nКоманда Аврора збирається зробити подарунок для {birthday_user_name}, "
-                f"у якого день народження через {days_to_birthday} днів. Всі скидаються по {amount} грн, і було б "
-                f"чудово, якби ти теж міг долучитися до цієї ініціативи. Заздалегідь дякуємо за твою підтримку!\n\n"
-                f"З найкращими побажаннями,\nКоманда {title}")
+            self, first_name: str, title: str, amount: int, birthday_user_name: str, days_to_birthday: int,
+            birthday_user: Optional[User] = None) -> str:
+        """If error with AI - create own content for asking money."""
+        if birthday_user:
+            data_b_user = user_data(user=birthday_user, is_birthday=True)
+            text = (f"Привіт, {first_name}!\n\nКоманда Аврора збирається зробити подарунок для:\n{data_b_user}\n\n"
+                    f"Всі скидаються по {amount} грн, і було б чудово, якби ти теж міг долучитися до цієї ініціативи."
+                    f"\nЗаздалегідь дякуємо за твою підтримку!\n\nЗ найкращими побажаннями,\nКоманда {title}")
+        else:
+            text = (f"Привіт, {first_name}!\n\nКоманда Аврора збирається зробити подарунок для "
+                    f"{birthday_user_name}, у якого день народження через {days_to_birthday} днів. "
+                    f"Всі скидаються по {amount} грн, і було б чудово, якби ти теж міг долучитися до цієї ініціативи."
+                    f"\nЗаздалегідь дякуємо за твою підтримку!\n\nЗ найкращими побажаннями,\nКоманда {title}")
         return text
 
 
@@ -128,7 +135,7 @@ class AskingMoney:
         else:
             text = DataAI().if_error_ai_get_text_for_asking_money(
                 first_name=user.first_name, title=title, amount=amount, birthday_user_name=birthday_user_name,
-                days_to_birthday=days_to_birthday)
+                days_to_birthday=days_to_birthday, birthday_user=birthday_user)
         if birthday_user:
             cv = user_data(user=birthday_user, is_birthday=True)
             text = text + f"\n\n{cv}\nкарта для перерахування внеску: <code>{card_number}</code>"

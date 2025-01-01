@@ -7,9 +7,9 @@ logger = get_logger(__name__)
 
 
 def encode_image(image_path: str) -> Optional[str]:
-    """ Function to encode the image """
+    """Function to encode the image."""
     try:
-        logger.debug(f"encode_image(image_path={image_path})")
+        logger.debug(msg=f"encode_image(image_path={image_path})")
         # Перевіряємо, чи існує файл
         if not os.path.exists(image_path):
             raise FileNotFoundError(f"File not found: {image_path}")
@@ -22,9 +22,9 @@ def encode_image(image_path: str) -> Optional[str]:
         # Повертаємо рядок у форматі base64
         return encoded_string.decode("utf-8")
     except FileNotFoundError as fnf_error:
-        logger.error(fnf_error)
+        logger.error(msg=fnf_error)
     except ValueError as val_error:
-        logger.error(val_error)
+        logger.error(msg=val_error)
     except Exception as e:
-        logger.error(e)
+        logger.error(msg=e)
     return None

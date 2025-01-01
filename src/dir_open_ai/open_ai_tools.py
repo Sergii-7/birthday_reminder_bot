@@ -31,7 +31,7 @@ class ResponseTextAI:
             return {"error": "prompt and messages are both None"}
 
         try:
-            logger.info("Start ResponseTextAI()")
+            logger.debug(msg="Start ResponseTextAI()")
             response: ChatCompletion = await client.chat.completions.create(
                 model=model,
                 messages=self.messages,
@@ -47,7 +47,7 @@ class ResponseTextAI:
                 "total_tokens": response.usage.total_tokens,
             }
         except Exception as e:
-            logger.error(f"Error occurred in ResponseTextAI: {str(e)}")
+            logger.error(msg=f"Error occurred in ResponseTextAI: {str(e)}")
             return {"error": str(e)}
 
 
@@ -57,7 +57,7 @@ class ResponseImageAI:
     async def get_image_from_ai(self, prompt_for_ai: str) -> Dict[str, Optional[Union[str, int]]]:
         """ Get url for Image from AI """
         try:
-            logger.info("Start get_image_from_ai")
+            logger.debug(msg="Start get_image_from_ai")
             response = await client.images.generate(
                 model="dall-e-3",
                 prompt=prompt_for_ai,
@@ -68,7 +68,7 @@ class ResponseImageAI:
             # print(response)
             return {"image_url": response.data[0].url, "revised_prompt": response.data[0].revised_prompt,}
         except Exception as e:
-            logger.error(e)
+            logger.error(msg=str(e))
             return {"error": str(e)}
 
     def get_messages_with_image(
@@ -101,7 +101,7 @@ class ResponseImageAI:
         messages_for_ai = self.get_messages_with_image(prompt_for_ai=prompt_for_ai, url_=url_, image_path=image_path)
         if messages_for_ai:
             try:
-                logger.info("Start ResponseImageAI()")
+                logger.debug(msg="Start ResponseImageAI()")
                 response: ChatCompletion = await client.chat.completions.create(
                     model="gpt-4-turbo-2024-04-09",  # модель для отримання зображень
                     messages=messages_for_ai,
@@ -116,11 +116,11 @@ class ResponseImageAI:
                     "total_tokens": response.usage.total_tokens,
                 }
             except Exception as e:
-                result = str(e)
+                msg = str(e)
         else:
-            result = "Not Start ResponseImageAI()"
-        logger.error(result)
-        return {"error": result}
+            msg = "Not Start ResponseImageAI(): 'messages_for_ai' is None"
+        logger.error(msg=msg)
+        return {"error": msg}
 
 
 
