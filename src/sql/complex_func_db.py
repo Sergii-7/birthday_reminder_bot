@@ -1,17 +1,16 @@
 import asyncio
-from typing import Optional, Union, List
+from typing import List
 from sqlalchemy.future import select
 
 from src.sql.connect import DBSession
-from src.sql.func_db import object_as_dict
-from src.sql.models import User, UserLogin, UserChat, Chat
+from src.sql.models import User, UserChat
 from src.service.loggers.py_logger_fast_api import get_logger
 
 logger = get_logger(__name__)
 
 
 async def get_intersecting_users(telegram_id: int) -> List[User]:
-    """ User get all users from their chats, where users have birthday set """
+    """User get all users from their chats, where users have birthday set."""
     for n in range(3):
         try:
             logger.debug(f'get_intersecting_users(telegram_id={telegram_id})')

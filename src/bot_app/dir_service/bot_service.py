@@ -102,7 +102,7 @@ def get_user_info(user: User, user_chat: UserChat = None) -> str:
     """ Get user info from User """
     username = f"@{user.username}\n" if user.username else ""
     phone_number = f"телефон <code>{user.phone_number}</code>\n" if user.phone_number else ""
-    if not user_chat:
+    if user_chat is None:
         birthday = str(user.birthday)[5:] if user.birthday else 'дані не внесені'
         birthday = f"день народження (month-day): <code>{birthday}</code>"
         link_settings = ""

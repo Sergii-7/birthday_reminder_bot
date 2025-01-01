@@ -12,18 +12,17 @@ async def get_schedule_holidays(user: User) -> List[str]:
     """ User get Date Birthdays the users of his chats """
     calendar_list = list()
     users = await get_intersecting_users(telegram_id=user.telegram_id)
-    # users.append(user)
-    if not users:
-        users = [user]
-    sorted_users = sorted(users, key=lambda user_doc: (user_doc.birthday.month, user_doc.birthday.day))
-    if len(sorted_users) < 6:
+    if user not in users:
+        users.append(user)
+    sorted_users = sorted(users, key=lambda doc: (doc.birthday.month, doc.birthday.day))
+    if len(sorted_users) < 7:
         text = "".join(f"\n{get_user_info(user=doc, user_chat=None)}\n ------------" for doc in sorted_users)
         calendar_list.append(text)
     else:
         text = ""
-        for n, doc in enumerate(start=1, iterable=users):
+        for n, doc in enumerate(start=1, iterable=sorted_users):
             text += f"\n{get_user_info(user=doc, user_chat=None)}\n ------------"
-            if n % 5 == 0:
+            if n % 7 == 0:
                 calendar_list.append(text)
                 text = ""
         if text:
@@ -32,13 +31,13 @@ async def get_schedule_holidays(user: User) -> List[str]:
 
 
 
-# async def test():
-#     from config import sb_telegram_id
-#     users = await get_intersecting_users(telegram_id=sb_telegram_id)
-#     sorted_users = sorted(users, key=lambda x: (x.birthday.month, x.birthday.day))
-#     sorted_users = sorted(users, key=lambda user_doc: (user_doc.birthday.month, user_doc.birthday.day))
-#     text = "".join(f"\n{get_user_info(user=doc, calendar=True)}\n ------------" for doc in sorted_users)
-#     print(text.strip())
-#
+async def testing():
+    """Testing this module."""
+    from src.sql.func_db import get_user_by_telegram_id
+    from config import sb_telegram_id
+    user = await get_user_by_telegram_id(telegram_id=sb_telegram_id)
+    list_calendar = await get_schedule_holidays(user=user)
+    [print(text) for text in list_calendar]
+
 # import asyncio
-# asyncio.run(main=test())
+# asyncio.run(main=testing())

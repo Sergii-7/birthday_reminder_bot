@@ -161,7 +161,9 @@ class AskingMoney:
                 if user_chat.user_telegram_id != birthday_user.telegram_id:
                     """Order the text and image from AI for user"""
                     chat: Optional[Chat] = await get_doc_by_id(model='chat', doc_id=user_chat.chat_id)
-                    report: Report = await get_report(user_pk=user_chat.user.id, chat_pk=chat.id, holiday_pk=holiday.id)
+                    report: Report = await get_report(
+                        user_pk=user_chat.user.id, chat_pk=chat.id, holiday_pk=holiday.id
+                    )
                     if report:
                         ask_money = False if report.status else True
                     else:
