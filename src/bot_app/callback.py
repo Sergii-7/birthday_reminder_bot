@@ -43,7 +43,8 @@ async def callback_run(callback_query: CallbackQuery):
                 text_list = await get_schedule_holidays(user=user)
                 for text in text_list:
                     reply_markup = InlineKeyboardMarkup(inline_keyboard=[b_menu]) if text == text_list[-1] else None
-                    text = f"<b>📅 Календар подій 📅</b>\n ------------\n{text}" if text == text_list[0] else text
+                    text = f"<b>📅 Календар подій 📅</b>\n ------------\n{text.strip()}" \
+                        if text == text_list[0] else text
                     await callback_query.message.answer(text=text, reply_markup=reply_markup)
                     await asyncio_sleep(1)
                 await callback_query.message.delete()
@@ -83,12 +84,3 @@ async def callback_run(callback_query: CallbackQuery):
                 await callback_query.answer(text="У вас немає доступу!", show_alert=True)
                 await callback_query.message.delete()
 
-
-# import asyncio
-# text_sms = (f"<b>Номер вашої банківської картки, яка вказана для отримання внесків:</b>\n\n"
-#             f"<code>1234567898765412</code>\n\nps: Якщо ви хочете змінити номер картки, натисніть"
-#             f" <b>Tak ✔️</b> у вас з'явиться спеціальна форма, не змінюйте її, "
-#             f"лише додайте інший номер картки.")
-# text_to_insert = '\nnew card number:\n'
-# setting = Settings(telegram_id=sb_telegram_id, text_sms=text_sms, text_to_insert=text_to_insert)
-# asyncio.run(setting.admin_commands(photo="bank_card.jpg"))
