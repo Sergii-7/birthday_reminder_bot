@@ -8,7 +8,13 @@ from src.service.loggers.py_logger_tel_bot import get_logger
 logger = get_logger(__name__)
 
 
-async def check_schedule(seconds: int = 25):
+async def wait_next_min():
+    """Sleep until the next minute."""
+    delay_= 60 - correct_time().second
+    await sleep(delay_)
+
+
+async def check_schedule():
     """Check schedule every int: seconds"""
     background_task = BackgroundTask()
     while True:
@@ -27,4 +33,4 @@ async def check_schedule(seconds: int = 25):
                 await sleep(delay=60)
         except Exception as e:
             logger.exception("⛔ Error during check_users_birthday: %s", str(e))
-        await sleep(delay=seconds)
+        await wait_next_min()
