@@ -1,4 +1,3 @@
-import asyncio
 from aiogram.types import FSInputFile
 from config import sb_telegram_id, media_file_path
 from src.bot_app.create_bot import bot
@@ -21,6 +20,10 @@ async def test():
     else:
         print("Чат не має фотографії.")
 
-# asyncio.run(test())
+
+async def testing():
+    # R&D -1001302960043
+    await bot.send_message(chat_id=-1001302960043, text='test')
+
 
 

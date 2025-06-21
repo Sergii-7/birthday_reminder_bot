@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 import pytz, secrets, string, random
 from stdnum.luhn import is_valid
 import phonenumbers
@@ -26,14 +27,15 @@ def check_card_number(card_number: str) -> bool:
         return False
 
 
-def validate_phone(phone_number: str) -> str | None:
+def validate_phone(phone_number: str) -> Optional[str]:
     """ Перевіряємо валідність номера телефону. """
     try:
         parsed_number = phonenumbers.parse(number=phone_number, region=None)
         formatted_number = phonenumbers.format_number(parsed_number, phonenumbers.PhoneNumberFormat.E164)
         if phonenumbers.is_valid_number(parsed_number):
             return formatted_number
-    except:
-        pass
-    return
+    except phonenumbers.NumberParseException:
+        return None
+
+
 

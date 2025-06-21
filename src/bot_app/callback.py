@@ -8,7 +8,7 @@ from src.bot_app.dir_menu.menu import Menu, AdminMenu, SetChat, SetEvent
 from src.bot_app.dir_menu.send_panel import panel_make_payment
 from src.bot_app.dir_service.calendar_m import get_schedule_holidays
 from src.sql import func_db
-from src.sql.models import User, Chat, Report, Holiday
+from src.sql.models import User, Chat, Holiday
 from src.service.loggers.py_logger_tel_bot import get_logger
 
 logger = get_logger(__name__)

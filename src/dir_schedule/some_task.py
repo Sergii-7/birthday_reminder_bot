@@ -79,9 +79,13 @@ class BackgroundTask:
                                                 )
                                                 money_asker = AskingMoney()
                                                 try:
-                                                    task = create_task(money_asker.start_asking(
-                                                        birthday_user=user, users_chats=users_chats,
-                                                        days_to_birthday=days_to_birthday, holiday=holiday)
+                                                    task = create_task(
+                                                        money_asker.start_asking(
+                                                            birthday_user=user,
+                                                            users_chats=users_chats,
+                                                            days_to_birthday=days_to_birthday,
+                                                            holiday=holiday
+                                                        )
                                                     )
                                                     logger.info(f"AskingMoney().send_asking(): {task}")
                                                 except Exception as e:
