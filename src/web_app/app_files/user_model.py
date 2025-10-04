@@ -1,6 +1,5 @@
-from pydantic import BaseModel
 from datetime import datetime
 from enum import Enum
-from typing import Optional, Union, List, Dict
+from typing import Dict, List, Optional, Union
 
-
+from pydantic import BaseModel

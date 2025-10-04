@@ -1,7 +1,7 @@
 from typing import Optional
 
-from src.sql.models import User
 from src.service.loggers.py_logger_tel_bot import get_logger
+from src.sql.models import User
 
 logger = get_logger(__name__)
 

@@ -1,5 +1,7 @@
-from typing import Optional, List, Dict, Any, Union
+from typing import Any, Dict, List, Optional, Union
+
 from openai.types.chat import ChatCompletion
+
 from src.dir_open_ai.connect import client
 from src.dir_open_ai.service_openai import encode_image
 from src.service.loggers.py_logger_openai import get_logger
@@ -8,35 +10,32 @@ logger = get_logger(__name__)
 
 
 class ResponseTextAI:
-    """ Class for getting content:(str) from AI """
+    """Class for getting content:(str) from AI"""
 
     def __init__(
-            self, role: str = None, prompt_for_ai: Optional[str] = None,
-            messages_for_ai: Optional[List[Dict[str, Any]]] = None):
-        """ Create messages for AI """
+        self,
+        role: str = None,
+        prompt_for_ai: Optional[str] = None,
+        messages_for_ai: Optional[List[Dict[str, Any]]] = None,
+    ):
+        """Create messages for AI"""
         if prompt_for_ai:
             role = role if role else "Ти корисний помічник, який допомагає мені з будь-якими питаннями."
-            self.messages = [
-                {"role": "system", "content": role},
-                {"role": "user", "content": prompt_for_ai}
-            ]
+            self.messages = [{"role": "system", "content": role}, {"role": "user", "content": prompt_for_ai}]
         else:
             self.messages = messages_for_ai
 
     async def get_content(
-            self, model: str = "gpt-4-turbo-2024-04-09", max_tokens: int = 500, temperature: float = 0
+        self, model: str = "gpt-4-turbo-2024-04-09", max_tokens: int = 500, temperature: float = 0
     ) -> Dict[str, Union[str, int]]:
-        """ Get content from AI """
+        """Get content from AI"""
         if self.messages is None:
             return {"error": "prompt and messages are both None"}
 
         try:
             logger.debug(msg="Start ResponseTextAI()")
             response: ChatCompletion = await client.chat.completions.create(
-                model=model,
-                messages=self.messages,
-                max_tokens=max_tokens,
-                temperature=temperature
+                model=model, messages=self.messages, max_tokens=max_tokens, temperature=temperature
             )
             # print(response)
             # print(response.choices[0].message.content)
@@ -52,29 +51,28 @@ class ResponseTextAI:
 
 
 class ResponseImageAI:
-    """ Class for working with OpenAI API: we send text and image or get image """
+    """Class for working with OpenAI API: we send text and image or get image"""
 
     async def get_image_from_ai(self, prompt_for_ai: str) -> Dict[str, Optional[Union[str, int]]]:
-        """ Get url for Image from AI """
+        """Get url for Image from AI"""
         try:
             logger.debug(msg="Start get_image_from_ai")
             response = await client.images.generate(
-                model="dall-e-3",
-                prompt=prompt_for_ai,
-                size="1024x1024",
-                quality="standard",
-                n=1  # не можна змінювати
+                model="dall-e-3", prompt=prompt_for_ai, size="1024x1024", quality="standard", n=1  # не можна змінювати
             )
             # print(response)
-            return {"image_url": response.data[0].url, "revised_prompt": response.data[0].revised_prompt,}
+            return {
+                "image_url": response.data[0].url,
+                "revised_prompt": response.data[0].revised_prompt,
+            }
         except Exception as e:
             logger.error(msg=str(e))
             return {"error": str(e)}
 
     def get_messages_with_image(
-            self, prompt_for_ai: str, image_path: Optional[str] = None, url_: Optional[str] = None
+        self, prompt_for_ai: str, image_path: Optional[str] = None, url_: Optional[str] = None
     ) -> Optional[List[Dict[str, Union[Any]]]]:
-        """ Create Dict with image data for messages """
+        """Create Dict with image data for messages"""
         data_image = None
         if image_path:
             base64_image = encode_image(image_path=image_path)
@@ -83,14 +81,28 @@ class ResponseImageAI:
         else:
             data_image = url_
         if data_image:
-            messages_for_ai = [{"role": "user", "content": [{"type": "text", "text": prompt_for_ai},
-                                                     {"type": "image_url", "image_url": {"url": data_image},},],},]
+            messages_for_ai = [
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": prompt_for_ai},
+                        {
+                            "type": "image_url",
+                            "image_url": {"url": data_image},
+                        },
+                    ],
+                },
+            ]
             return messages_for_ai
         return None
 
     async def get_response(
-            self, prompt_for_ai: str, image_path: Optional[str] = None, url_: Optional[str] = None,
-            max_tokens: int = 2000, temperature: float = 0
+        self,
+        prompt_for_ai: str,
+        image_path: Optional[str] = None,
+        url_: Optional[str] = None,
+        max_tokens: int = 2000,
+        temperature: float = 0,
     ) -> Dict[str, Optional[Union[str, int]]]:
         """
         Send image for AI with text
@@ -106,7 +118,7 @@ class ResponseImageAI:
                     model="gpt-4-turbo-2024-04-09",  # модель для отримання зображень
                     messages=messages_for_ai,
                     max_tokens=max_tokens,
-                    temperature=temperature
+                    temperature=temperature,
                 )
                 # print(response)
                 return {
@@ -121,7 +133,6 @@ class ResponseImageAI:
             msg = "Not Start ResponseImageAI(): 'messages_for_ai' is None"
         logger.error(msg=msg)
         return {"error": msg}
-
 
 
 # from asyncio import run as asyncio_run
@@ -141,16 +152,15 @@ class ResponseImageAI:
 
 """
 ImagesResponse(
-    created=1728221518, 
+    created=1728221518,
     data=[Image(b64_json=None, revised_prompt='Create an image depicting a corporate scenario where a co-worker, a Caucasian male, is acting in an uncooperative manner, resulting in detrimental effects to the company. The office environment should be clear and there should be visible signs of distress among other team members, a diverse group of South Asian female, Black male, and Middle-Eastern female colleagues.', url='https://oaidalleapiprodscus.blob.core.windows.net/private/org-vdPphsiIVBT6qImMmNI4a2DJ/user-hr3lMNoxppiZgKqs7CP2YZo9/img-yTHQhVf3EOBgTM09XHOmUtpw.png?st=2024-10-06T12%3A31%3A58Z&se=2024-10-06T14%3A31%3A58Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=d505667d-d6c1-4a0a-bac7-5c84a87759f8&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2024-10-06T09%3A34%3A25Z&ske=2024-10-07T09%3A34%3A25Z&sks=b&skv=2024-08-04&sig=QvC5ys6T4v44P%2BJpo5GGDbSPxTuHrJo8/aXzLSaEqas%3D')])
 
 --------------------------
 
 ChatCompletion(
-    id='chatcmpl-AFKAnrucPH8Hu75femZZVTOmoASxt', 
-    choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='На зображенні немає жодного тексту, включаючи e-mail. Я бачу лише святковий торт зі свічками та феєрверками. Якщо у вас є інші питання про зображення, будь ласка, задайте їх!', refusal=None, role='assistant', function_call=None, tool_calls=None))], 
-    created=1728215829, model='gpt-4-turbo-2024-04-09', object='chat.completion', service_tier=None, system_fingerprint='fp_81dd8129df', 
+    id='chatcmpl-AFKAnrucPH8Hu75femZZVTOmoASxt',
+    choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='На зображенні немає жодного тексту, включаючи e-mail. Я бачу лише святковий торт зі свічками та феєрверками. Якщо у вас є інші питання про зображення, будь ласка, задайте їх!', refusal=None, role='assistant', function_call=None, tool_calls=None))],
+    created=1728215829, model='gpt-4-turbo-2024-04-09', object='chat.completion', service_tier=None, system_fingerprint='fp_81dd8129df',
     usage=CompletionUsage(completion_tokens=95, prompt_tokens=794, total_tokens=889, completion_tokens_details=CompletionTokensDetails(audio_tokens=None, reasoning_tokens=0), prompt_tokens_details=PromptTokensDetails(audio_tokens=None, cached_tokens=0))
 )
 """
-

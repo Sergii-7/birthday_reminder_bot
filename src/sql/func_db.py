@@ -1,26 +1,32 @@
 from asyncio import sleep
 from datetime import datetime
-from typing import Optional, Union, List, Dict, Any
+from typing import Any, Dict, List, Optional, Union
+
 from aiogram.types import Message
 from sqlalchemy import and_
 from sqlalchemy.future import select
 from sqlalchemy.inspection import inspect
-from sqlalchemy.orm import joinedload, selectinload, SQLORMExpression
+from sqlalchemy.orm import SQLORMExpression, joinedload, selectinload
 
-from src.sql.connect import DBSession
-from src.sql.models import User, UserLogin, UserChat, Chat, Holiday, Report
-from src.service.service_tools import correct_time
 from src.service.loggers.py_logger_fast_api import get_logger
+from src.service.service_tools import correct_time
+from src.sql.connect import DBSession
+from src.sql.models import Chat, Holiday, Report, User, UserChat, UserLogin
 
 logger = get_logger(__name__)
 
 models = {
-    'user': User, 'user_login': UserLogin, 'user_chat': UserChat, 'chat': Chat, 'holiday': Holiday, 'report': Report,
+    "user": User,
+    "user_login": UserLogin,
+    "user_chat": UserChat,
+    "chat": Chat,
+    "holiday": Holiday,
+    "report": Report,
 }
 
 
 async def get_doc_by_id(model: str, doc_id: int) -> Optional[Union[User, UserLogin, UserChat, Chat, Holiday, Report]]:
-    """ Get doc from DataBase by id """
+    """Get doc from DataBase by id"""
     if model in models:
         for n in range(3):
             try:
@@ -39,10 +45,10 @@ async def get_doc_by_id(model: str, doc_id: int) -> Optional[Union[User, UserLog
 
 
 async def check_user(message: Message) -> Optional[User]:
-    """ Create User and UserLogin in DataBase """
+    """Create User and UserLogin in DataBase"""
     for n in range(3):
         try:
-            logger.debug(f'check_user(telegram_id={message.from_user.id})')
+            logger.debug(f"check_user(telegram_id={message.from_user.id})")
             # Перевірка чи є користувач у базі даних
             async with DBSession() as session:
                 async with session.begin():
@@ -55,12 +61,10 @@ async def check_user(message: Message) -> Optional[User]:
                             first_name=message.from_user.first_name,
                             last_name=message.from_user.last_name,
                             username=message.from_user.username,
-                            language_code=message.from_user.language_code
+                            language_code=message.from_user.language_code,
                         )
                         session.add(user)
-                        user_login = UserLogin(
-                            user_telegram_id=user.telegram_id
-                        )
+                        user_login = UserLogin(user_telegram_id=user.telegram_id)
                         session.add(user_login)
                         logger.info(f"Kyiv_time: {correct_time()} add new_user in db: telegram_id={user.telegram_id}")
                     return user
@@ -71,10 +75,10 @@ async def check_user(message: Message) -> Optional[User]:
 
 
 async def get_user_by_telegram_id(telegram_id: int) -> Optional[User]:
-    """ Get User from DataBase by telegram_id """
+    """Get User from DataBase by telegram_id"""
     for n in range(3):
         try:
-            logger.debug(f'get_user_by_telegram_id(telegram_id={telegram_id})')
+            logger.debug(f"get_user_by_telegram_id(telegram_id={telegram_id})")
             async with DBSession() as session:
                 # Формуємо запит
                 query = select(User).filter_by(telegram_id=telegram_id)
@@ -88,10 +92,10 @@ async def get_user_by_telegram_id(telegram_id: int) -> Optional[User]:
 
 
 async def get_user_by_id(user_id: int) -> Optional[User]:
-    """ Get User from DataBase by user_id """
+    """Get User from DataBase by user_id"""
     for n in range(3):
         try:
-            logger.debug(f'get_user_by_id(user_id={user_id})')
+            logger.debug(f"get_user_by_id(user_id={user_id})")
             async with DBSession() as session:
                 # Формуємо запит
                 query = select(User).filter_by(id=user_id)
@@ -105,10 +109,10 @@ async def get_user_by_id(user_id: int) -> Optional[User]:
 
 
 async def get_user_by_phone(phone_number: str) -> Optional[User]:
-    """ Get User from DataBase by phone_number """
+    """Get User from DataBase by phone_number"""
     for n in range(3):
         try:
-            logger.debug(f'get_user_by_phone(phone_number={phone_number})')
+            logger.debug(f"get_user_by_phone(phone_number={phone_number})")
             async with DBSession() as session:
                 # Формуємо запит
                 query = select(User).filter_by(phone_number=phone_number)
@@ -122,10 +126,10 @@ async def get_user_by_phone(phone_number: str) -> Optional[User]:
 
 
 async def get_user_by_login(telegram_id: int, password: str) -> Optional[Union[User, UserLogin]]:
-    """ Get user and user login from DataBase by 'login' and 'password' """
+    """Get user and user login from DataBase by 'login' and 'password'"""
     for n in range(3):
         try:
-            logger.debug(f'get_user_by_login(telegram_id={telegram_id}, password=***)')
+            logger.debug(f"get_user_by_login(telegram_id={telegram_id}, password=***)")
             async with DBSession() as session:
                 result = await session.execute(
                     select(UserLogin)
@@ -144,10 +148,10 @@ async def get_user_by_login(telegram_id: int, password: str) -> Optional[Union[U
 
 
 async def get_login_user_by_telegram_id(telegram_id: int) -> Optional[UserLogin]:
-    """ Get user and user login from DataBase by 'login' and 'password' """
+    """Get user and user login from DataBase by 'login' and 'password'"""
     for n in range(3):
         try:
-            logger.debug(f'get_login_user_by_telegram_id(telegram_id={telegram_id})')
+            logger.debug(f"get_login_user_by_telegram_id(telegram_id={telegram_id})")
             async with DBSession() as session:
                 result = await session.execute(select(UserLogin).filter_by(user_telegram_id=telegram_id))
                 user_login = result.scalar()
@@ -162,10 +166,10 @@ async def get_login_user_by_telegram_id(telegram_id: int) -> Optional[UserLogin]
 
 
 async def update_phone_number(telegram_id: int, phone_number: str) -> Optional[Union[User]]:
-    """ Update 'phone_number' in table='users' in DataBase """
+    """Update 'phone_number' in table='users' in DataBase"""
     for n in range(3):
         try:
-            logger.debug(f'update_phone_number(telegram_id={telegram_id}, phone_number={phone_number})')
+            logger.debug(f"update_phone_number(telegram_id={telegram_id}, phone_number={phone_number})")
             async with DBSession() as session:
                 async with session.begin():
                     user = await session.execute(select(User).filter_by(telegram_id=telegram_id))
@@ -176,7 +180,7 @@ async def update_phone_number(telegram_id: int, phone_number: str) -> Optional[U
                         await session.commit()
                         return user
                     else:
-                        logger.error(f'User with phone_number={phone_number} is empty in DataBase')
+                        logger.error(f"User with phone_number={phone_number} is empty in DataBase")
                         return None
         except Exception as e:
             logger.error(f"attempt={n + 1} error: {e}")
@@ -185,31 +189,31 @@ async def update_phone_number(telegram_id: int, phone_number: str) -> Optional[U
 
 
 async def doc_update(
-        doc: Union[User, UserLogin, UserChat, Chat, Holiday, Report]
+    doc: Union[User, UserLogin, UserChat, Chat, Holiday, Report],
 ) -> Union[bool, Union[User, UserLogin, UserChat, Chat, Holiday, Report]]:
-    """ Оновлюємо будь-який object в якому ми робили ті чи інші зміни """
+    """Оновлюємо будь-який object в якому ми робили ті чи інші зміни"""
     if doc:
         for n in range(3):
             try:
-                logger.debug(f'doc_update(doc={doc})')
+                logger.debug(f"doc_update(doc={doc})")
                 async with DBSession() as session:
                     async with session.begin():
                         await session.merge(doc)
                         await session.commit()
                         return doc
             except Exception as e:
-                logger.error(f'Attempt {n + 1} failed: {e}')
+                logger.error(f"Attempt {n + 1} failed: {e}")
                 await sleep(0.5)
     return False
 
 
 async def get_chat_with_user(pk: int = None, chat_id: int = None) -> Optional[Chat]:
-    """ Get Chat by pk (primary key) and chat_id (id group in telegram) with the associated user """
+    """Get Chat by pk (primary key) and chat_id (id group in telegram) with the associated user"""
     if not pk and not chat_id:
         return None
     for n in range(3):
         try:
-            logger.debug(f'get_chat_with_user(pk={pk}, chat_id={chat_id})')
+            logger.debug(f"get_chat_with_user(pk={pk}, chat_id={chat_id})")
             async with DBSession() as session:
                 # Створюємо запит
                 query = select(Chat).options(selectinload(Chat.user))
@@ -230,7 +234,7 @@ async def get_chat_with_user(pk: int = None, chat_id: int = None) -> Optional[Ch
 
 
 async def get_user_chat_with_user(user_chat_pk: int) -> Optional[UserChat]:
-    """ Get UserChat with User """
+    """Get UserChat with User"""
     for n in range(3):
         try:
             logger.debug(f"get_user_chat_with_user(user_chat_pk={user_chat_pk})")
@@ -249,7 +253,7 @@ async def get_user_chat_with_user(user_chat_pk: int) -> Optional[UserChat]:
 
 
 async def get_users(filter_by_birthday: bool = False) -> List[User]:
-    """ Get all users from DataBase, optionally filter by non-null birthday """
+    """Get all users from DataBase, optionally filter by non-null birthday"""
     for n in range(3):
         try:
             logger.debug("get_all_users()")
@@ -268,10 +272,10 @@ async def get_users(filter_by_birthday: bool = False) -> List[User]:
 
 
 async def get_chats(user_id: int = None, status: bool = None, limit: int = None) -> List[Chat]:
-    """ Get array with object<SQLAlchemy>: 'Chat' by optional user_id and optional limit """
+    """Get array with object<SQLAlchemy>: 'Chat' by optional user_id and optional limit"""
     for n in range(3):
         try:
-            logger.debug(f'get_chats(user_id={user_id}, limit={limit})')
+            logger.debug(f"get_chats(user_id={user_id}, limit={limit})")
             async with DBSession() as session:
                 # Формуємо запит
                 query = select(Chat)
@@ -288,22 +292,19 @@ async def get_chats(user_id: int = None, status: bool = None, limit: int = None)
                 chats = result.scalars().all()  # Отримуємо список чатів
                 return chats
         except Exception as e:
-            logger.error(f'Attempt {n + 1} failed: {e}')
+            logger.error(f"Attempt {n + 1} failed: {e}")
             await sleep(0.5)
     return []
 
 
 async def get_user_chat(chat_id: int, user_telegram_id: int) -> Optional[UserChat]:
-    """ Get UserChat from DataBase by 'chat.id' and 'user.telegram_id' """
+    """Get UserChat from DataBase by 'chat.id' and 'user.telegram_id'"""
     for n in range(3):
         try:
             logger.debug(f"get_user_chat(chat_id={chat_id}, user_telegram_id={user_telegram_id})")
             async with DBSession() as session:
                 query = select(UserChat).filter(
-                    and_(
-                        UserChat.chat_id == chat_id,
-                        UserChat.user_telegram_id == user_telegram_id
-                    )
+                    and_(UserChat.chat_id == chat_id, UserChat.user_telegram_id == user_telegram_id)
                 )
                 result = await session.execute(query)
                 return result.scalar_one_or_none()
@@ -314,7 +315,7 @@ async def get_user_chat(chat_id: int, user_telegram_id: int) -> Optional[UserCha
 
 
 async def get_all_users_from_chat(chat_id: int) -> List[UserChat]:
-    """ Get all users from UserChat by 'chat.id' with associated User """
+    """Get all users from UserChat by 'chat.id' with associated User"""
     for n in range(3):
         try:
             logger.debug(f"get_all_users_from_chat(chat_id={chat_id})")
@@ -329,10 +330,10 @@ async def get_all_users_from_chat(chat_id: int) -> List[UserChat]:
 
 
 async def get_holiday_with_chat(holiday_id: int) -> Optional[Holiday]:
-    """ Get Holiday by id (primary key) with the associated chat """
+    """Get Holiday by id (primary key) with the associated chat"""
     for n in range(3):
         try:
-            logger.debug(f'get_holiday_with_chat(holiday_id={holiday_id})')
+            logger.debug(f"get_holiday_with_chat(holiday_id={holiday_id})")
             async with DBSession() as session:
                 # Створюємо запит
                 query = select(Holiday).options(selectinload(Holiday.chat))
@@ -351,7 +352,7 @@ async def get_holiday(user_pk: int, chat_pk: int):
     """Get Holiday by user_pk (ForeignKey) and chat_pk (ForeignKey)"""
     for n in range(3):
         try:
-            logger.debug(f'get_holiday(user_pk={user_pk}, chat_pk={chat_pk})')
+            logger.debug(f"get_holiday(user_pk={user_pk}, chat_pk={chat_pk})")
             async with DBSession() as session:
                 query = select(Holiday).where(and_(Holiday.user_id == user_pk, Holiday.chat_id == chat_pk))
                 result = await session.execute(query)
@@ -370,11 +371,7 @@ async def get_report(user_pk: int, chat_pk: int, holiday_pk: int) -> Optional[Re
             logger.debug(f"get_report(user_pk={user_pk}, chat_pk={chat_pk}, holiday_pk={holiday_pk})")
             async with DBSession() as session:
                 query = select(Report).where(
-                    and_(
-                        Report.user_id == user_pk,
-                        Report.chat_id == chat_pk,
-                        Report.holiday_id == holiday_pk
-                    )
+                    and_(Report.user_id == user_pk, Report.chat_id == chat_pk, Report.holiday_id == holiday_pk)
                 )
                 result = await session.execute(query)
                 report = result.scalar_one_or_none()
@@ -399,7 +396,7 @@ def convert_str_to_datetime_fields(data: dict) -> dict:
 
 
 async def create_new_doc(model: str, data: dict, data_has_datatime: bool = False) -> Optional[int]:
-    """ Створюємо новий документ в базі даних, конвертуючи дати зі строк """
+    """Створюємо новий документ в базі даних, конвертуючи дати зі строк"""
     if model in models:
         for n in range(3):
             try:
@@ -422,8 +419,8 @@ async def create_new_doc(model: str, data: dict, data_has_datatime: bool = False
 
 
 async def object_as_dict(obj: object) -> Dict[str, Any]:
-    """ Перетворюємо object з DataBase на dict """
-    if not hasattr(obj, '__table__'):
+    """Перетворюємо object з DataBase на dict"""
+    if not hasattr(obj, "__table__"):
         raise ValueError(f"Expected SQLAlchemy model instance, got {obj.__class__}")
     result = {}
     for c in inspect(obj).mapper.column_attrs:
@@ -464,10 +461,14 @@ async def get_user_reports(user_id: int, status: Optional[bool] = None) -> Optio
     try:
         logger.debug(f"user_id={user_id}, status={status}")
         async with DBSession() as session:
-            query = select(Report).options(
-                joinedload(Report.chat),
-                joinedload(Report.holidays),
-            ).where(Report.user_id == user_id)
+            query = (
+                select(Report)
+                .options(
+                    joinedload(Report.chat),
+                    joinedload(Report.holidays),
+                )
+                .where(Report.user_id == user_id)
+            )
             if status is not None:
                 query = query.where(Report.status == status)
             result = await session.execute(query)

@@ -1,24 +1,32 @@
-import aiohttp
-from PIL import Image
-from io import BytesIO
-from typing import Optional, Dict, Union, Any
-from aiogram.types import (FSInputFile, ChatMember, InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove,
-                           ForceReply)
-from aiogram.enums import ChatMemberStatus
 import os
-from config import media_file_path, bot_link
+from io import BytesIO
+from typing import Any, Dict, Optional, Union
+
+import aiohttp
+from aiogram.enums import ChatMemberStatus
+from aiogram.types import (
+    ChatMember,
+    ForceReply,
+    FSInputFile,
+    InlineKeyboardMarkup,
+    ReplyKeyboardMarkup,
+    ReplyKeyboardRemove,
+)
+from PIL import Image
+
+from config import bot_link, media_file_path
 from src.bot_app.create_bot import bot
 from src.bot_app.dir_menu.buttons_for_menu import b_my_groups
-from src.sql.models import User, Chat, UserChat
-from src.sql.func_db import doc_update, get_chats, get_user_chat, create_new_doc, get_chat_with_user, get_user_by_phone
-from src.service.service_tools import correct_time, validate_phone
 from src.service.loggers.py_logger_tel_bot import get_logger
+from src.service.service_tools import correct_time, validate_phone
+from src.sql.func_db import create_new_doc, doc_update, get_chat_with_user, get_chats, get_user_by_phone, get_user_chat
+from src.sql.models import Chat, User, UserChat
 
 logger = get_logger(__name__)
 
 
 async def check_user_in_group(telegram_id: int, chat_id: int) -> bool:
-    """ Check user: is he member of the chat """
+    """Check user: is he member of the chat"""
     try:
         # Отримання інформації про учасника групи
         member: ChatMember = await bot.get_chat_member(chat_id=chat_id, user_id=telegram_id)
@@ -35,7 +43,7 @@ async def check_user_in_group(telegram_id: int, chat_id: int) -> bool:
 
 
 async def check_user_in_every_chat(user: User) -> Dict[str, int]:
-    """ Check: is User member of one or more chats """
+    """Check: is User member of one or more chats"""
     logger.info(f"start check_user_in_every_chat for user: {user.telegram_id}, {user.first_name}")
     new_user_chat, updated_user_chat = 0, 0
     chats = await get_chats()
@@ -49,7 +57,7 @@ async def check_user_in_every_chat(user: User) -> Dict[str, int]:
                 updated_user_chat = updated_user_chat + 1 if r else updated_user_chat
             else:
                 user_chat = {"chat_id": chat.id, "user_telegram_id": user.telegram_id, "status": True}
-                r = await create_new_doc(model='user_chat', data=user_chat, data_has_datatime=False)
+                r = await create_new_doc(model="user_chat", data=user_chat, data_has_datatime=False)
                 new_user_chat = new_user_chat + 1 if r else new_user_chat
     res = {"new_user_chat": new_user_chat, "updated_user_chat": updated_user_chat}
     logger.info(str(res))
@@ -57,8 +65,9 @@ async def check_user_in_every_chat(user: User) -> Dict[str, int]:
 
 
 async def get_chat_info(
-        admin: User, chat: Chat, get_photo: bool = True) -> Dict[str, Optional[Union[str, FSInputFile]]]:
-    """ Get chat info from Telegram and DataBase """
+    admin: User, chat: Chat, get_photo: bool = True
+) -> Dict[str, Optional[Union[str, FSInputFile]]]:
+    """Get chat info from Telegram and DataBase"""
     try:
         chat_data = await bot.get_chat(chat_id=chat.chat_id)
     except Exception as e:
@@ -68,8 +77,11 @@ async def get_chat_info(
     if chat.status != status:
         chat.status = status
         chat = await doc_update(doc=chat)
-    status_description = "ГРУПА АКТИВНА" if status \
+    status_description = (
+        "ГРУПА АКТИВНА"
+        if status
         else "<b>⚠️ налаштування не можливі - адмін або Телеграм бот не мають доступу до групи</b>"
+    )
     count_users = "не відомо"
     try:
         if status:
@@ -78,9 +90,11 @@ async def get_chat_info(
         logger.error(e)
     title = f"<b>{chat_data.title}</b>\n" if chat_data else ""
     user_name = f"@{admin.username}\n" if admin.username else ""
-    text = (f"chat_id: <code>{chat.chat_id}</code>\nстатус: {status_description}\n{title}"
-            f"кількість учасників: <b>{count_users}</b>\n<b>Адмін</b>\nІм'я в Телеграмі: "
-            f"<b>{admin.first_name}</b>\nтелефон: <code>{admin.phone_number}</code>\n{user_name}")
+    text = (
+        f"chat_id: <code>{chat.chat_id}</code>\nстатус: {status_description}\n{title}"
+        f"кількість учасників: <b>{count_users}</b>\n<b>Адмін</b>\nІм'я в Телеграмі: "
+        f"<b>{admin.first_name}</b>\nтелефон: <code>{admin.phone_number}</code>\n{user_name}"
+    )
     photo = None
     if get_photo:
         try:
@@ -99,15 +113,15 @@ async def get_chat_info(
 
 
 def get_user_info(user: User, user_chat: UserChat = None) -> str:
-    """ Get user info from User """
+    """Get user info from User"""
     username = f"@{user.username}\n" if user.username else ""
     phone_number = f"телефон <code>{user.phone_number}</code>\n" if user.phone_number else ""
     if user_chat is None:
-        birthday = str(user.birthday)[5:] if user.birthday else 'дані не внесені'
+        birthday = str(user.birthday)[5:] if user.birthday else "дані не внесені"
         birthday = f"день народження (month-day): <code>{birthday}</code>"
         link_settings = ""
     else:
-        birthday = user.birthday if user.birthday else 'дані не внесені'
+        birthday = user.birthday if user.birthday else "дані не внесені"
         birthday = f"день народження: <code>{birthday}</code>"
         desc = "<b>💲 задіяний до зборів</b>" if user_chat.status else "<b>🙅 не задіяний до зборів</b>"
         link_settings = f"\n{desc} <a href='{bot_link}?start=set-status-{user_chat.id}'>змінити</a>"
@@ -116,8 +130,9 @@ def get_user_info(user: User, user_chat: UserChat = None) -> str:
 
 
 async def download_and_compress_image(
-        url: str, max_size: int = 5 * 1024 * 1024, filename: str = "compressed_image.jpg") -> Optional[str]:
-    """ Завантажує та стискає зображення з URL та повертає шлях до тимчасового файлу """
+    url: str, max_size: int = 5 * 1024 * 1024, filename: str = "compressed_image.jpg"
+) -> Optional[str]:
+    """Завантажує та стискає зображення з URL та повертає шлях до тимчасового файлу"""
     async with aiohttp.ClientSession() as session:
         try:
             async with session.get(url) as response:
@@ -129,14 +144,14 @@ async def download_and_compress_image(
                     # Стискаємо зображення до потрібного розміру
                     while True:
                         output = BytesIO()
-                        image.save(output, format='JPEG', quality=quality)
+                        image.save(output, format="JPEG", quality=quality)
                         size = output.tell()
                         if size <= max_size or quality <= 10:
                             break
                         quality -= 5
                     # Зберігаємо стиснене зображення у тимчасовий файл
                     file = f"{media_file_path}/images/{filename}"
-                    with open(file=file, mode='wb') as temp_file:
+                    with open(file=file, mode="wb") as temp_file:
                         temp_file.write(output.getvalue())
                     return file
         except Exception as e:
@@ -145,8 +160,12 @@ async def download_and_compress_image(
 
 
 async def send_compressed_image(
-        chat_id: int, url: str, caption: str=None, filename: str="compressed_image.jpg", disable_notification=True,
-        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]]=None
+    chat_id: int,
+    url: str,
+    caption: str = None,
+    filename: str = "compressed_image.jpg",
+    disable_notification=True,
+    reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
 ) -> bool:
     """Відправляє стиснене зображення через Telegram"""
     # temp_filename = "compressed_image.jpg" - Ім'я тимчасового файлу
@@ -157,15 +176,17 @@ async def send_compressed_image(
             # Використовуємо FSInputFile для відправки через Telegram
             input_file = FSInputFile(file_path)
             await bot.send_photo(
-                chat_id=chat_id, photo=input_file, caption=caption,
+                chat_id=chat_id,
+                photo=input_file,
+                caption=caption,
                 reply_markup=reply_markup,
-                disable_notification=disable_notification
+                disable_notification=disable_notification,
             )
             res = True
         except Exception as e:
             logger.error(f"Error sending image: {e}")
         finally:
-            """ Видаляємо тимчасовий файл """
+            """Видаляємо тимчасовий файл"""
             if os.path.exists(file_path):
                 os.remove(file_path)
     else:
@@ -174,23 +195,25 @@ async def send_compressed_image(
 
 
 async def check_admin(chat_pk: int, telegram_id: int, phone_number: str) -> bool:
-    """ Check new admin by phone_number """
+    """Check new admin by phone_number"""
     chat = await get_chat_with_user(pk=chat_pk)
     if await check_user_in_group(telegram_id=telegram_id, chat_id=chat.chat_id):
         phone_number = validate_phone(phone_number=phone_number)
         if phone_number:
             new_admin = await get_user_by_phone(phone_number=phone_number)
             if new_admin:
-                if await check_user_in_group(
-                        telegram_id=new_admin.telegram_id, chat_id=chat.chat_id):
-                    text = (f"Вітаємо, {new_admin.first_name}!\nВи стали новим адміністратором цього чату: "
-                            f"<code>{chat.chat_id}</code>. Налаштуйте свою банківську картку, щоб приймати внески "
-                            f"від учасників чату.")
-                    reply_markup = InlineKeyboardMarkup(inline_keyboard=[b_my_groups(role='admin')])
+                if await check_user_in_group(telegram_id=new_admin.telegram_id, chat_id=chat.chat_id):
+                    text = (
+                        f"Вітаємо, {new_admin.first_name}!\nВи стали новим адміністратором цього чату: "
+                        f"<code>{chat.chat_id}</code>. Налаштуйте свою банківську картку, щоб приймати внески "
+                        f"від учасників чату."
+                    )
+                    reply_markup = InlineKeyboardMarkup(inline_keyboard=[b_my_groups(role="admin")])
                     photo = FSInputFile(path=f"{media_file_path}wellcome_admin.png")
                     await bot.send_photo(
-                        chat_id=new_admin.telegram_id, photo=photo, caption=text, reply_markup=reply_markup)
-                    new_admin.info = 'admin' if not new_admin.info else new_admin.info
+                        chat_id=new_admin.telegram_id, photo=photo, caption=text, reply_markup=reply_markup
+                    )
+                    new_admin.info = "admin" if not new_admin.info else new_admin.info
                     await doc_update(doc=new_admin)
                     chat.user_id = new_admin.id
                     await doc_update(doc=chat)

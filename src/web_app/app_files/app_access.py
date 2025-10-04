@@ -1,7 +1,8 @@
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
-from src.sql.func_app_db import get_admin
+
 from src.service.loggers.py_logger_fast_api import get_logger
+from src.sql.func_app_db import get_admin
 
 logger = get_logger(__name__)
 
@@ -9,7 +10,7 @@ security = HTTPBasic()
 
 
 async def get_current_admin(credentials: HTTPBasicCredentials = Depends(security)):
-    """ Check if user == admin or not """
+    """Check if user == admin or not"""
     admin = await get_admin(login=credentials.username, password=credentials.password)
     if not admin or not admin.status:
         logger.error(f"status.HTTP_401_UNAUTHORIZED: '{credentials.username}' and his password are not valid!")
@@ -22,7 +23,7 @@ async def get_current_admin(credentials: HTTPBasicCredentials = Depends(security
 
 
 async def get_current_user(credentials: HTTPBasicCredentials = Depends(security)):
-    """ Check if user == admin or not """
+    """Check if user == admin or not"""
     admin = await get_admin(login=credentials.username, password=credentials.password)
     if not admin or not admin.status:
         logger.error(f"status.HTTP_401_UNAUTHORIZED: '{credentials.username}' and his password are not valid!")
@@ -32,4 +33,3 @@ async def get_current_user(credentials: HTTPBasicCredentials = Depends(security)
             headers={"WWW-Authenticate": "Basic"},
         )
     return user
-

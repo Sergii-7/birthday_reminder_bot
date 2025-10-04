@@ -1,15 +1,16 @@
-from aiogram.types import InlineKeyboardButton, KeyboardButton
-from typing import List, Dict
+from typing import Dict, List
 
-from src.sql.models import Holiday
+from aiogram.types import InlineKeyboardButton, KeyboardButton
+
 from config import HOST
+from src.sql.models import Holiday
 
 """ Buttons for menu """
 
-b_contact = [KeyboardButton(text='поділитися контактом', request_contact=True)]
-''' Даємо головне меню і видаляємо СМС з якого запускається цей callback '''
+b_contact = [KeyboardButton(text="поділитися контактом", request_contact=True)]
+""" Даємо головне меню і видаляємо СМС з якого запускається цей callback """
 b_menu_and_remove_sms = [InlineKeyboardButton(text="назад до меню ⤴️", callback_data="0:m")]
-''' Даємо головне меню але НЕ видаляємо СМС з якого запускається цей callback '''
+""" Даємо головне меню але НЕ видаляємо СМС з якого запускається цей callback """
 b_menu = [InlineKeyboardButton(text="назад до меню ⤴️", callback_data="0:b")]
 b_remove_panel = [InlineKeyboardButton(text="🫣 сховати панель 🫣", callback_data="0:x")]
 b_add_group = [InlineKeyboardButton(text="👫 Додати групу 👫", callback_data="0:super_set_chat_0")]
@@ -25,12 +26,12 @@ def buttons_for_user() -> List[List[InlineKeyboardButton]]:
 
 def b_web_app_birthday(telegram_id: int, password: str) -> List[InlineKeyboardButton]:
     """"""
-    web_app: Dict[str, str] = {'url': f"{HOST}/path/login/{telegram_id}/{password}"}
+    web_app: Dict[str, str] = {"url": f"{HOST}/path/login/{telegram_id}/{password}"}
     return [InlineKeyboardButton(text="🎂 🥳 🎉", web_app=web_app)]
 
 
 def b_my_groups(role: str) -> List[InlineKeyboardButton]:
-    """ Create button '⚙️ Мої групи ⚙️' for admin or super-admin """
+    """Create button '⚙️ Мої групи ⚙️' for admin or super-admin"""
     role = "super" if role == "super-admin" else "admin"
     return [InlineKeyboardButton(text="⚙️ Мої групи ⚙️", callback_data=f"0:{role}:m")]
 
@@ -41,14 +42,22 @@ def b_chat_settings(role: str, chat_doc_id: int) -> List[InlineKeyboardButton]:
 
 def buttons_for_chat_settings(role: str, chat_doc_id: int) -> List[List[InlineKeyboardButton]]:
     buttons = list()
-    buttons.append([InlineKeyboardButton(
-        text="💳 Номер вашої карти 💳", callback_data=f"0:{role}:set:card:{chat_doc_id}")])
-    buttons.append([InlineKeyboardButton(
-        text="🧔🏼 Користувачі чату 👨‍🦱", callback_data=f"0:{role}:set:users:{chat_doc_id}")])
-    buttons.append([InlineKeyboardButton(
-        text="💰 Звіт по внескам 💰", callback_data=f"0:{role}:set:report:{chat_doc_id}")])
-    buttons.append([InlineKeyboardButton(
-        text="☢️ Передати права адміна ☣️", callback_data=f"0:{role}:set:change_admin:{chat_doc_id}")])
+    buttons.append(
+        [InlineKeyboardButton(text="💳 Номер вашої карти 💳", callback_data=f"0:{role}:set:card:{chat_doc_id}")]
+    )
+    buttons.append(
+        [InlineKeyboardButton(text="🧔🏼 Користувачі чату 👨‍🦱", callback_data=f"0:{role}:set:users:{chat_doc_id}")]
+    )
+    buttons.append(
+        [InlineKeyboardButton(text="💰 Звіт по внескам 💰", callback_data=f"0:{role}:set:report:{chat_doc_id}")]
+    )
+    buttons.append(
+        [
+            InlineKeyboardButton(
+                text="☢️ Передати права адміна ☣️", callback_data=f"0:{role}:set:change_admin:{chat_doc_id}"
+            )
+        ]
+    )
     buttons.append(b_remove_panel)
     return buttons
 
@@ -57,8 +66,9 @@ def buttons_for_event_settings(role: str, holiday: Holiday) -> List[List[InlineK
     """Buttons for Admin to set Holiday"""
     buttons = list()
     role = "super" if role == "super-admin" else role  # "admin"
-    buttons.append([InlineKeyboardButton(
-        text="Змінити сума внеску (грн) 💸", callback_data=f"0:{role}:event_amount:{holiday.id}")])
+    buttons.append(
+        [InlineKeyboardButton(text="Змінити сума внеску (грн) 💸", callback_data=f"0:{role}:event_amount:{holiday.id}")]
+    )
     if holiday.status:
         b = [InlineKeyboardButton(text="❌ Закрити подію ❌", callback_data=f"0:{role}:event_status:{holiday.id}")]
     else:
@@ -68,9 +78,7 @@ def buttons_for_event_settings(role: str, holiday: Holiday) -> List[List[InlineK
 
 
 def buttons_for_admin_command(text_to_insert: str) -> List[InlineKeyboardButton]:
-    """ buttons for 'class Settings().admin_commands()' """
+    """buttons for 'class Settings().admin_commands()'"""
     b_yes = InlineKeyboardButton(text="Tak ✔️", switch_inline_query_current_chat=text_to_insert)
     b_not = InlineKeyboardButton(text="Hi 🙅", callback_data="0:x")
     return [b_yes, b_not]
-
-

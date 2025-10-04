@@ -1,6 +1,7 @@
 from asyncio import sleep
-from aiogram.types import InlineKeyboardMarkup, CallbackQuery
 from typing import List, Optional
+
+from aiogram.types import CallbackQuery, InlineKeyboardMarkup
 
 from config import bot_link
 from src.bot_app.create_bot import bot
@@ -8,23 +9,24 @@ from src.bot_app.dir_menu.buttons_for_menu import buttons_for_event_settings
 from src.dir_schedule.some_tools import DataAI
 from src.service.create_data import user_data
 from src.sql.func_db import get_doc_by_id, get_user_reports
-from src.sql.models import User, Chat, Holiday, Report, UserChat
+from src.sql.models import Chat, Holiday, Report, User, UserChat
 
 
 async def panel_set_holidays(chat: Chat, holiday: Holiday):
     """Send panel for Admin to set Holiday in DataBase"""
     title = await DataAI().get_title(chat=chat)
-    admin: User = await get_doc_by_id(model='user', doc_id=chat.user_id)
-    b_user: Optional[User] = await get_doc_by_id(model='user', doc_id=holiday.user_id)
+    admin: User = await get_doc_by_id(model="user", doc_id=chat.user_id)
+    b_user: Optional[User] = await get_doc_by_id(model="user", doc_id=holiday.user_id)
     if b_user:
         text = f"чат: <b>{title}</b>\n{user_data(user=b_user, is_birthday=True)}\nсума внеску: <b>{holiday.amount}</b>"
     else:
-        text = (f"чат: <b>{title}</b>\n<u>Іменинник/іменинниця:</u>\n{holiday.info}\n"
-                f"Дата Народження: <code>{holiday.date_event}</code>\nсума внеску: <b>{holiday.amount}</b>")
+        text = (
+            f"чат: <b>{title}</b>\n<u>Іменинник/іменинниця:</u>\n{holiday.info}\n"
+            f"Дата Народження: <code>{holiday.date_event}</code>\nсума внеску: <b>{holiday.amount}</b>"
+        )
     buttons = buttons_for_event_settings(role=admin.info, holiday=holiday)
     reply_markup = InlineKeyboardMarkup(inline_keyboard=buttons)
-    await bot.send_message(
-        chat_id=admin.telegram_id, text=text, reply_markup=reply_markup)
+    await bot.send_message(chat_id=admin.telegram_id, text=text, reply_markup=reply_markup)
 
 
 async def panel_make_payment(user: User, callback_query: CallbackQuery):
@@ -36,12 +38,14 @@ async def panel_make_payment(user: User, callback_query: CallbackQuery):
             for n, report in enumerate(start=1, iterable=reports):
                 holiday: Optional[Holiday] = report.holidays
                 chat: Optional[Chat] = report.chat
-                b_user: Optional[User] = await get_doc_by_id(model='user', doc_id=report.holidays.user_id)
+                b_user: Optional[User] = await get_doc_by_id(model="user", doc_id=report.holidays.user_id)
                 if holiday and b_user and chat:
                     """User has financial debt before this chat"""
                     title = await DataAI().get_title(chat=chat)
-                    text += (f"\n\nчат: <b>{title}</b>\n{user_data(user=b_user, is_birthday=True)}\n"
-                             f"карта для перерахування внеску: <code>{chat.card_number}</code>")
+                    text += (
+                        f"\n\nчат: <b>{title}</b>\n{user_data(user=b_user, is_birthday=True)}\n"
+                        f"карта для перерахування внеску: <code>{chat.card_number}</code>"
+                    )
                     if n % 5 == 0:
                         text_list.append(text)
                         text = ""
@@ -66,12 +70,9 @@ async def text_payment_info_with_set_link(report: Report, user_chat: UserChat, u
     user: User = user_chat.user if not user else user
     username = f"@{user.username}\n" if user.username else ""
     phone_number = f"телефон <code>{user.phone_number}</code>\n" if user.phone_number else ""
-    birthday = str(user.birthday)[5:] if user.birthday else 'дані не внесені'
+    birthday = str(user.birthday)[5:] if user.birthday else "дані не внесені"
     birthday = f"день народження (month-day): <code>{birthday}</code>"
     desc = "<b>🎉 вже робив внесок 🥳</b>" if report.status else "<b>🤬 ще не зробив внесок 😡</b>"
     link_settings = f"\n{desc} <a href='{bot_link}?start=set-report-{report.id}'>змінити</a>"
     text = f"<b>{user.first_name}</b>\n{username}{phone_number}{birthday}{link_settings}"
     return text
-
-
-

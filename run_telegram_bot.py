@@ -1,6 +1,7 @@
 from asyncio import run as asyncio_run
-from src.bot_app.create_bot import bot
+
 from config import WEBHOOK_URL
+from src.bot_app.create_bot import bot
 from src.service.loggers.py_logger_tel_bot import get_logger
 
 logger = get_logger(__name__)

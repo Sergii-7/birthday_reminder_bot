@@ -1,5 +1,7 @@
 import os
-from dotenv import load_dotenv, find_dotenv
+
+from dotenv import find_dotenv, load_dotenv
+
 load_dotenv(find_dotenv())
 
 """Сума внеску (грн)"""
@@ -8,34 +10,37 @@ amount = 500
 """ Отримуємо абсолютний шлях до кореневої директорії проекту """
 project_root = os.path.dirname(os.path.abspath(__file__))
 
+"""..."""
+STATIC_FILES = os.path.join(project_root, "src", "web_app", "static")
+TEMPLATES = os.path.join(project_root, "src", "web_app", "templates")
+
 """ Визначаємо шлях до файлів з логами відносно кореневої директорії проекту """
-file_log_tel_bot = os.path.join(project_root, 'logs', 'tel_bot.log')
-file_log_fast_api = os.path.join(project_root, 'logs', 'fast_api.log')
-file_log_openai = os.path.join(project_root, 'logs', 'openai.log')
+file_log_tel_bot = os.path.join(project_root, "logs", "tel_bot.log")
+file_log_fast_api = os.path.join(project_root, "logs", "fast_api.log")
+file_log_openai = os.path.join(project_root, "logs", "openai.log")
 
 """ Path to directory with media files """
-media_file_path = os.path.join(project_root, 'src/media/')
+media_file_path = os.path.join(project_root, "src/media/")
 
 """ DataBase 'birthday_bot' on Linux Ubuntu in Digital Ocean """
-URI_DB = os.environ.get('UBUNTU_URI_DB')
+URI_DB = os.environ.get("UBUNTU_URI_DB")
 
 """Connect to DataBase 'BirthdayBot' on MongoDB."""
-MONGO_URI = os.environ.get('MONGO_URI')
+MONGO_URI = os.environ.get("MONGO_URI")
 
 """ API_KEY_OPENAI # для підключення model="gpt-4.0" """
-API_KEY_OPENAI = os.environ.get('API_KEY_OPENAI')
+API_KEY_OPENAI = os.environ.get("API_KEY_OPENAI")
 
 """ Telegram Bot """
-TOKEN = os.environ.get('TOKEN')
+TOKEN = os.environ.get("TOKEN")
 bot_name = "Holiday organizer"
-bot_link = "https://t.me/holiday_organizer_bot"
-bot_user_name = "@holiday_organizer_bot"
-sb_telegram_id = 620527199
-HOST = 'https://holiday-organizer-dp6b4.ondigitalocean.app'
-WEBHOOK_PATH = '/telegram/api/bot/hr/set/webhook/path/a/b/c/d/e'
-WEBHOOK_URL = f'{HOST}{WEBHOOK_PATH}'
-my_admin_chat = -4037129546
+bot_link = os.environ.get("BOT_LINK")
+bot_user_name = os.environ.get("BOT_USER_NAME")
+sb_telegram_id = int(os.environ.get("SB_TELEGRAM_ID"))
+HOST = os.environ.get("HOST")
+WEBHOOK_PATH = os.environ.get("WEBHOOK_PATH")
+WEBHOOK_URL = f"{HOST}{WEBHOOK_PATH}"
+my_admin_chat = int(os.environ.get("MY_ADMIN_CHAT"))
 get_chat_id_bot = "@GetChatID_IL_BOT"
 
-""" My card number """
-my_banc_card = "4441111152635466"
+my_banc_card = os.environ.get("MY_BANC_CARD")

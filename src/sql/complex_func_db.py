@@ -1,10 +1,11 @@
 import asyncio
 from typing import List
+
 from sqlalchemy.future import select
 
+from src.service.loggers.py_logger_fast_api import get_logger
 from src.sql.connect import DBSession
 from src.sql.models import User, UserChat
-from src.service.loggers.py_logger_fast_api import get_logger
 
 logger = get_logger(__name__)
 
@@ -13,11 +14,10 @@ async def get_intersecting_users(telegram_id: int) -> List[User]:
     """User get all users from their chats, where users have birthday set."""
     for n in range(3):
         try:
-            logger.debug(f'get_intersecting_users(telegram_id={telegram_id})')
+            logger.debug(f"get_intersecting_users(telegram_id={telegram_id})")
             async with DBSession() as session:
                 chats_with_user = (
-                    select(UserChat.chat_id)
-                    .filter(UserChat.user_telegram_id == telegram_id)
+                    select(UserChat.chat_id).filter(UserChat.user_telegram_id == telegram_id)
                 ).subquery()  # Виправлено: додаємо явний select()
 
                 # Витягти всіх користувачів, які також беруть участь у тих самих чатах і у яких birthday не None
@@ -36,5 +36,3 @@ async def get_intersecting_users(telegram_id: int) -> List[User]:
             logger.error(f"Attempt={n+1}: {e}")
             await asyncio.sleep(0.5)
     return []
-
-

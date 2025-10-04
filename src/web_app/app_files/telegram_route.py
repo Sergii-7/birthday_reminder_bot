@@ -1,8 +1,9 @@
-from fastapi import Request, status
 from aiogram.types import Update
+from fastapi import Request, status
+
+from config import WEBHOOK_PATH  # , WEBHOOK_URL
 from create_app import app
 from src.bot_app.create_bot import bot, dp
-from config import WEBHOOK_PATH #, WEBHOOK_URL
 from src.service.loggers.py_logger_tel_bot import get_logger
 
 logger = get_logger(__name__)

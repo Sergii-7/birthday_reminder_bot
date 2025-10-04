@@ -1,6 +1,7 @@
 import base64
 import os
 from typing import Optional
+
 from src.service.loggers.py_logger_openai import get_logger
 
 logger = get_logger(__name__)

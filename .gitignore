@@ -20,6 +20,8 @@ share/python-wheels/
 .installed.cfg
 *.egg
 
+*.log
+
 .pdm.toml
 .pdm-python
 .pdm-build/

@@ -1,16 +1,17 @@
 from asyncio import sleep
 from typing import Optional
+
 from sqlalchemy.future import select
 
+from src.service.loggers.py_logger_fast_api import get_logger
 from src.sql.connect import DBSession
 from src.sql.models import SystemData
-from src.service.loggers.py_logger_fast_api import get_logger
 
 logger = get_logger(__name__)
 
 
 async def create_system_data(
-        title: str, data_digital: int = None, data_text: str = None, data_status: bool = None
+    title: str, data_digital: int = None, data_text: str = None, data_status: bool = None
 ) -> Optional[SystemData]:
     """Create SystemData in DataBase"""
     for n in range(3):
@@ -19,10 +20,7 @@ async def create_system_data(
             async with DBSession() as session:
                 async with session.begin():
                     system_data = SystemData(
-                        title=title,
-                        data_digital=data_digital,
-                        data_text=data_text,
-                        data_status=data_status
+                        title=title, data_digital=data_digital, data_text=data_text, data_status=data_status
                     )
                     await session.merge(instance=system_data)
                     await session.commit()
@@ -55,5 +53,3 @@ async def get_system_data(title: str) -> Optional[SystemData]:
 #     print(doc.data_text)
 #     print(doc.data_digital)
 # asyncio.run(test())
-
-

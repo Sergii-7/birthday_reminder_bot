@@ -1,16 +1,16 @@
 from asyncio import sleep
 
-from src.sql.func_system_db import get_system_data
 from src.dir_schedule.some_task import BackgroundTask
-from src.service.service_tools import correct_time
 from src.service.loggers.py_logger_tel_bot import get_logger
+from src.service.service_tools import correct_time
+from src.sql.func_system_db import get_system_data
 
 logger = get_logger(__name__)
 
 
 async def wait_next_min():
     """Sleep until the next minute."""
-    delay_= 60 - correct_time().second
+    delay_ = 60 - correct_time().second
     await sleep(delay_)
 
 
@@ -18,8 +18,8 @@ async def check_schedule():
     """Check schedule every int: seconds"""
     background_task = BackgroundTask()
     while True:
-        """ Дані для запуску перевірки дат народження користувачів, які долучені до подій """
-        doc = await get_system_data(title='check_birthday')
+        """Дані для запуску перевірки дат народження користувачів, які долучені до подій"""
+        doc = await get_system_data(title="check_birthday")
         days_to_birthday = doc.data_digital if doc and doc.data_digital else 10
         time_to_check_birthday = doc.data_text if doc and doc.data_text else "08:00"
         """ Дані длі запуску перевірки reports """

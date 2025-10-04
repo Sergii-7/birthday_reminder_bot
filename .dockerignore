@@ -3,5 +3,4 @@ alembic/
 .idea/
 .gitignore
 alembic.ini
-test.py
 src/mongo_db/

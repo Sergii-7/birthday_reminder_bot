@@ -1,7 +1,8 @@
 from aiogram import Bot, Dispatcher
+from aiogram.client.bot import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.utils.token import TokenValidationError
-from aiogram.client.bot import DefaultBotProperties
+
 # from aiogram.fsm.storage.memory import MemoryStorage
 from config import TOKEN
 from src.service.loggers.py_logger_tel_bot import get_logger
