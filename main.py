@@ -1,7 +1,7 @@
 import uvicorn
 
 from src.bot_app import callback, command, message
-from src.web_app.app_files import admin_route, telegram_route, user_route
+from src.web_app.app_files import admin_route, telegram_route, test_route, user_route
 from src.web_app.create_app import app
 
 if __name__ == "__main__":

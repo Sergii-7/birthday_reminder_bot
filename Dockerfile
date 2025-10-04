@@ -1,39 +1,23 @@
-FROM python:3.12-slim
+FROM python:3.12
 
-# --- базові оптимізації Python ---
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
-
-# --- системні пакети ---
-# curl для HEALTHCHECK, tini як init-процес (правильні сигнали), redis-server/ffmpeg якщо справді треба всередині контейнера
+# Оновлення списку пакетів та встановлення Redis + ffmpeg
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl \
-    tini \
     redis-server \
     ffmpeg \
-  && rm -rf /var/lib/apt/lists/*
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# --- робоча директорія ---
-WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# --- спочатку залежності (кеш шарів) ---
-COPY requirements.txt /app/
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+# Тепер копіюємо решту файлів програми
+COPY . .
 
-# --- тепер код ---
-COPY . /app
-RUN chmod +x /app/start.sh
+# Копіюємо запускний скрипт та робимо його виконуваним
+RUN chmod +x start.sh
 
-# --- мережа ---
+# Відкриваємо порт для FastAPI
 EXPOSE 8000
 
-# --- healthcheck на простий ендпойнт (створи /health у FastAPI) ---
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-  CMD curl -fsS http://127.0.0.1:8000/health || exit 1
-
-# --- запуск через tini, щоб коректно ловити SIGTERM/SIGINT ---
-ENTRYPOINT ["/usr/bin/tini", "--"]
-
-# Якщо в start.sh вже є shebang `#!/usr/bin/env bash` і він виконавний:
-CMD ["/app/start.sh"]
+# Запуск стартового скрипта
+CMD ["./start.sh"]
