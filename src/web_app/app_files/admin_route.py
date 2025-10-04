@@ -4,6 +4,7 @@ from fastapi import Depends, HTTPException, Request, status
 from fastapi.openapi.docs import get_redoc_html, get_swagger_ui_html
 from fastapi.openapi.utils import get_openapi
 from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi_limiter.depends import RateLimiter
 
 from config import file_log_fast_api, file_log_tel_bot, sb_telegram_id
 from src.bot_app.create_bot import bot
@@ -11,13 +12,18 @@ from src.service.loggers.py_logger_fast_api import get_logger
 from src.service.service_tools import correct_time
 from src.sql.models import AdminApp
 from src.web_app.app_files.app_access import get_current_admin
-from src.web_app.create_app import app, limiter, templates
+from src.web_app.create_app import app, templates
 
 logger = get_logger(__name__)
 
 
-@app.get(path="/", response_class=HTMLResponse, include_in_schema=False, status_code=status.HTTP_200_OK)
-@limiter.limit("5/minute")
+@app.get(
+    path="/",
+    response_class=HTMLResponse,
+    include_in_schema=False,
+    status_code=status.HTTP_200_OK,
+    dependencies=[Depends(RateLimiter(times=5, seconds=60))],
+)
 async def home(request: Request, admin: AdminApp = Depends(get_current_admin)):
     """Перевірка робота додатка"""
     time_now = correct_time()
@@ -33,8 +39,13 @@ async def home(request: Request, admin: AdminApp = Depends(get_current_admin)):
     return templates.TemplateResponse("index.html", {"request": request, "data": data})
 
 
-@app.get("/log", include_in_schema=False, operation_id="super_admin_log", status_code=status.HTTP_200_OK)
-@limiter.limit("5/minute")
+@app.get(
+    "/log",
+    include_in_schema=False,
+    operation_id="super_admin_log",
+    status_code=status.HTTP_200_OK,
+    dependencies=[Depends(RateLimiter(times=5, seconds=60))],
+)
 async def log(request: Request, admin: AdminApp = Depends(get_current_admin)):
     """Запит на файл з логами"""
     time_now = correct_time()
@@ -59,8 +70,12 @@ async def log(request: Request, admin: AdminApp = Depends(get_current_admin)):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=detail)
 
 
-@app.get("/docs", include_in_schema=False, operation_id="super_admin_docs")
-@limiter.limit("60/minute")
+@app.get(
+    path="/docs",
+    include_in_schema=False,
+    operation_id="super_admin_docs",
+    dependencies=[Depends(RateLimiter(times=60, seconds=60))],
+)
 async def docs(request: Request, admin: AdminApp = Depends(get_current_admin)):
     time_now = correct_time()
     headers = dict(request.headers)
@@ -69,8 +84,12 @@ async def docs(request: Request, admin: AdminApp = Depends(get_current_admin)):
     return get_swagger_ui_html(openapi_url="/openapi.json", title="docs")
 
 
-@app.get("/redoc", include_in_schema=False, operation_id="super_admin_redoc")
-@limiter.limit("60/minute")
+@app.get(
+    path="/redoc",
+    include_in_schema=False,
+    operation_id="super_admin_redoc",
+    dependencies=[Depends(RateLimiter(times=60, seconds=60))],
+)
 async def redoc(request: Request, admin: AdminApp = Depends(get_current_admin)):
     time_now = correct_time()
     headers = dict(request.headers)
@@ -79,8 +98,12 @@ async def redoc(request: Request, admin: AdminApp = Depends(get_current_admin)):
     return get_redoc_html(openapi_url="/openapi.json", title="redoc")
 
 
-@app.get("/openapi.json", include_in_schema=False, operation_id="super_admin_open_api_endpoint")
-@limiter.limit("60/minute")
+@app.get(
+    path="/openapi.json",
+    include_in_schema=False,
+    operation_id="super_admin_open_api_endpoint",
+    dependencies=[Depends(RateLimiter(times=60, seconds=60))],
+)
 async def open_api_endpoint(request: Request, admin: AdminApp = Depends(get_current_admin)):
     time_now = correct_time()
     headers = dict(request.headers)

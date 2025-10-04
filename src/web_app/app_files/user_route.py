@@ -1,14 +1,15 @@
 from asyncio import create_task as asyncio_create_task
 from datetime import datetime
 
-from fastapi import APIRouter, Form, HTTPException, Request, Response, status
+from fastapi import APIRouter, Depends, Form, HTTPException, Request, Response, status
 from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi_limiter.depends import RateLimiter
 
 from src.bot_app.dir_menu.menu import Menu
 from src.service.loggers.py_logger_fast_api import get_logger
 from src.service.service_tools import correct_time
 from src.sql.func_db import doc_update, get_user_by_login
-from src.web_app.create_app import app, limiter, templates
+from src.web_app.create_app import app, templates
 
 logger = get_logger(__name__)
 
@@ -36,8 +37,8 @@ user_router = APIRouter(prefix="/path", tags=["WIDGET-APP"])
         - Cookies are used to store `telegram_id` and `password` for further requests, allowing the user to remain logged in.
         - Cookies are not hashed, so storing sensitive information like passwords should be handled carefully.
     """,
+    dependencies=[Depends(RateLimiter(times=60, seconds=60))],
 )
-@limiter.limit("60/minute")
 async def login(request: Request, response: Response, telegram_id: int, password: str):
     """
     Handles user login and sets cookies with authentication data.
@@ -66,7 +67,13 @@ async def login(request: Request, response: Response, telegram_id: int, password
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=detail)
 
 
-@user_router.get(path="/birthday", include_in_schema=True, response_class=HTMLResponse, status_code=status.HTTP_200_OK)
+@user_router.get(
+    path="/birthday",
+    include_in_schema=True,
+    response_class=HTMLResponse,
+    status_code=status.HTTP_200_OK,
+    dependencies=[Depends(RateLimiter(times=60, seconds=60))],
+)
 async def set_birthday(request: Request):
     """
     Checks if the user is authenticated by verifying cookies.
@@ -86,7 +93,11 @@ async def set_birthday(request: Request):
 
 
 @user_router.post(
-    path="/get_birthday", include_in_schema=True, status_code=status.HTTP_200_OK, response_class=HTMLResponse
+    path="/get_birthday",
+    include_in_schema=True,
+    status_code=status.HTTP_200_OK,
+    response_class=HTMLResponse,
+    dependencies=[Depends(RateLimiter(times=60, seconds=60))],
 )
 async def get_birthday(request: Request, birthday: str = Form(...)):
     """

@@ -4,3 +4,5 @@ alembic/
 .gitignore
 alembic.ini
 src/mongo_db/
+*.log
+.env

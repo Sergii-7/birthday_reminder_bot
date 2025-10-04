@@ -24,8 +24,8 @@ async def get_current_admin(credentials: HTTPBasicCredentials = Depends(security
 
 async def get_current_user(credentials: HTTPBasicCredentials = Depends(security)):
     """Check if user == admin or not"""
-    admin = await get_admin(login=credentials.username, password=credentials.password)
-    if not admin or not admin.status:
+    user = await get_admin(login=credentials.username, password=credentials.password)
+    if not user or not user.status:
         logger.error(f"status.HTTP_401_UNAUTHORIZED: '{credentials.username}' and his password are not valid!")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
