@@ -6,12 +6,12 @@ from fastapi.openapi.utils import get_openapi
 from fastapi.responses import HTMLResponse, JSONResponse
 
 from config import file_log_fast_api, file_log_tel_bot, sb_telegram_id
-from create_app import app, limiter, templates
 from src.bot_app.create_bot import bot
 from src.service.loggers.py_logger_fast_api import get_logger
 from src.service.service_tools import correct_time
 from src.sql.models import AdminApp
 from src.web_app.app_files.app_access import get_current_admin
+from src.web_app.create_app import app, limiter, templates
 
 logger = get_logger(__name__)
 

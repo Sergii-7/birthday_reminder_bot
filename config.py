@@ -10,7 +10,7 @@ amount = 500
 """ Отримуємо абсолютний шлях до кореневої директорії проекту """
 project_root = os.path.dirname(os.path.abspath(__file__))
 
-"""..."""
+""" Визначаємо шляхи до статичних файлів та шаблонів відносно кореневої директорії проекту """
 STATIC_FILES = os.path.join(project_root, "src", "web_app", "static")
 TEMPLATES = os.path.join(project_root, "src", "web_app", "templates")
 
@@ -21,6 +21,13 @@ file_log_openai = os.path.join(project_root, "logs", "openai.log")
 
 """ Path to directory with media files """
 media_file_path = os.path.join(project_root, "src/media/")
+
+"""Redis Settings"""
+REDIS_PORT = 6379
+REDIS_HOST = "localhost"
+REDIS_TIMEOUT = 10
+REDIS_NUMBER_DB = 2
+# REDIS_MAX_CONNECTIONS = 10
 
 """ DataBase 'birthday_bot' on Linux Ubuntu in Digital Ocean """
 URI_DB = os.environ.get("UBUNTU_URI_DB")

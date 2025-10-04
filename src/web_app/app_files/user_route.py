@@ -4,11 +4,11 @@ from datetime import datetime
 from fastapi import APIRouter, Form, HTTPException, Request, Response, status
 from fastapi.responses import HTMLResponse, RedirectResponse
 
-from create_app import app, limiter, templates
 from src.bot_app.dir_menu.menu import Menu
 from src.service.loggers.py_logger_fast_api import get_logger
 from src.service.service_tools import correct_time
 from src.sql.func_db import doc_update, get_user_by_login
+from src.web_app.create_app import app, limiter, templates
 
 logger = get_logger(__name__)
 
