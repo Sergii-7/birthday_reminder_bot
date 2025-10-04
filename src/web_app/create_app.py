@@ -1,10 +1,10 @@
-import redis.asyncio as redis
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBasic
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi_limiter import FastAPILimiter
+from redis.asyncio import Redis
 
 from config import HOST, REDIS_HOST, REDIS_NUMBER_DB, REDIS_PORT, REDIS_TIMEOUT, STATIC_FILES, TEMPLATES
 from src.service.loggers.py_logger_fast_api import get_logger
@@ -16,7 +16,7 @@ security = HTTPBasic()
 app = FastAPI(debug=False, docs_url=None, redoc_url=None, openapi_url=None)
 
 
-redis_client = redis.Redis(
+redis_client = Redis(
     host=REDIS_HOST,
     port=REDIS_PORT,
     db=REDIS_NUMBER_DB,

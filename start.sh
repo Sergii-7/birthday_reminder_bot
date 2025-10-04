@@ -1,4 +1,8 @@
 #!/bin/bash
+set -euo pipefail
+
+# корінь та PYTHONPATH
+export PYTHONPATH="$(pwd)"
 
 # Redis
 if ! redis-cli ping >/dev/null 2>&1; then
@@ -10,11 +14,22 @@ else
   echo "Redis вже працює."
 fi
 
-# запуск fast-api
-uvicorn main:app --host 0.0.0.0 --port 8000 --workers 1 &
+# FastAPI
+echo "Запуск FastAPI..."
+uvicorn main:app \
+  --host 0.0.0.0 \
+  --port "${PORT:-8000}" \
+  --workers 1 \
+  --proxy-headers &
+UVICORN_PID=$!
+sleep 2
+ps -p "$UVICORN_PID" >/dev/null || { echo "FastAPI не запускається!"; exit 1; }
+echo "FastAPI успішно запущено."
 
-# Запуск Telegram бота
+
+echo "🤖 Запуск Telegram-бота..."
 python3 run_telegram_bot.py &
+echo "✅ Telegram-бот запущено."
 
 # Запуск Background task
 while true; do
@@ -24,5 +39,5 @@ while true; do
     sleep 5
 done &
 
-# Очікування завершення усіх бекграунд-процесів
+echo "⏳ Очікування завершення всіх процесів..."
 wait
