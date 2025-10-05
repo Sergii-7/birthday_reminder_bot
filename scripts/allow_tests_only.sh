@@ -4,7 +4,7 @@ set -euo pipefail
 allow() {
   local f="$1"
   [[ "$f" =~ ^tests/ ]] \
-  || [[ "$f" =~ ^scripts/ ]] \    # ← додали це
+  || [[ "$f" =~ ^scripts/ ]] \
   || [[ "$f" == "pytest.ini" ]] \
   || [[ "$f" == "conftest.py" ]] \
   || [[ "$f" == "tox.ini" ]] \
