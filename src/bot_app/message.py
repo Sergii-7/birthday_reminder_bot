@@ -5,7 +5,7 @@ from typing import Optional
 from aiogram import F
 from aiogram.types import FSInputFile, InputMediaDocument, Message
 
-from config import amount, bot_user_name, file_log_fast_api, file_log_tel_bot, my_banc_card, sb_telegram_id
+from config import bot_user_name, file_log_fast_api, file_log_tel_bot, my_banc_card, sb_telegram_id
 from src.bot_app.create_bot import bot, dp
 from src.bot_app.dir_menu.menu import Menu
 from src.bot_app.dir_menu.send_panel import panel_set_holidays

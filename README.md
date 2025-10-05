@@ -3,7 +3,9 @@
 ## alembic start to work:
 ```pip install alembic```
 
-```alembic init alembic```
+```
+alembic init alembic
+```
 
 ### change in file: alembic.ini:
 ```sqlalchemy.url = postgresql://user:password@localhost:5432/database_name```
@@ -14,6 +16,10 @@
 ```target_metadata = Base.metadata```
 
 ### create migration after changing in models:
-```alembic revision --autogenerate -m "initial migration"```
+```
+alembic revision --autogenerate -m "initial migration"
+```
 
-```alembic upgrade head```
+```
+alembic upgrade head
+```

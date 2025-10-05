@@ -30,7 +30,7 @@ async def get_schedule_holidays(user: User) -> List[str]:
     return calendar_list
 
 
-async def testing():
+async def _demo():
     """Testing this module."""
     from config import sb_telegram_id
     from src.sql.func_db import get_user_by_telegram_id
@@ -40,5 +40,8 @@ async def testing():
     [print(text) for text in list_calendar]
 
 
-# import asyncio
-# asyncio.run(main=testing())
+if __name__ == "__main__":
+    """Run this module for testing."""
+    import asyncio
+
+    asyncio.run(main=_demo())

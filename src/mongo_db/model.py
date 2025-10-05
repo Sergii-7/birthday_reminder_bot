@@ -1,4 +1,3 @@
-import asyncio
 from typing import Any, Dict, List, Optional, Union
 
 from bson import ObjectId
@@ -86,7 +85,7 @@ class User:
         return res.deleted_count > 0
 
 
-async def testing():
+async def _demo():
     """Testing this module."""
     # items = await Item().get_items(type_report='only_categories')
     # print(items)
@@ -97,9 +96,14 @@ async def testing():
     res = await user.update_user(
         data={"username": "username", "last_name": "Бешляга", "first_name": "Сергій", "info": "test"}
     )
+    print(res)
     # users = await user.get_users()
     users = await user.get_users({"telegram_id": 620527199})
     print(users)
 
 
-# asyncio.run(main=testing())
+if __name__ == "__main__":
+    """Run demo."""
+    import asyncio
+
+    asyncio.run(_demo())

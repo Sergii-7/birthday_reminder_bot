@@ -1,7 +1,6 @@
 import os
 from asyncio import sleep as asyncio_sleep
-from time import pthread_getcpuclockid
-from typing import Any, List, Optional, Union
+from typing import Optional, Union
 
 from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import CallbackQuery, FSInputFile, InlineKeyboardMarkup, ReplyKeyboardMarkup

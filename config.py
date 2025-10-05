@@ -18,6 +18,7 @@ TEMPLATES = os.path.join(project_root, "src", "web_app", "templates")
 file_log_tel_bot = os.path.join(project_root, "logs", "tel_bot.log")
 file_log_fast_api = os.path.join(project_root, "logs", "fast_api.log")
 file_log_openai = os.path.join(project_root, "logs", "openai.log")
+file_log_sql = os.path.join(project_root, "logs", "sql.log")
 
 """ Path to directory with media files """
 media_file_path = os.path.join(project_root, "src/media/")

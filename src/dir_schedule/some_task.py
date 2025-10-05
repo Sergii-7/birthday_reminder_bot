@@ -96,6 +96,9 @@ class BackgroundTask:
                                                     logger.error(e)
 
 
-# import asyncio
-# background_task = BackgroundTask()
-# asyncio.run(main=background_task.check_users_birthday(days_to_birthday=10))
+if __name__ == "__main__":
+    """For test only"""
+    import asyncio
+
+    background_task = BackgroundTask()
+    asyncio.run(main=background_task.check_users_birthday(days_to_birthday=10))

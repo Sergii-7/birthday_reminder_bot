@@ -1,6 +1,6 @@
 import logging
 
-from config import file_log_openai as filename
+from config import file_log_sql as filename
 from src.service.loggers.time_formatter import KyivTimeFormatter
 
 _format = f"%(asctime)s [%(levelname)s] - %(name)s - %(funcName)s(%(lineno)d) - %(message)s"

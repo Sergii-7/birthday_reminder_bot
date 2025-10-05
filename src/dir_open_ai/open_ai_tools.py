@@ -133,34 +133,3 @@ class ResponseImageAI:
             msg = "Not Start ResponseImageAI(): 'messages_for_ai' is None"
         logger.error(msg=msg)
         return {"error": msg}
-
-
-# from asyncio import run as asyncio_run
-# from config import media_file_path
-# prompt_for_ai = ("Напиши короткий текст для Сергія від імені команди Аврора з проханням здати гроші на день "
-#                  "народження колеги Андрія. Поясни, що він досі цього не зробив, але без звинувачень або агресії. "
-#                  "Текст має бути жорстким та однозначним, і одразу підходити для відправки.")
-# start_ai = ResponseTextAI(prompt_for_ai=prompt_for_ai)
-# res = asyncio_run(main=start_ai.get_content(temperature=1))
-# print(res)
-# start_ai_with_image = ResponseImageAI()
-# res = asyncio_run(start_ai_with_image.get_response(
-#     image_path=f"{media_file_path}images/chat_photo.jpg", prompt_for_ai="Скажи мені що тут на фото"))
-# prompt = "Зроби мені зображення як колега по роботі не хоче бути членом команди і шкодить нашої компанії."
-# res  =asyncio_run(main=start_ai_with_image.get_image_from_ai(prompt_for_ai=prompt))
-# print(res)
-
-"""
-ImagesResponse(
-    created=1728221518,
-    data=[Image(b64_json=None, revised_prompt='Create an image depicting a corporate scenario where a co-worker, a Caucasian male, is acting in an uncooperative manner, resulting in detrimental effects to the company. The office environment should be clear and there should be visible signs of distress among other team members, a diverse group of South Asian female, Black male, and Middle-Eastern female colleagues.', url='https://oaidalleapiprodscus.blob.core.windows.net/private/org-vdPphsiIVBT6qImMmNI4a2DJ/user-hr3lMNoxppiZgKqs7CP2YZo9/img-yTHQhVf3EOBgTM09XHOmUtpw.png?st=2024-10-06T12%3A31%3A58Z&se=2024-10-06T14%3A31%3A58Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=d505667d-d6c1-4a0a-bac7-5c84a87759f8&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2024-10-06T09%3A34%3A25Z&ske=2024-10-07T09%3A34%3A25Z&sks=b&skv=2024-08-04&sig=QvC5ys6T4v44P%2BJpo5GGDbSPxTuHrJo8/aXzLSaEqas%3D')])
-
---------------------------
-
-ChatCompletion(
-    id='chatcmpl-AFKAnrucPH8Hu75femZZVTOmoASxt',
-    choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='На зображенні немає жодного тексту, включаючи e-mail. Я бачу лише святковий торт зі свічками та феєрверками. Якщо у вас є інші питання про зображення, будь ласка, задайте їх!', refusal=None, role='assistant', function_call=None, tool_calls=None))],
-    created=1728215829, model='gpt-4-turbo-2024-04-09', object='chat.completion', service_tier=None, system_fingerprint='fp_81dd8129df',
-    usage=CompletionUsage(completion_tokens=95, prompt_tokens=794, total_tokens=889, completion_tokens_details=CompletionTokensDetails(audio_tokens=None, reasoning_tokens=0), prompt_tokens_details=PromptTokensDetails(audio_tokens=None, cached_tokens=0))
-)
-"""

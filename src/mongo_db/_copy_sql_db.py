@@ -1,4 +1,3 @@
-import asyncio
 from datetime import datetime, time
 from typing import List, Optional, Union
 
@@ -29,7 +28,11 @@ async def transfer_users():
 
 async def working():
     """Func for some operations."""
-    ...
+    await transfer_users()
 
 
-# asyncio.run(main=working())
+if __name__ == "__main__":
+    """Run some operations."""
+    import asyncio
+
+    asyncio.run(working())

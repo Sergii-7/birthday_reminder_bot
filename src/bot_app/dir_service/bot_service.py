@@ -1,6 +1,6 @@
 import os
 from io import BytesIO
-from typing import Any, Dict, Optional, Union
+from typing import Dict, Optional, Union
 
 import aiohttp
 from aiogram.enums import ChatMemberStatus
@@ -228,7 +228,16 @@ async def check_admin(chat_pk: int, telegram_id: int, phone_number: str) -> bool
         raise ValueError("Ви або Телеграм-бот не маєте доступу до чату!")
 
 
-# import asyncio
-# from config import telegram_sb
-# url = 'https://uvaga.gov.ua/uk/asset/129568/1/1?129568/1'
-# asyncio.run(send_compressed_image(chat_id=telegram_sb, url=url, caption='test'))
+async def _demo():
+    """Demo function for testing"""
+    from config import sb_telegram_id
+
+    url = "https://uvaga.gov.ua/uk/asset/129568/1/1?129568/1"
+    await send_compressed_image(chat_id=sb_telegram_id, url=url, caption="test")
+
+
+if __name__ == "__main__":
+    """Run demo."""
+    import asyncio
+
+    asyncio.run(_demo())
