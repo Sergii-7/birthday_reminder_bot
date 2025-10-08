@@ -147,13 +147,16 @@ markers =
 ### Основні команди
 
 ```bash
-# Запуск всіх працюючих тестів
+# Запуск всіх працюючих тестів (55 тестів, 100% успіх)
 pytest tests/test_minimal.py tests/service/ tests/dir_open_ai/test_service_openai.py tests/dir_open_ai/test_connect.py -v
 
-# Запуск з коротким виводом
-pytest tests/test_minimal.py tests/service/ tests/dir_open_ai/test_service_openai.py tests/dir_open_ai/test_connect.py -q
+# Запуск ВСІХ тестів у проекті (включаючи проблемні)
+pytest tests/ -v
 
-# Запуск з детальним трейсбеком
+# Запуск всіх тестів з коротким виводом
+pytest tests/ -q
+
+# Запуск з детальним трейсбеком для працюючих тестів
 pytest tests/test_minimal.py tests/service/ tests/dir_open_ai/test_service_openai.py tests/dir_open_ai/test_connect.py -v --tb=long
 ```
 
