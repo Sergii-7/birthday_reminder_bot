@@ -22,8 +22,7 @@ class TestUserRoute:
         return request
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.user_route.get_logger")
-    async def test_user_login_route(self, mock_logger, mock_request):
+    async def test_user_login_route(self, mock_request):
         """Тест маршруту логіну користувача."""
         try:
             from src.web_app.app_files.user_route import user_login
@@ -35,8 +34,7 @@ class TestUserRoute:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.user_route.get_logger")
-    async def test_user_profile_route(self, mock_logger, mock_request):
+    async def test_user_profile_route(self, mock_request):
         """Тест маршруту профілю користувача."""
         try:
             from src.web_app.app_files.user_route import user_profile
@@ -49,8 +47,7 @@ class TestUserRoute:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.user_route.get_logger")
-    async def test_birthday_setting_route(self, mock_logger, mock_request):
+    async def test_birthday_setting_route(self, mock_request):
         """Тест маршруту встановлення дня народження."""
         try:
             from src.web_app.app_files.user_route import set_birthday
@@ -64,8 +61,7 @@ class TestUserRoute:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.user_route.get_logger")
-    async def test_user_dashboard_route(self, mock_logger, mock_request):
+    async def test_user_dashboard_route(self, mock_request):
         """Тест маршруту дашборду користувача."""
         try:
             from src.web_app.app_files.user_route import user_dashboard
@@ -77,8 +73,7 @@ class TestUserRoute:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.user_route.get_logger")
-    async def test_user_settings_route(self, mock_logger, mock_request):
+    async def test_user_settings_route(self, mock_request):
         """Тест маршруту налаштувань користувача."""
         try:
             from src.web_app.app_files.user_route import user_settings
@@ -90,8 +85,7 @@ class TestUserRoute:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.user_route.get_logger")
-    async def test_birthday_calendar_route(self, mock_logger, mock_request):
+    async def test_birthday_calendar_route(self, mock_request):
         """Тест маршруту календаря днів народження."""
         try:
             from src.web_app.app_files.user_route import birthday_calendar
@@ -106,8 +100,7 @@ class TestUserRoute:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.user_route.get_logger")
-    async def test_user_logout_route(self, mock_logger, mock_request):
+    async def test_user_logout_route(self, mock_request):
         """Тест маршруту виходу користувача."""
         try:
             from src.web_app.app_files.user_route import user_logout
@@ -123,8 +116,7 @@ class TestUserRoute:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.user_route.get_logger")
-    async def test_form_data_processing(self, mock_logger, mock_request):
+    async def test_form_data_processing(self, mock_request):
         """Тест обробки форм даних."""
         try:
             from src.web_app.app_files.user_route import process_form_data
@@ -139,8 +131,7 @@ class TestUserRoute:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.user_route.get_logger")
-    async def test_user_data_validation(self, mock_logger):
+    async def test_user_data_validation(self):
         """Тест валідації користувацьких даних."""
         try:
             from src.web_app.app_files.user_route import validate_user_data
@@ -154,8 +145,7 @@ class TestUserRoute:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.user_route.get_logger")
-    async def test_cookie_management(self, mock_logger, mock_request):
+    async def test_cookie_management(self, mock_request):
         """Тест управління cookies."""
         try:
             from src.web_app.app_files.user_route import get_user_cookie, set_user_cookie
@@ -176,8 +166,7 @@ class TestUserRoute:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.user_route.get_logger")
-    async def test_user_permissions(self, mock_logger, mock_request):
+    async def test_user_permissions(self, mock_request):
         """Тест перевірки дозволів користувача."""
         try:
             from src.web_app.app_files.user_route import check_user_permissions
@@ -192,8 +181,7 @@ class TestUserRoute:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.user_route.get_logger")
-    async def test_user_route_error_handling(self, mock_logger, mock_request):
+    async def test_user_route_error_handling(self, mock_request):
         """Тест обробки помилок у користувацьких маршрутах."""
         try:
             from src.web_app.app_files.user_route import user_profile

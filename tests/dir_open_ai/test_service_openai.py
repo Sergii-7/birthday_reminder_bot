@@ -12,8 +12,7 @@ class TestServiceOpenAI:
     """Тести для сервісу OpenAI."""
 
     @pytest.mark.asyncio
-    @patch("src.dir_open_ai.service_openai.get_logger")
-    async def test_openai_service_initialization(self, mock_logger, mock_openai_client):
+    async def test_openai_service_initialization(self, mock_openai_client):
         """Тест ініціалізації сервісу OpenAI."""
         try:
             from src.dir_open_ai.service_openai import OpenAIService
@@ -27,8 +26,7 @@ class TestServiceOpenAI:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_open_ai.service_openai.get_logger")
-    async def test_process_birthday_request(self, mock_logger, mock_openai_client):
+    async def test_process_birthday_request(self, mock_openai_client):
         """Тест обробки запиту на день народження."""
         try:
             from src.dir_open_ai.service_openai import OpenAIService
@@ -58,8 +56,7 @@ class TestServiceOpenAI:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_open_ai.service_openai.get_logger")
-    async def test_generate_reminder_message(self, mock_logger, mock_openai_client):
+    async def test_generate_reminder_message(self, mock_openai_client):
         """Тест генерації повідомлення-нагадування."""
         try:
             from src.dir_open_ai.service_openai import OpenAIService
@@ -89,8 +86,7 @@ class TestServiceOpenAI:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_open_ai.service_openai.get_logger")
-    async def test_create_birthday_card_content(self, mock_logger, mock_openai_client):
+    async def test_create_birthday_card_content(self, mock_openai_client):
         """Тест створення контенту для листівки."""
         try:
             from src.dir_open_ai.service_openai import OpenAIService
@@ -121,8 +117,7 @@ class TestServiceOpenAI:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_open_ai.service_openai.get_logger")
-    async def test_suggest_gift_ideas(self, mock_logger, mock_openai_client):
+    async def test_suggest_gift_ideas(self, mock_openai_client):
         """Тест підказок подарунків."""
         try:
             from src.dir_open_ai.service_openai import OpenAIService
@@ -152,8 +147,7 @@ class TestServiceOpenAI:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_open_ai.service_openai.get_logger")
-    async def test_analyze_user_sentiment(self, mock_logger, mock_openai_client):
+    async def test_analyze_user_sentiment(self, mock_openai_client):
         """Тест аналізу настрою користувача."""
         try:
             from src.dir_open_ai.service_openai import OpenAIService
@@ -177,8 +171,7 @@ class TestServiceOpenAI:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_open_ai.service_openai.get_logger")
-    async def test_generate_party_ideas(self, mock_logger, mock_openai_client):
+    async def test_generate_party_ideas(self, mock_openai_client):
         """Тест генерації ідей для вечірки."""
         try:
             from src.dir_open_ai.service_openai import OpenAIService
@@ -208,8 +201,7 @@ class TestServiceOpenAI:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_open_ai.service_openai.get_logger")
-    async def test_personalize_message(self, mock_logger, mock_openai_client):
+    async def test_personalize_message(self, mock_openai_client):
         """Тест персоналізації повідомлення."""
         try:
             from src.dir_open_ai.service_openai import OpenAIService
@@ -244,8 +236,7 @@ class TestServiceOpenAI:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_open_ai.service_openai.get_logger")
-    async def test_validate_generated_content(self, mock_logger, mock_openai_client):
+    async def test_validate_generated_content(self, mock_openai_client):
         """Тест валідації згенерованого контенту."""
         try:
             from src.dir_open_ai.service_openai import OpenAIService
@@ -269,8 +260,7 @@ class TestServiceOpenAI:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_open_ai.service_openai.get_logger")
-    async def test_batch_message_generation(self, mock_logger, mock_openai_client):
+    async def test_batch_message_generation(self, mock_openai_client):
         """Тест пакетної генерації повідомлень."""
         try:
             from src.dir_open_ai.service_openai import OpenAIService
@@ -298,8 +288,7 @@ class TestServiceOpenAI:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_open_ai.service_openai.get_logger")
-    async def test_handle_service_errors(self, mock_logger, mock_openai_client):
+    async def test_handle_service_errors(self, mock_openai_client):
         """Тест обробки помилок сервісу."""
         try:
             from src.dir_open_ai.service_openai import OpenAIService
@@ -316,8 +305,7 @@ class TestServiceOpenAI:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_open_ai.service_openai.get_logger")
-    async def test_service_caching(self, mock_logger, mock_openai_client):
+    async def test_service_caching(self, mock_openai_client):
         """Тест кешування в сервісі."""
         try:
             from src.dir_open_ai.service_openai import OpenAIService
@@ -339,8 +327,7 @@ class TestServiceOpenAI:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_open_ai.service_openai.get_logger")
-    async def test_service_metrics_tracking(self, mock_logger, mock_openai_client):
+    async def test_service_metrics_tracking(self, mock_openai_client):
         """Тест відстеження метрик сервісу."""
         try:
             from src.dir_open_ai.service_openai import OpenAIService

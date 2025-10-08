@@ -13,8 +13,7 @@ class TestOpenAITools:
     """Тести для інструментів OpenAI."""
 
     @pytest.mark.asyncio
-    @patch("src.dir_open_ai.open_ai_tools.get_logger")
-    async def test_generate_text(self, mock_logger, mock_openai_client):
+    async def test_generate_text(self, mock_openai_client):
         """Тест генерації тексту."""
         try:
             from src.dir_open_ai.open_ai_tools import generate_text
@@ -36,8 +35,7 @@ class TestOpenAITools:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_open_ai.open_ai_tools.get_logger")
-    async def test_generate_image(self, mock_logger, mock_openai_client):
+    async def test_generate_image(self, mock_openai_client):
         """Тест генерації зображення."""
         try:
             from src.dir_open_ai.open_ai_tools import generate_image
@@ -59,8 +57,7 @@ class TestOpenAITools:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_open_ai.open_ai_tools.get_logger")
-    async def test_analyze_image(self, mock_logger, mock_openai_client):
+    async def test_analyze_image(self, mock_openai_client):
         """Тест аналізу зображення."""
         try:
             from src.dir_open_ai.open_ai_tools import analyze_image
@@ -83,8 +80,7 @@ class TestOpenAITools:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_open_ai.open_ai_tools.get_logger")
-    async def test_translate_text(self, mock_logger, mock_openai_client):
+    async def test_translate_text(self, mock_openai_client):
         """Тест перекладу тексту."""
         try:
             from src.dir_open_ai.open_ai_tools import translate_text
@@ -107,8 +103,7 @@ class TestOpenAITools:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_open_ai.open_ai_tools.get_logger")
-    async def test_generate_birthday_message(self, mock_logger, mock_openai_client):
+    async def test_generate_birthday_message(self, mock_openai_client):
         """Тест генерації привітання з днем народження."""
         try:
             from src.dir_open_ai.open_ai_tools import generate_birthday_message
@@ -131,8 +126,7 @@ class TestOpenAITools:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_open_ai.open_ai_tools.get_logger")
-    async def test_summarize_text(self, mock_logger, mock_openai_client):
+    async def test_summarize_text(self, mock_openai_client):
         """Тест створення резюме тексту."""
         try:
             from src.dir_open_ai.open_ai_tools import summarize_text
@@ -161,8 +155,7 @@ class TestOpenAITools:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_open_ai.open_ai_tools.get_logger")
-    async def test_detect_language(self, mock_logger, mock_openai_client):
+    async def test_detect_language(self, mock_openai_client):
         """Тест визначення мови тексту."""
         try:
             from src.dir_open_ai.open_ai_tools import detect_language
@@ -184,8 +177,7 @@ class TestOpenAITools:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_open_ai.open_ai_tools.get_logger")
-    async def test_generate_creative_message(self, mock_logger, mock_openai_client):
+    async def test_generate_creative_message(self, mock_openai_client):
         """Тест генерації креативного повідомлення."""
         try:
             from src.dir_open_ai.open_ai_tools import generate_creative_message
@@ -208,8 +200,7 @@ class TestOpenAITools:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_open_ai.open_ai_tools.get_logger")
-    async def test_improve_text(self, mock_logger, mock_openai_client):
+    async def test_improve_text(self, mock_openai_client):
         """Тест покращення тексту."""
         try:
             from src.dir_open_ai.open_ai_tools import improve_text
@@ -234,8 +225,7 @@ class TestOpenAITools:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_open_ai.open_ai_tools.get_logger")
-    async def test_extract_keywords(self, mock_logger, mock_openai_client):
+    async def test_extract_keywords(self, mock_openai_client):
         """Тест вилучення ключових слів."""
         try:
             from src.dir_open_ai.open_ai_tools import extract_keywords
@@ -258,8 +248,7 @@ class TestOpenAITools:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_open_ai.open_ai_tools.get_logger")
-    async def test_generate_poem(self, mock_logger, mock_openai_client):
+    async def test_generate_poem(self, mock_openai_client):
         """Тест генерації вірша."""
         try:
             from src.dir_open_ai.open_ai_tools import generate_poem
@@ -290,8 +279,7 @@ class TestOpenAITools:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_open_ai.open_ai_tools.get_logger")
-    async def test_check_content_safety(self, mock_logger, mock_openai_client):
+    async def test_check_content_safety(self, mock_openai_client):
         """Тест перевірки безпеки контенту."""
         try:
             from src.dir_open_ai.open_ai_tools import check_content_safety
@@ -312,8 +300,7 @@ class TestOpenAITools:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_open_ai.open_ai_tools.get_logger")
-    async def test_error_handling_api_limit(self, mock_logger, mock_openai_client):
+    async def test_error_handling_api_limit(self, mock_openai_client):
         """Тест обробки помилки ліміту API."""
         try:
             from src.dir_open_ai.open_ai_tools import generate_text
@@ -330,8 +317,7 @@ class TestOpenAITools:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_open_ai.open_ai_tools.get_logger")
-    async def test_batch_processing(self, mock_logger, mock_openai_client):
+    async def test_batch_processing(self, mock_openai_client):
         """Тест пакетної обробки запитів."""
         try:
             from src.dir_open_ai.open_ai_tools import batch_generate_text

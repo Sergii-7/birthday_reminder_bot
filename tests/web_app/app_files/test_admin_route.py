@@ -22,8 +22,7 @@ class TestAdminRoute:
         return request
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.admin_route.get_logger")
-    async def test_admin_dashboard_route(self, mock_logger, mock_request):
+    async def test_admin_dashboard_route(self, mock_request):
         """Тест маршруту адмін панелі."""
         try:
             from src.web_app.app_files.admin_route import admin_dashboard
@@ -35,8 +34,7 @@ class TestAdminRoute:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.admin_route.get_logger")
-    async def test_admin_users_route(self, mock_logger, mock_request):
+    async def test_admin_users_route(self, mock_request):
         """Тест маршруту управління користувачами."""
         try:
             from src.web_app.app_files.admin_route import admin_users
@@ -48,8 +46,7 @@ class TestAdminRoute:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.admin_route.get_logger")
-    async def test_admin_logs_route(self, mock_logger, mock_request):
+    async def test_admin_logs_route(self, mock_request):
         """Тест маршруту перегляду логів."""
         try:
             from src.web_app.app_files.admin_route import admin_logs
@@ -61,8 +58,7 @@ class TestAdminRoute:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.admin_route.get_logger")
-    async def test_admin_statistics_route(self, mock_logger, mock_request):
+    async def test_admin_statistics_route(self, mock_request):
         """Тест маршруту статистики."""
         try:
             from src.web_app.app_files.admin_route import admin_statistics
@@ -74,8 +70,7 @@ class TestAdminRoute:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.admin_route.get_logger")
-    async def test_admin_settings_route(self, mock_logger, mock_request):
+    async def test_admin_settings_route(self, mock_request):
         """Тест маршруту налаштувань."""
         try:
             from src.web_app.app_files.admin_route import admin_settings
@@ -87,8 +82,7 @@ class TestAdminRoute:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.admin_route.get_logger")
-    async def test_backup_route(self, mock_logger, mock_request):
+    async def test_backup_route(self, mock_request):
         """Тест маршруту створення резервних копій."""
         try:
             from src.web_app.app_files.admin_route import create_backup
@@ -100,8 +94,7 @@ class TestAdminRoute:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.admin_route.get_logger")
-    async def test_system_health_route(self, mock_logger, mock_request):
+    async def test_system_health_route(self, mock_request):
         """Тест маршруту перевірки здоров'я системи."""
         try:
             from src.web_app.app_files.admin_route import system_health
@@ -117,8 +110,7 @@ class TestAdminRoute:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.admin_route.get_logger")
-    async def test_send_broadcast_route(self, mock_logger, mock_request):
+    async def test_send_broadcast_route(self, mock_request):
         """Тест маршруту розсилки повідомлень."""
         try:
             from src.web_app.app_files.admin_route import send_broadcast
@@ -132,8 +124,7 @@ class TestAdminRoute:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.admin_route.get_logger")
-    async def test_user_management_route(self, mock_logger, mock_request):
+    async def test_user_management_route(self, mock_request):
         """Тест маршруту управління користувачами."""
         try:
             from src.web_app.app_files.admin_route import manage_user
@@ -148,8 +139,7 @@ class TestAdminRoute:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.admin_route.get_logger")
-    async def test_database_operations_route(self, mock_logger, mock_request):
+    async def test_database_operations_route(self, mock_request):
         """Тест маршруту операцій з базою даних."""
         try:
             from src.web_app.app_files.admin_route import database_operations
@@ -163,8 +153,7 @@ class TestAdminRoute:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.admin_route.get_logger")
-    async def test_admin_authentication_required(self, mock_logger, mock_request):
+    async def test_admin_authentication_required(self, mock_request):
         """Тест вимоги аутентифікації для адмін маршрутів."""
         try:
             from src.web_app.app_files.admin_route import require_admin_auth
@@ -179,8 +168,7 @@ class TestAdminRoute:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.admin_route.get_logger")
-    async def test_admin_route_error_handling(self, mock_logger, mock_request):
+    async def test_admin_route_error_handling(self, mock_request):
         """Тест обробки помилок в адмін маршрутах."""
         try:
             from src.web_app.app_files.admin_route import admin_dashboard

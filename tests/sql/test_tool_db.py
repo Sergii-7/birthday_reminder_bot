@@ -12,8 +12,7 @@ class TestToolDB:
     """Тести для інструментів бази даних."""
 
     @pytest.mark.asyncio
-    @patch("src.sql.tool_db.get_logger")
-    async def test_database_connection_validator(self, mock_logger, mock_db_session):
+    async def test_database_connection_validator(self, mock_db_session):
         """Тест валідатора з'єднання з базою даних."""
         try:
             from src.sql.tool_db import validate_database_connection
@@ -32,8 +31,7 @@ class TestToolDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.tool_db.get_logger")
-    async def test_table_schema_inspector(self, mock_logger, mock_db_session):
+    async def test_table_schema_inspector(self, mock_db_session):
         """Тест інспектора схеми таблиць."""
         try:
             from src.sql.tool_db import inspect_table_schema
@@ -61,8 +59,7 @@ class TestToolDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.tool_db.get_logger")
-    async def test_query_performance_analyzer(self, mock_logger, mock_db_session):
+    async def test_query_performance_analyzer(self, mock_db_session):
         """Тест аналізатора продуктивності запитів."""
         try:
             from src.sql.tool_db import analyze_query_performance
@@ -90,8 +87,7 @@ class TestToolDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.tool_db.get_logger")
-    async def test_data_validator(self, mock_logger, mock_db_session):
+    async def test_data_validator(self, mock_db_session):
         """Тест валідатора даних."""
         try:
             from src.sql.tool_db import validate_data_integrity
@@ -122,8 +118,7 @@ class TestToolDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.tool_db.get_logger")
-    async def test_index_optimizer(self, mock_logger, mock_db_session):
+    async def test_index_optimizer(self, mock_db_session):
         """Тест оптимізатора індексів."""
         try:
             from src.sql.tool_db import optimize_table_indexes
@@ -150,8 +145,7 @@ class TestToolDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.tool_db.get_logger")
-    async def test_backup_tool(self, mock_logger, mock_db_session):
+    async def test_backup_tool(self, mock_db_session):
         """Тест інструменту резервного копіювання."""
         try:
             from src.sql.tool_db import create_backup
@@ -177,8 +171,7 @@ class TestToolDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.tool_db.get_logger")
-    async def test_migration_tool(self, mock_logger, mock_db_session):
+    async def test_migration_tool(self, mock_db_session):
         """Тест інструменту міграції."""
         try:
             from src.sql.tool_db import apply_migration
@@ -203,8 +196,7 @@ class TestToolDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.tool_db.get_logger")
-    async def test_data_export_tool(self, mock_logger, mock_db_session):
+    async def test_data_export_tool(self, mock_db_session):
         """Тест інструменту експорту даних."""
         try:
             from src.sql.tool_db import export_data
@@ -236,8 +228,7 @@ class TestToolDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.tool_db.get_logger")
-    async def test_data_import_tool(self, mock_logger, mock_db_session):
+    async def test_data_import_tool(self, mock_db_session):
         """Тест інструменту імпорту даних."""
         try:
             from src.sql.tool_db import import_data
@@ -265,8 +256,7 @@ class TestToolDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.tool_db.get_logger")
-    async def test_monitoring_tool(self, mock_logger, mock_db_session):
+    async def test_monitoring_tool(self, mock_db_session):
         """Тест інструменту моніторингу."""
         try:
             from src.sql.tool_db import monitor_database_health
@@ -298,8 +288,7 @@ class TestToolDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.tool_db.get_logger")
-    async def test_cleanup_tool(self, mock_logger, mock_db_session):
+    async def test_cleanup_tool(self, mock_db_session):
         """Тест інструменту очищення."""
         try:
             from src.sql.tool_db import cleanup_database
@@ -335,8 +324,7 @@ class TestToolDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.tool_db.get_logger")
-    async def test_error_handling_tools(self, mock_logger, mock_db_session):
+    async def test_error_handling_tools(self, mock_db_session):
         """Тест інструментів обробки помилок."""
         try:
             from src.sql.tool_db import handle_database_error

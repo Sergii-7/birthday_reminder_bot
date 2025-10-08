@@ -12,8 +12,7 @@ class TestSomeTask:
     """Тести для завдань планувальника."""
 
     @pytest.mark.asyncio
-    @patch("src.dir_schedule.some_task.get_logger")
-    async def test_birthday_check_task(self, mock_logger, mock_db_session):
+    async def test_birthday_check_task(self, mock_db_session):
         """Тест завдання перевірки днів народження."""
         try:
             from src.dir_schedule.some_task import birthday_check_task
@@ -35,8 +34,7 @@ class TestSomeTask:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_schedule.some_task.get_logger")
-    async def test_send_birthday_notifications(self, mock_logger, mock_telegram_bot):
+    async def test_send_birthday_notifications(self, mock_telegram_bot):
         """Тест завдання відправки сповіщень про день народження."""
         try:
             from src.dir_schedule.some_task import send_birthday_notifications
@@ -58,8 +56,7 @@ class TestSomeTask:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_schedule.some_task.get_logger")
-    async def test_upcoming_birthdays_task(self, mock_logger, mock_db_session):
+    async def test_upcoming_birthdays_task(self, mock_db_session):
         """Тест завдання перевірки майбутніх днів народження."""
         try:
             from src.dir_schedule.some_task import upcoming_birthdays_task
@@ -83,8 +80,7 @@ class TestSomeTask:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_schedule.some_task.get_logger")
-    async def test_cleanup_old_notifications(self, mock_logger, mock_db_session):
+    async def test_cleanup_old_notifications(self, mock_db_session):
         """Тест завдання очищення старих сповіщень."""
         try:
             from src.dir_schedule.some_task import cleanup_old_notifications_task
@@ -104,8 +100,7 @@ class TestSomeTask:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_schedule.some_task.get_logger")
-    async def test_generate_reminder_messages(self, mock_logger, mock_openai_client):
+    async def test_generate_reminder_messages(self, mock_openai_client):
         """Тест завдання генерації повідомлень-нагадувань."""
         try:
             from src.dir_schedule.some_task import generate_reminder_messages_task
@@ -130,8 +125,7 @@ class TestSomeTask:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_schedule.some_task.get_logger")
-    async def test_update_user_statistics(self, mock_logger, mock_db_session):
+    async def test_update_user_statistics(self, mock_db_session):
         """Тест завдання оновлення статистики користувачів."""
         try:
             from src.dir_schedule.some_task import update_user_statistics_task
@@ -150,8 +144,7 @@ class TestSomeTask:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_schedule.some_task.get_logger")
-    async def test_backup_database_task(self, mock_logger, mock_db_session):
+    async def test_backup_database_task(self, mock_db_session):
         """Тест завдання резервного копіювання бази даних."""
         try:
             from src.dir_schedule.some_task import backup_database_task
@@ -171,8 +164,7 @@ class TestSomeTask:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_schedule.some_task.get_logger")
-    async def test_sync_with_external_calendar(self, mock_logger):
+    async def test_sync_with_external_calendar(self):
         """Тест завдання синхронізації з зовнішнім календарем."""
         try:
             from src.dir_schedule.some_task import sync_external_calendar_task
@@ -197,8 +189,7 @@ class TestSomeTask:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_schedule.some_task.get_logger")
-    async def test_generate_birthday_reports(self, mock_logger, mock_db_session):
+    async def test_generate_birthday_reports(self, mock_db_session):
         """Тест завдання генерації звітів про дні народження."""
         try:
             from src.dir_schedule.some_task import generate_birthday_reports_task
@@ -218,8 +209,7 @@ class TestSomeTask:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_schedule.some_task.get_logger")
-    async def test_optimize_database_task(self, mock_logger, mock_db_session):
+    async def test_optimize_database_task(self, mock_db_session):
         """Тест завдання оптимізації бази даних."""
         try:
             from src.dir_schedule.some_task import optimize_database_task
@@ -240,8 +230,7 @@ class TestSomeTask:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_schedule.some_task.get_logger")
-    async def test_check_system_health(self, mock_logger):
+    async def test_check_system_health(self):
         """Тест завдання перевірки здоров'я системи."""
         try:
             from src.dir_schedule.some_task import system_health_check_task
@@ -261,8 +250,7 @@ class TestSomeTask:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_schedule.some_task.get_logger")
-    async def test_task_error_handling(self, mock_logger):
+    async def test_task_error_handling(self):
         """Тест обробки помилок у завданнях."""
         try:
             from src.dir_schedule.some_task import birthday_check_task
@@ -282,8 +270,7 @@ class TestSomeTask:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_schedule.some_task.get_logger")
-    async def test_task_retry_mechanism(self, mock_logger):
+    async def test_task_retry_mechanism(self):
         """Тест механізму повторних спроб для завдань."""
         try:
             from src.dir_schedule.some_task import retry_failed_task
@@ -303,8 +290,7 @@ class TestSomeTask:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_schedule.some_task.get_logger")
-    async def test_batch_task_execution(self, mock_logger):
+    async def test_batch_task_execution(self):
         """Тест пакетного виконання завдань."""
         try:
             from src.dir_schedule.some_task import execute_batch_tasks

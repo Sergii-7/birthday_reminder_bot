@@ -12,8 +12,7 @@ class TestCreateData:
     """Тести для створення даних."""
 
     @pytest.mark.asyncio
-    @patch("src.service.create_data.get_logger")
-    async def test_create_user_data(self, mock_logger):
+    async def test_create_user_data(self):
         """Тест створення даних користувача."""
         try:
             from src.service.create_data import create_user_data
@@ -33,8 +32,7 @@ class TestCreateData:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.service.create_data.get_logger")
-    async def test_create_birthday_data(self, mock_logger):
+    async def test_create_birthday_data(self):
         """Тест створення даних дня народження."""
         try:
             from src.service.create_data import create_birthday_data
@@ -59,8 +57,7 @@ class TestCreateData:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.service.create_data.get_logger")
-    async def test_create_notification_data(self, mock_logger):
+    async def test_create_notification_data(self):
         """Тест створення даних сповіщення."""
         try:
             from src.service.create_data import create_notification_data
@@ -162,8 +159,7 @@ class TestCreateData:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.service.create_data.get_logger")
-    async def test_bulk_create_users(self, mock_logger):
+    async def test_bulk_create_users(self):
         """Тест масового створення користувачів."""
         try:
             from src.service.create_data import bulk_create_users
@@ -200,8 +196,7 @@ class TestCreateData:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.service.create_data.get_logger")
-    async def test_create_event_data(self, mock_logger):
+    async def test_create_event_data(self):
         """Тест створення даних події."""
         try:
             from src.service.create_data import create_event_data

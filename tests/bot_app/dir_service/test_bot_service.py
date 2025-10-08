@@ -23,8 +23,7 @@ class TestBotService:
         }
 
     @pytest.mark.asyncio
-    @patch("src.bot_app.dir_service.bot_service.get_logger")
-    async def test_user_registration_service(self, mock_logger, mock_user_data):
+    async def test_user_registration_service(self, mock_user_data):
         """Тест сервісу реєстрації користувача."""
         try:
             from src.bot_app.dir_service.bot_service import register_user
@@ -40,8 +39,7 @@ class TestBotService:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.bot_app.dir_service.bot_service.get_logger")
-    async def test_birthday_validation_service(self, mock_logger):
+    async def test_birthday_validation_service(self):
         """Тест сервісу валідації дати народження."""
         try:
             from src.bot_app.dir_service.bot_service import validate_birthday
@@ -62,8 +60,7 @@ class TestBotService:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.bot_app.dir_service.bot_service.get_logger")
-    async def test_user_data_service(self, mock_logger, mock_user_data):
+    async def test_user_data_service(self, mock_user_data):
         """Тест сервісу роботи з даними користувача."""
         try:
             from src.bot_app.dir_service.bot_service import get_user_data, update_user_data
@@ -80,8 +77,7 @@ class TestBotService:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.bot_app.dir_service.bot_service.get_logger")
-    async def test_birthday_notification_service(self, mock_logger):
+    async def test_birthday_notification_service(self):
         """Тест сервісу сповіщень про дні народження."""
         try:
             from src.bot_app.dir_service.bot_service import check_birthdays_today
@@ -93,8 +89,7 @@ class TestBotService:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.bot_app.dir_service.bot_service.get_logger")
-    async def test_admin_service_functions(self, mock_logger):
+    async def test_admin_service_functions(self):
         """Тест адміністративних сервісних функцій."""
         try:
             from src.bot_app.dir_service.bot_service import get_user_statistics
@@ -106,8 +101,7 @@ class TestBotService:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.bot_app.dir_service.bot_service.get_logger")
-    async def test_message_processing_service(self, mock_logger):
+    async def test_message_processing_service(self):
         """Тест сервісу обробки повідомлень."""
         try:
             from src.bot_app.dir_service.bot_service import process_user_message
@@ -121,8 +115,7 @@ class TestBotService:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.bot_app.dir_service.bot_service.get_logger")
-    async def test_calendar_integration_service(self, mock_logger):
+    async def test_calendar_integration_service(self):
         """Тест сервісу інтеграції з календарем."""
         try:
             from src.bot_app.dir_service.bot_service import add_to_calendar
@@ -136,8 +129,7 @@ class TestBotService:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.bot_app.dir_service.bot_service.get_logger")
-    async def test_data_backup_service(self, mock_logger):
+    async def test_data_backup_service(self):
         """Тест сервісу резервного копіювання даних."""
         try:
             from src.bot_app.dir_service.bot_service import backup_user_data
@@ -149,8 +141,7 @@ class TestBotService:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.bot_app.dir_service.bot_service.get_logger")
-    async def test_service_error_handling(self, mock_logger):
+    async def test_service_error_handling(self):
         """Тест обробки помилок у сервісах."""
         try:
             from src.bot_app.dir_service.bot_service import handle_service_error
@@ -164,8 +155,7 @@ class TestBotService:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.bot_app.dir_service.bot_service.get_logger")
-    async def test_caching_service(self, mock_logger):
+    async def test_caching_service(self):
         """Тест сервісу кешування."""
         try:
             from src.bot_app.dir_service.bot_service import cache_user_data, get_cached_data

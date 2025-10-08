@@ -28,7 +28,7 @@ class TestMinimal:
         try:
             import config
 
-            assert config.URI_DB == "sqlite:///:memory:"
+            assert config.URI_DB == "user:pass@localhost:5432/testdb"
             assert config.TOKEN == "test_telegram_token"
             assert True
         except ImportError:

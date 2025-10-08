@@ -18,8 +18,7 @@ class TestAppAccess:
         return HTTPBasicCredentials(username="admin", password="password")
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.app_access.get_logger")
-    async def test_admin_authentication(self, mock_logger, mock_credentials):
+    async def test_admin_authentication(self, mock_credentials):
         """Тест аутентифікації адміністратора."""
         try:
             from src.web_app.app_files.app_access import verify_admin_credentials
@@ -31,8 +30,7 @@ class TestAppAccess:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.app_access.get_logger")
-    async def test_user_authentication(self, mock_logger, mock_credentials):
+    async def test_user_authentication(self, mock_credentials):
         """Тест аутентифікації користувача."""
         try:
             from src.web_app.app_files.app_access import verify_user_credentials
@@ -44,8 +42,7 @@ class TestAppAccess:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.app_access.get_logger")
-    async def test_invalid_credentials(self, mock_logger):
+    async def test_invalid_credentials(self):
         """Тест невалідних credentials."""
         invalid_creds = HTTPBasicCredentials(username="wrong", password="wrong")
 
@@ -59,8 +56,7 @@ class TestAppAccess:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.app_access.get_logger")
-    async def test_access_token_validation(self, mock_logger):
+    async def test_access_token_validation(self):
         """Тест валідації токену доступу."""
         try:
             from src.web_app.app_files.app_access import validate_access_token
@@ -73,8 +69,7 @@ class TestAppAccess:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.app_access.get_logger")
-    async def test_role_based_access(self, mock_logger):
+    async def test_role_based_access(self):
         """Тест контролю доступу на основі ролей."""
         try:
             from src.web_app.app_files.app_access import check_user_role
@@ -89,8 +84,7 @@ class TestAppAccess:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.app_access.get_logger")
-    async def test_session_management(self, mock_logger):
+    async def test_session_management(self):
         """Тест управління сесіями."""
         try:
             from src.web_app.app_files.app_access import create_session, validate_session
@@ -107,8 +101,7 @@ class TestAppAccess:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.app_access.get_logger")
-    async def test_rate_limiting(self, mock_logger):
+    async def test_rate_limiting(self):
         """Тест обмеження швидкості запитів."""
         try:
             from src.web_app.app_files.app_access import check_rate_limit
@@ -123,8 +116,7 @@ class TestAppAccess:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.app_access.get_logger")
-    async def test_ip_whitelist(self, mock_logger):
+    async def test_ip_whitelist(self):
         """Тест білого списку IP адрес."""
         try:
             from src.web_app.app_files.app_access import check_ip_whitelist
@@ -137,8 +129,7 @@ class TestAppAccess:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.app_access.get_logger")
-    async def test_password_hashing(self, mock_logger):
+    async def test_password_hashing(self):
         """Тест хешування паролів."""
         try:
             from src.web_app.app_files.app_access import hash_password, verify_password
@@ -156,8 +147,7 @@ class TestAppAccess:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.app_access.get_logger")
-    async def test_access_logging(self, mock_logger):
+    async def test_access_logging(self):
         """Тест логування доступу."""
         try:
             from src.web_app.app_files.app_access import log_access_attempt

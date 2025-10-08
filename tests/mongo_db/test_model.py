@@ -13,8 +13,7 @@ class TestMongoModels:
     """Тести для MongoDB моделей."""
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db.model.get_logger")
-    async def test_user_model_create(self, mock_logger, mock_mongo_client):
+    async def test_user_model_create(self, mock_mongo_client):
         """Тест створення моделі користувача."""
         try:
             from src.mongo_db.model import UserModel
@@ -41,8 +40,7 @@ class TestMongoModels:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db.model.get_logger")
-    async def test_user_model_find_by_id(self, mock_logger, mock_mongo_client):
+    async def test_user_model_find_by_id(self, mock_mongo_client):
         """Тест пошуку користувача за ID."""
         try:
             from src.mongo_db.model import UserModel
@@ -66,8 +64,7 @@ class TestMongoModels:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db.model.get_logger")
-    async def test_user_model_update(self, mock_logger, mock_mongo_client):
+    async def test_user_model_update(self, mock_mongo_client):
         """Тест оновлення користувача."""
         try:
             from src.mongo_db.model import UserModel
@@ -93,8 +90,7 @@ class TestMongoModels:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db.model.get_logger")
-    async def test_birthday_model_create(self, mock_logger, mock_mongo_client):
+    async def test_birthday_model_create(self, mock_mongo_client):
         """Тест створення моделі дня народження."""
         try:
             from src.mongo_db.model import BirthdayModel
@@ -121,8 +117,7 @@ class TestMongoModels:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db.model.get_logger")
-    async def test_birthday_model_find_by_user(self, mock_logger, mock_mongo_client):
+    async def test_birthday_model_find_by_user(self, mock_mongo_client):
         """Тест пошуку днів народження користувача."""
         try:
             from src.mongo_db.model import BirthdayModel
@@ -162,8 +157,7 @@ class TestMongoModels:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db.model.get_logger")
-    async def test_birthday_model_find_today(self, mock_logger, mock_mongo_client):
+    async def test_birthday_model_find_today(self, mock_mongo_client):
         """Тест пошуку днів народження на сьогодні."""
         try:
             from src.mongo_db.model import BirthdayModel
@@ -194,8 +188,7 @@ class TestMongoModels:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db.model.get_logger")
-    async def test_notification_model_create(self, mock_logger, mock_mongo_client):
+    async def test_notification_model_create(self, mock_mongo_client):
         """Тест створення моделі сповіщення."""
         try:
             from src.mongo_db.model import NotificationModel
@@ -224,8 +217,7 @@ class TestMongoModels:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db.model.get_logger")
-    async def test_notification_model_mark_sent(self, mock_logger, mock_mongo_client):
+    async def test_notification_model_mark_sent(self, mock_mongo_client):
         """Тест позначення сповіщення як відправленого."""
         try:
             from src.mongo_db.model import NotificationModel
@@ -251,8 +243,7 @@ class TestMongoModels:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db.model.get_logger")
-    async def test_user_settings_model(self, mock_logger, mock_mongo_client):
+    async def test_user_settings_model(self, mock_mongo_client):
         """Тест моделі налаштувань користувача."""
         try:
             from src.mongo_db.model import UserSettingsModel
@@ -280,8 +271,7 @@ class TestMongoModels:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db.model.get_logger")
-    async def test_analytics_model(self, mock_logger, mock_mongo_client):
+    async def test_analytics_model(self, mock_mongo_client):
         """Тест моделі аналітики."""
         try:
             from src.mongo_db.model import AnalyticsModel
@@ -307,8 +297,7 @@ class TestMongoModels:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db.model.get_logger")
-    async def test_base_model_operations(self, mock_logger, mock_mongo_client):
+    async def test_base_model_operations(self, mock_mongo_client):
         """Тест базових операцій моделі."""
         try:
             from src.mongo_db.model import BaseModel
@@ -329,8 +318,7 @@ class TestMongoModels:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db.model.get_logger")
-    async def test_model_aggregation(self, mock_logger, mock_mongo_client):
+    async def test_model_aggregation(self, mock_mongo_client):
         """Тест агрегації в моделі."""
         try:
             from src.mongo_db.model import BirthdayModel
@@ -357,8 +345,7 @@ class TestMongoModels:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db.model.get_logger")
-    async def test_model_validation(self, mock_logger, mock_mongo_client):
+    async def test_model_validation(self, mock_mongo_client):
         """Тест валідації даних в моделі."""
         try:
             from src.mongo_db.model import UserModel
@@ -380,8 +367,7 @@ class TestMongoModels:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db.model.get_logger")
-    async def test_model_soft_delete(self, mock_logger, mock_mongo_client):
+    async def test_model_soft_delete(self, mock_mongo_client):
         """Тест м'якого видалення в моделі."""
         try:
             from src.mongo_db.model import UserModel

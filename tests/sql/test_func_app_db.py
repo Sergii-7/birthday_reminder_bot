@@ -12,8 +12,7 @@ class TestFuncAppDB:
     """Тести для функцій додатку бази даних."""
 
     @pytest.mark.asyncio
-    @patch("src.sql.func_app_db.get_logger")
-    async def test_register_user(self, mock_logger, mock_db_session):
+    async def test_register_user(self, mock_db_session):
         """Тест реєстрації користувача."""
         try:
             from src.sql.func_app_db import register_user
@@ -33,8 +32,7 @@ class TestFuncAppDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.func_app_db.get_logger")
-    async def test_get_user_settings(self, mock_logger, mock_db_session):
+    async def test_get_user_settings(self, mock_db_session):
         """Тест отримання налаштувань користувача."""
         try:
             from src.sql.func_app_db import get_user_settings
@@ -56,8 +54,7 @@ class TestFuncAppDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.func_app_db.get_logger")
-    async def test_update_user_settings(self, mock_logger, mock_db_session):
+    async def test_update_user_settings(self, mock_db_session):
         """Тест оновлення налаштувань користувача."""
         try:
             from src.sql.func_app_db import update_user_settings
@@ -77,8 +74,7 @@ class TestFuncAppDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.func_app_db.get_logger")
-    async def test_add_birthday_reminder(self, mock_logger, mock_db_session):
+    async def test_add_birthday_reminder(self, mock_db_session):
         """Тест додавання нагадування про день народження."""
         try:
             from src.sql.func_app_db import add_birthday_reminder
@@ -102,8 +98,7 @@ class TestFuncAppDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.func_app_db.get_logger")
-    async def test_get_user_reminders(self, mock_logger, mock_db_session):
+    async def test_get_user_reminders(self, mock_db_session):
         """Тест отримання нагадувань користувача."""
         try:
             from src.sql.func_app_db import get_user_reminders
@@ -125,8 +120,7 @@ class TestFuncAppDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.func_app_db.get_logger")
-    async def test_delete_reminder(self, mock_logger, mock_db_session):
+    async def test_delete_reminder(self, mock_db_session):
         """Тест видалення нагадування."""
         try:
             from src.sql.func_app_db import delete_reminder
@@ -146,8 +140,7 @@ class TestFuncAppDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.func_app_db.get_logger")
-    async def test_get_upcoming_birthdays(self, mock_logger, mock_db_session):
+    async def test_get_upcoming_birthdays(self, mock_db_session):
         """Тест отримання найближчих днів народження."""
         try:
             from src.sql.func_app_db import get_upcoming_birthdays
@@ -170,8 +163,7 @@ class TestFuncAppDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.func_app_db.get_logger")
-    async def test_mark_notification_sent(self, mock_logger, mock_db_session):
+    async def test_mark_notification_sent(self, mock_db_session):
         """Тест позначення сповіщення як відправленого."""
         try:
             from src.sql.func_app_db import mark_notification_sent
@@ -190,8 +182,7 @@ class TestFuncAppDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.func_app_db.get_logger")
-    async def test_get_notification_history(self, mock_logger, mock_db_session):
+    async def test_get_notification_history(self, mock_db_session):
         """Тест отримання історії сповіщень."""
         try:
             from src.sql.func_app_db import get_notification_history
@@ -214,8 +205,7 @@ class TestFuncAppDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.func_app_db.get_logger")
-    async def test_toggle_reminder_status(self, mock_logger, mock_db_session):
+    async def test_toggle_reminder_status(self, mock_db_session):
         """Тест перемикання статусу нагадування."""
         try:
             from src.sql.func_app_db import toggle_reminder_status
@@ -235,8 +225,7 @@ class TestFuncAppDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.func_app_db.get_logger")
-    async def test_get_active_users(self, mock_logger, mock_db_session):
+    async def test_get_active_users(self, mock_db_session):
         """Тест отримання активних користувачів."""
         try:
             from src.sql.func_app_db import get_active_users
@@ -258,8 +247,7 @@ class TestFuncAppDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.func_app_db.get_logger")
-    async def test_user_activity_tracking(self, mock_logger, mock_db_session):
+    async def test_user_activity_tracking(self, mock_db_session):
         """Тест відстеження активності користувача."""
         try:
             from src.sql.func_app_db import update_user_activity
@@ -279,8 +267,7 @@ class TestFuncAppDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.func_app_db.get_logger")
-    async def test_cleanup_old_notifications(self, mock_logger, mock_db_session):
+    async def test_cleanup_old_notifications(self, mock_db_session):
         """Тест очищення старих сповіщень."""
         try:
             from src.sql.func_app_db import cleanup_old_notifications

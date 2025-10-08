@@ -12,8 +12,7 @@ class TestCopySqlDB:
     """Тести для копіювання SQL бази в MongoDB."""
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db._copy_sql_db.get_logger")
-    async def test_copy_users_table(self, mock_logger, mock_db_session, mock_mongo_client):
+    async def test_copy_users_table(self, mock_db_session, mock_mongo_client):
         """Тест копіювання таблиці користувачів."""
         try:
             from src.mongo_db._copy_sql_db import copy_users_table
@@ -44,8 +43,7 @@ class TestCopySqlDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db._copy_sql_db.get_logger")
-    async def test_copy_birthdays_table(self, mock_logger, mock_db_session, mock_mongo_client):
+    async def test_copy_birthdays_table(self, mock_db_session, mock_mongo_client):
         """Тест копіювання таблиці днів народження."""
         try:
             from src.mongo_db._copy_sql_db import copy_birthdays_table
@@ -75,8 +73,7 @@ class TestCopySqlDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db._copy_sql_db.get_logger")
-    async def test_copy_notifications_table(self, mock_logger, mock_db_session, mock_mongo_client):
+    async def test_copy_notifications_table(self, mock_db_session, mock_mongo_client):
         """Тест копіювання таблиці сповіщень."""
         try:
             from src.mongo_db._copy_sql_db import copy_notifications_table
@@ -106,8 +103,7 @@ class TestCopySqlDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db._copy_sql_db.get_logger")
-    async def test_full_database_copy(self, mock_logger, mock_db_session, mock_mongo_client):
+    async def test_full_database_copy(self, mock_db_session, mock_mongo_client):
         """Тест повного копіювання бази даних."""
         try:
             from src.mongo_db._copy_sql_db import copy_full_database
@@ -134,8 +130,7 @@ class TestCopySqlDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db._copy_sql_db.get_logger")
-    async def test_incremental_copy(self, mock_logger, mock_db_session, mock_mongo_client):
+    async def test_incremental_copy(self, mock_db_session, mock_mongo_client):
         """Тест інкрементального копіювання."""
         try:
             from src.mongo_db._copy_sql_db import incremental_copy
@@ -169,8 +164,7 @@ class TestCopySqlDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db._copy_sql_db.get_logger")
-    async def test_data_transformation(self, mock_logger, mock_db_session, mock_mongo_client):
+    async def test_data_transformation(self, mock_db_session, mock_mongo_client):
         """Тест трансформації даних при копіюванні."""
         try:
             from src.mongo_db._copy_sql_db import transform_sql_to_mongo
@@ -196,8 +190,7 @@ class TestCopySqlDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db._copy_sql_db.get_logger")
-    async def test_batch_processing(self, mock_logger, mock_db_session, mock_mongo_client):
+    async def test_batch_processing(self, mock_db_session, mock_mongo_client):
         """Тест пакетної обробки при копіюванні."""
         try:
             from src.mongo_db._copy_sql_db import copy_table_in_batches
@@ -236,8 +229,7 @@ class TestCopySqlDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db._copy_sql_db.get_logger")
-    async def test_error_handling_during_copy(self, mock_logger, mock_db_session, mock_mongo_client):
+    async def test_error_handling_during_copy(self, mock_db_session, mock_mongo_client):
         """Тест обробки помилок при копіюванні."""
         try:
             from src.mongo_db._copy_sql_db import copy_users_table
@@ -256,8 +248,7 @@ class TestCopySqlDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db._copy_sql_db.get_logger")
-    async def test_copy_progress_tracking(self, mock_logger, mock_db_session, mock_mongo_client):
+    async def test_copy_progress_tracking(self, mock_db_session, mock_mongo_client):
         """Тест відстеження прогресу копіювання."""
         try:
             from src.mongo_db._copy_sql_db import copy_with_progress
@@ -275,8 +266,7 @@ class TestCopySqlDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db._copy_sql_db.get_logger")
-    async def test_data_validation_during_copy(self, mock_logger, mock_db_session, mock_mongo_client):
+    async def test_data_validation_during_copy(self, mock_db_session, mock_mongo_client):
         """Тест валідації даних при копіюванні."""
         try:
             from src.mongo_db._copy_sql_db import validate_copied_data
@@ -306,8 +296,7 @@ class TestCopySqlDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db._copy_sql_db.get_logger")
-    async def test_cleanup_before_copy(self, mock_logger, mock_db_session, mock_mongo_client):
+    async def test_cleanup_before_copy(self, mock_db_session, mock_mongo_client):
         """Тест очищення перед копіюванням."""
         try:
             from src.mongo_db._copy_sql_db import cleanup_mongo_collections
@@ -329,8 +318,7 @@ class TestCopySqlDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db._copy_sql_db.get_logger")
-    async def test_copy_with_mapping(self, mock_logger, mock_db_session, mock_mongo_client):
+    async def test_copy_with_mapping(self, mock_db_session, mock_mongo_client):
         """Тест копіювання з мапінгом полів."""
         try:
             from src.mongo_db._copy_sql_db import copy_with_field_mapping

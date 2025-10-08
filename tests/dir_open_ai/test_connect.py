@@ -11,8 +11,7 @@ class TestOpenAIConnect:
     """Тести для з'єднання з OpenAI."""
 
     @pytest.mark.asyncio
-    @patch("src.dir_open_ai.connect.get_logger")
-    async def test_create_openai_client(self, mock_logger, mock_openai_client):
+    async def test_create_openai_client(self, mock_openai_client):
         """Тест створення клієнта OpenAI."""
         try:
             from src.dir_open_ai.connect import create_openai_client
@@ -27,8 +26,7 @@ class TestOpenAIConnect:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_open_ai.connect.get_logger")
-    async def test_test_openai_connection(self, mock_logger, mock_openai_client):
+    async def test_test_openai_connection(self, mock_openai_client):
         """Тест перевірки з'єднання з OpenAI."""
         try:
             from src.dir_open_ai.connect import test_openai_connection
@@ -48,8 +46,7 @@ class TestOpenAIConnect:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_open_ai.connect.get_logger")
-    async def test_openai_connection_failure(self, mock_logger, mock_openai_client):
+    async def test_openai_connection_failure(self, mock_openai_client):
         """Тест обробки помилки з'єднання з OpenAI."""
         try:
             from src.dir_open_ai.connect import test_openai_connection
@@ -65,8 +62,7 @@ class TestOpenAIConnect:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_open_ai.connect.get_logger")
-    async def test_get_openai_models(self, mock_logger, mock_openai_client):
+    async def test_get_openai_models(self, mock_openai_client):
         """Тест отримання списку моделей OpenAI."""
         try:
             from src.dir_open_ai.connect import get_openai_models
@@ -106,8 +102,7 @@ class TestOpenAIConnect:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_open_ai.connect.get_logger")
-    async def test_openai_client_with_proxy(self, mock_logger, mock_openai_client):
+    async def test_openai_client_with_proxy(self, mock_openai_client):
         """Тест створення клієнта з проксі."""
         try:
             from src.dir_open_ai.connect import create_openai_client_with_proxy
@@ -125,8 +120,7 @@ class TestOpenAIConnect:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_open_ai.connect.get_logger")
-    async def test_openai_rate_limit_handling(self, mock_logger, mock_openai_client):
+    async def test_openai_rate_limit_handling(self, mock_openai_client):
         """Тест обробки rate limit."""
         try:
             from src.dir_open_ai.connect import handle_rate_limit
@@ -146,8 +140,7 @@ class TestOpenAIConnect:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_open_ai.connect.get_logger")
-    async def test_openai_timeout_handling(self, mock_logger, mock_openai_client):
+    async def test_openai_timeout_handling(self, mock_openai_client):
         """Тест обробки таймауту."""
         try:
             from src.dir_open_ai.connect import create_openai_client_with_timeout
@@ -162,8 +155,7 @@ class TestOpenAIConnect:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_open_ai.connect.get_logger")
-    async def test_openai_client_health_check(self, mock_logger, mock_openai_client):
+    async def test_openai_client_health_check(self, mock_openai_client):
         """Тест перевірки здоров'я клієнта."""
         try:
             from src.dir_open_ai.connect import health_check
@@ -209,8 +201,7 @@ class TestOpenAIConnect:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_open_ai.connect.get_logger")
-    async def test_openai_client_retry_mechanism(self, mock_logger, mock_openai_client):
+    async def test_openai_client_retry_mechanism(self, mock_openai_client):
         """Тест механізму повторних спроб."""
         try:
             from src.dir_open_ai.connect import create_openai_client_with_retry
@@ -225,8 +216,7 @@ class TestOpenAIConnect:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_open_ai.connect.get_logger")
-    async def test_openai_connection_pool(self, mock_logger):
+    async def test_openai_connection_pool(self):
         """Тест пулу з'єднань."""
         try:
             from src.dir_open_ai.connect import OpenAIConnectionPool

@@ -12,8 +12,7 @@ class TestSomeSchedule:
     """Тести для планувальника завдань."""
 
     @pytest.mark.asyncio
-    @patch("src.dir_schedule.some_schedule.get_logger")
-    async def test_schedule_birthday_notification(self, mock_logger):
+    async def test_schedule_birthday_notification(self):
         """Тест планування сповіщення про день народження."""
         try:
             from src.dir_schedule.some_schedule import schedule_birthday_notification
@@ -37,8 +36,7 @@ class TestSomeSchedule:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_schedule.some_schedule.get_logger")
-    async def test_cancel_scheduled_notification(self, mock_logger):
+    async def test_cancel_scheduled_notification(self):
         """Тест скасування запланованого сповіщення."""
         try:
             from src.dir_schedule.some_schedule import cancel_scheduled_notification
@@ -57,8 +55,7 @@ class TestSomeSchedule:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_schedule.some_schedule.get_logger")
-    async def test_schedule_recurring_task(self, mock_logger):
+    async def test_schedule_recurring_task(self):
         """Тест планування повторюваного завдання."""
         try:
             from src.dir_schedule.some_schedule import schedule_recurring_task
@@ -83,8 +80,7 @@ class TestSomeSchedule:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_schedule.some_schedule.get_logger")
-    async def test_get_scheduled_jobs(self, mock_logger):
+    async def test_get_scheduled_jobs(self):
         """Тест отримання списку запланованих завдань."""
         try:
             from src.dir_schedule.some_schedule import get_scheduled_jobs
@@ -108,8 +104,7 @@ class TestSomeSchedule:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_schedule.some_schedule.get_logger")
-    async def test_update_scheduled_job(self, mock_logger):
+    async def test_update_scheduled_job(self):
         """Тест оновлення запланованого завдання."""
         try:
             from src.dir_schedule.some_schedule import update_scheduled_job
@@ -129,8 +124,7 @@ class TestSomeSchedule:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_schedule.some_schedule.get_logger")
-    async def test_pause_scheduler(self, mock_logger):
+    async def test_pause_scheduler(self):
         """Тест призупинення планувальника."""
         try:
             from src.dir_schedule.some_schedule import pause_scheduler
@@ -147,8 +141,7 @@ class TestSomeSchedule:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_schedule.some_schedule.get_logger")
-    async def test_resume_scheduler(self, mock_logger):
+    async def test_resume_scheduler(self):
         """Тест відновлення планувальника."""
         try:
             from src.dir_schedule.some_schedule import resume_scheduler
@@ -165,8 +158,7 @@ class TestSomeSchedule:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_schedule.some_schedule.get_logger")
-    async def test_scheduler_status(self, mock_logger):
+    async def test_scheduler_status(self):
         """Тест отримання статусу планувальника."""
         try:
             from src.dir_schedule.some_schedule import get_scheduler_status
@@ -185,8 +177,7 @@ class TestSomeSchedule:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_schedule.some_schedule.get_logger")
-    async def test_schedule_bulk_notifications(self, mock_logger):
+    async def test_schedule_bulk_notifications(self):
         """Тест планування масових сповіщень."""
         try:
             from src.dir_schedule.some_schedule import schedule_bulk_notifications
@@ -210,8 +201,7 @@ class TestSomeSchedule:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_schedule.some_schedule.get_logger")
-    async def test_cleanup_expired_jobs(self, mock_logger):
+    async def test_cleanup_expired_jobs(self):
         """Тест очищення просрочених завдань."""
         try:
             from src.dir_schedule.some_schedule import cleanup_expired_jobs
@@ -237,8 +227,7 @@ class TestSomeSchedule:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_schedule.some_schedule.get_logger")
-    async def test_scheduler_error_handling(self, mock_logger):
+    async def test_scheduler_error_handling(self):
         """Тест обробки помилок планувальника."""
         try:
             from src.dir_schedule.some_schedule import schedule_birthday_notification
@@ -257,8 +246,7 @@ class TestSomeSchedule:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_schedule.some_schedule.get_logger")
-    async def test_job_persistence(self, mock_logger):
+    async def test_job_persistence(self):
         """Тест збереження завдань."""
         try:
             from src.dir_schedule.some_schedule import save_jobs_to_storage
@@ -275,8 +263,7 @@ class TestSomeSchedule:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_schedule.some_schedule.get_logger")
-    async def test_load_jobs_from_storage(self, mock_logger):
+    async def test_load_jobs_from_storage(self):
         """Тест завантаження завдань із сховища."""
         try:
             from src.dir_schedule.some_schedule import load_jobs_from_storage
@@ -293,8 +280,7 @@ class TestSomeSchedule:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.dir_schedule.some_schedule.get_logger")
-    async def test_scheduler_metrics(self, mock_logger):
+    async def test_scheduler_metrics(self):
         """Тест метрик планувальника."""
         try:
             from src.dir_schedule.some_schedule import get_scheduler_metrics

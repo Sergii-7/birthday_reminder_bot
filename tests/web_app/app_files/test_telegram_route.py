@@ -35,8 +35,7 @@ class TestTelegramRoute:
         }
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.telegram_route.get_logger")
-    async def test_webhook_endpoint(self, mock_logger, mock_request, mock_telegram_update):
+    async def test_webhook_endpoint(self, mock_request, mock_telegram_update):
         """Тест webhook endpoint для Telegram."""
         try:
             from src.web_app.app_files.telegram_route import telegram_webhook
@@ -52,8 +51,7 @@ class TestTelegramRoute:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.telegram_route.get_logger")
-    async def test_update_processing(self, mock_logger, mock_telegram_update):
+    async def test_update_processing(self, mock_telegram_update):
         """Тест обробки Telegram update."""
         try:
             from src.web_app.app_files.telegram_route import process_telegram_update
@@ -65,8 +63,7 @@ class TestTelegramRoute:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.telegram_route.get_logger")
-    async def test_message_handling(self, mock_logger, mock_telegram_update):
+    async def test_message_handling(self, mock_telegram_update):
         """Тест обробки повідомлень."""
         try:
             from src.web_app.app_files.telegram_route import handle_message
@@ -79,8 +76,7 @@ class TestTelegramRoute:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.telegram_route.get_logger")
-    async def test_callback_query_handling(self, mock_logger):
+    async def test_callback_query_handling(self):
         """Тест обробки callback queries."""
         callback_data = {
             "id": "callback_123",
@@ -99,8 +95,7 @@ class TestTelegramRoute:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.telegram_route.get_logger")
-    async def test_webhook_security(self, mock_logger, mock_request):
+    async def test_webhook_security(self, mock_request):
         """Тест безпеки webhook."""
         try:
             from src.web_app.app_files.telegram_route import verify_webhook_signature
@@ -115,8 +110,7 @@ class TestTelegramRoute:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.telegram_route.get_logger")
-    async def test_bot_dispatcher_integration(self, mock_logger, mock_telegram_update):
+    async def test_bot_dispatcher_integration(self, mock_telegram_update):
         """Тест інтеграції з bot dispatcher."""
         try:
             from src.web_app.app_files.telegram_route import feed_update_to_dispatcher
@@ -132,8 +126,7 @@ class TestTelegramRoute:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.telegram_route.get_logger")
-    async def test_webhook_health_check(self, mock_logger, mock_request):
+    async def test_webhook_health_check(self, mock_request):
         """Тест health check для webhook."""
         try:
             from src.web_app.app_files.telegram_route import webhook_health
@@ -148,8 +141,7 @@ class TestTelegramRoute:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.telegram_route.get_logger")
-    async def test_update_validation(self, mock_logger):
+    async def test_update_validation(self):
         """Тест валідації update даних."""
         try:
             from src.web_app.app_files.telegram_route import validate_update
@@ -169,8 +161,7 @@ class TestTelegramRoute:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.telegram_route.get_logger")
-    async def test_async_update_processing(self, mock_logger, mock_telegram_update):
+    async def test_async_update_processing(self, mock_telegram_update):
         """Тест асинхронної обробки updates."""
         try:
             from src.web_app.app_files.telegram_route import process_update_async
@@ -183,8 +174,7 @@ class TestTelegramRoute:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.telegram_route.get_logger")
-    async def test_error_handling_in_webhook(self, mock_logger, mock_request):
+    async def test_error_handling_in_webhook(self, mock_request):
         """Тест обробки помилок у webhook."""
         try:
             from src.web_app.app_files.telegram_route import telegram_webhook
@@ -205,8 +195,7 @@ class TestTelegramRoute:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.web_app.app_files.telegram_route.get_logger")
-    async def test_rate_limiting_webhook(self, mock_logger, mock_request):
+    async def test_rate_limiting_webhook(self, mock_request):
         """Тест обмеження швидкості для webhook."""
         try:
             from src.web_app.app_files.telegram_route import check_webhook_rate_limit

@@ -12,8 +12,7 @@ class TestFuncSystemDB:
     """Тести для системних функцій бази даних."""
 
     @pytest.mark.asyncio
-    @patch("src.sql.func_system_db.get_logger")
-    async def test_init_database(self, mock_logger, mock_db_session):
+    async def test_init_database(self, mock_db_session):
         """Тест ініціалізації бази даних."""
         try:
             from src.sql.func_system_db import init_database
@@ -30,8 +29,7 @@ class TestFuncSystemDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.func_system_db.get_logger")
-    async def test_check_database_health(self, mock_logger, mock_db_session):
+    async def test_check_database_health(self, mock_db_session):
         """Тест перевірки здоров'я бази даних."""
         try:
             from src.sql.func_system_db import check_database_health
@@ -50,8 +48,7 @@ class TestFuncSystemDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.func_system_db.get_logger")
-    async def test_backup_database(self, mock_logger, mock_db_session):
+    async def test_backup_database(self, mock_db_session):
         """Тест створення резервної копії бази даних."""
         try:
             from src.sql.func_system_db import backup_database
@@ -69,8 +66,7 @@ class TestFuncSystemDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.func_system_db.get_logger")
-    async def test_restore_database(self, mock_logger, mock_db_session):
+    async def test_restore_database(self, mock_db_session):
         """Тест відновлення бази даних з резервної копії."""
         try:
             from src.sql.func_system_db import restore_database
@@ -91,8 +87,7 @@ class TestFuncSystemDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.func_system_db.get_logger")
-    async def test_migrate_database(self, mock_logger, mock_db_session):
+    async def test_migrate_database(self, mock_db_session):
         """Тест міграції бази даних."""
         try:
             from src.sql.func_system_db import migrate_database
@@ -111,8 +106,7 @@ class TestFuncSystemDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.func_system_db.get_logger")
-    async def test_get_database_version(self, mock_logger, mock_db_session):
+    async def test_get_database_version(self, mock_db_session):
         """Тест отримання версії бази даних."""
         try:
             from src.sql.func_system_db import get_database_version
@@ -131,8 +125,7 @@ class TestFuncSystemDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.func_system_db.get_logger")
-    async def test_cleanup_database(self, mock_logger, mock_db_session):
+    async def test_cleanup_database(self, mock_db_session):
         """Тест очищення бази даних."""
         try:
             from src.sql.func_system_db import cleanup_database
@@ -151,8 +144,7 @@ class TestFuncSystemDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.func_system_db.get_logger")
-    async def test_optimize_database(self, mock_logger, mock_db_session):
+    async def test_optimize_database(self, mock_db_session):
         """Тест оптимізації бази даних."""
         try:
             from src.sql.func_system_db import optimize_database
@@ -168,8 +160,7 @@ class TestFuncSystemDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.func_system_db.get_logger")
-    async def test_get_database_statistics(self, mock_logger, mock_db_session):
+    async def test_get_database_statistics(self, mock_db_session):
         """Тест отримання статистики бази даних."""
         try:
             from src.sql.func_system_db import get_database_statistics
@@ -188,8 +179,7 @@ class TestFuncSystemDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.func_system_db.get_logger")
-    async def test_create_database_index(self, mock_logger, mock_db_session):
+    async def test_create_database_index(self, mock_db_session):
         """Тест створення індексу бази даних."""
         try:
             from src.sql.func_system_db import create_database_index
@@ -210,8 +200,7 @@ class TestFuncSystemDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.func_system_db.get_logger")
-    async def test_check_table_exists(self, mock_logger, mock_db_session):
+    async def test_check_table_exists(self, mock_db_session):
         """Тест перевірки існування таблиці."""
         try:
             from src.sql.func_system_db import check_table_exists
@@ -232,8 +221,7 @@ class TestFuncSystemDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.func_system_db.get_logger")
-    async def test_system_maintenance(self, mock_logger, mock_db_session):
+    async def test_system_maintenance(self, mock_db_session):
         """Тест системного обслуговування."""
         try:
             from src.sql.func_system_db import run_system_maintenance
@@ -252,8 +240,7 @@ class TestFuncSystemDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.func_system_db.get_logger")
-    async def test_database_connection_pool(self, mock_logger, mock_db_session):
+    async def test_database_connection_pool(self, mock_db_session):
         """Тест пулу з'єднань з базою даних."""
         try:
             from src.sql.func_system_db import get_connection_pool_stats
@@ -272,8 +259,7 @@ class TestFuncSystemDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.func_system_db.get_logger")
-    async def test_database_error_handling(self, mock_logger, mock_db_session):
+    async def test_database_error_handling(self, mock_db_session):
         """Тест обробки помилок бази даних."""
         try:
             from src.sql.func_system_db import handle_database_error

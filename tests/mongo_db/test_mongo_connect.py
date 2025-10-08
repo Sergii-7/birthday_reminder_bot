@@ -11,8 +11,7 @@ class TestMongoConnect:
     """Тести для з'єднання з MongoDB."""
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db.connect.get_logger")
-    async def test_create_mongo_client(self, mock_logger, mock_mongo_client):
+    async def test_create_mongo_client(self, mock_mongo_client):
         """Тест створення клієнта MongoDB."""
         try:
             from src.mongo_db.connect import create_mongo_client
@@ -28,8 +27,7 @@ class TestMongoConnect:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db.connect.get_logger")
-    async def test_test_mongo_connection(self, mock_logger, mock_mongo_client):
+    async def test_test_mongo_connection(self, mock_mongo_client):
         """Тест перевірки з'єднання з MongoDB."""
         try:
             from src.mongo_db.connect import test_mongo_connection
@@ -46,8 +44,7 @@ class TestMongoConnect:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db.connect.get_logger")
-    async def test_mongo_connection_failure(self, mock_logger, mock_mongo_client):
+    async def test_mongo_connection_failure(self, mock_mongo_client):
         """Тест обробки помилки з'єднання з MongoDB."""
         try:
             from src.mongo_db.connect import test_mongo_connection
@@ -63,8 +60,7 @@ class TestMongoConnect:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db.connect.get_logger")
-    async def test_get_database(self, mock_logger, mock_mongo_client):
+    async def test_get_database(self, mock_mongo_client):
         """Тест отримання бази даних."""
         try:
             from src.mongo_db.connect import get_database
@@ -83,8 +79,7 @@ class TestMongoConnect:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db.connect.get_logger")
-    async def test_get_collection(self, mock_logger, mock_mongo_client):
+    async def test_get_collection(self, mock_mongo_client):
         """Тест отримання колекції."""
         try:
             from src.mongo_db.connect import get_collection
@@ -106,8 +101,7 @@ class TestMongoConnect:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db.connect.get_logger")
-    async def test_create_indexes(self, mock_logger, mock_mongo_client):
+    async def test_create_indexes(self, mock_mongo_client):
         """Тест створення індексів."""
         try:
             from src.mongo_db.connect import create_indexes
@@ -135,8 +129,7 @@ class TestMongoConnect:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db.connect.get_logger")
-    async def test_mongo_health_check(self, mock_logger, mock_mongo_client):
+    async def test_mongo_health_check(self, mock_mongo_client):
         """Тест перевірки здоров'я MongoDB."""
         try:
             from src.mongo_db.connect import mongo_health_check
@@ -157,8 +150,7 @@ class TestMongoConnect:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db.connect.get_logger")
-    async def test_mongo_connection_pool_config(self, mock_logger):
+    async def test_mongo_connection_pool_config(self):
         """Тест конфігурації пулу з'єднань MongoDB."""
         try:
             from src.mongo_db.connect import create_mongo_client_with_pool
@@ -179,8 +171,7 @@ class TestMongoConnect:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db.connect.get_logger")
-    async def test_mongo_transaction_support(self, mock_logger, mock_mongo_client):
+    async def test_mongo_transaction_support(self, mock_mongo_client):
         """Тест підтримки транзакцій MongoDB."""
         try:
             from src.mongo_db.connect import start_transaction
@@ -198,8 +189,7 @@ class TestMongoConnect:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db.connect.get_logger")
-    async def test_mongo_replica_set_config(self, mock_logger):
+    async def test_mongo_replica_set_config(self):
         """Тест конфігурації replica set."""
         try:
             from src.mongo_db.connect import create_mongo_client_replica_set
@@ -252,8 +242,7 @@ class TestMongoConnect:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db.connect.get_logger")
-    async def test_mongo_authentication(self, mock_logger):
+    async def test_mongo_authentication(self):
         """Тест автентифікації MongoDB."""
         try:
             from src.mongo_db.connect import authenticate_mongo_client
@@ -280,8 +269,7 @@ class TestMongoConnect:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.mongo_db.connect.get_logger")
-    async def test_mongo_ssl_config(self, mock_logger):
+    async def test_mongo_ssl_config(self):
         """Тест конфігурації SSL для MongoDB."""
         try:
             from src.mongo_db.connect import create_mongo_client_ssl

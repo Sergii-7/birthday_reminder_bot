@@ -17,8 +17,7 @@ class TestCalendarM:
         return {"year": 2024, "month": 3, "day": 15, "event_name": "Birthday", "user_id": 123456}
 
     @pytest.mark.asyncio
-    @patch("src.bot_app.dir_service.calendar_m.get_logger")
-    async def test_calendar_generation(self, mock_logger, mock_calendar_data):
+    async def test_calendar_generation(self, mock_calendar_data):
         """Тест генерації календаря."""
         try:
             from src.bot_app.dir_service.calendar_m import generate_calendar
@@ -34,8 +33,7 @@ class TestCalendarM:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.bot_app.dir_service.calendar_m.get_logger")
-    async def test_calendar_keyboard_creation(self, mock_logger):
+    async def test_calendar_keyboard_creation(self):
         """Тест створення клавіатури календаря."""
         try:
             from src.bot_app.dir_service.calendar_m import create_calendar_keyboard
@@ -47,8 +45,7 @@ class TestCalendarM:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.bot_app.dir_service.calendar_m.get_logger")
-    async def test_date_selection(self, mock_logger):
+    async def test_date_selection(self):
         """Тест вибору дати в календарі."""
         try:
             from src.bot_app.dir_service.calendar_m import handle_date_selection
@@ -62,8 +59,7 @@ class TestCalendarM:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.bot_app.dir_service.calendar_m.get_logger")
-    async def test_month_navigation(self, mock_logger):
+    async def test_month_navigation(self):
         """Тест навігації по місяцях."""
         try:
             from src.bot_app.dir_service.calendar_m import navigate_month
@@ -80,8 +76,7 @@ class TestCalendarM:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.bot_app.dir_service.calendar_m.get_logger")
-    async def test_birthday_highlighting(self, mock_logger):
+    async def test_birthday_highlighting(self):
         """Тест підсвічування днів народження в календарі."""
         try:
             from src.bot_app.dir_service.calendar_m import highlight_birthdays
@@ -95,8 +90,7 @@ class TestCalendarM:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.bot_app.dir_service.calendar_m.get_logger")
-    async def test_calendar_events_display(self, mock_logger):
+    async def test_calendar_events_display(self):
         """Тест відображення подій в календарі."""
         try:
             from src.bot_app.dir_service.calendar_m import display_calendar_events
@@ -111,8 +105,7 @@ class TestCalendarM:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.bot_app.dir_service.calendar_m.get_logger")
-    async def test_date_validation(self, mock_logger):
+    async def test_date_validation(self):
         """Тест валідації дат."""
         try:
             from src.bot_app.dir_service.calendar_m import validate_date
@@ -139,8 +132,7 @@ class TestCalendarM:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.bot_app.dir_service.calendar_m.get_logger")
-    async def test_calendar_localization(self, mock_logger):
+    async def test_calendar_localization(self):
         """Тест локалізації календаря."""
         try:
             from src.bot_app.dir_service.calendar_m import localize_calendar
@@ -153,8 +145,7 @@ class TestCalendarM:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.bot_app.dir_service.calendar_m.get_logger")
-    async def test_current_date_highlighting(self, mock_logger):
+    async def test_current_date_highlighting(self):
         """Тест підсвічування поточної дати."""
         try:
             from src.bot_app.dir_service.calendar_m import highlight_current_date
@@ -167,8 +158,7 @@ class TestCalendarM:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.bot_app.dir_service.calendar_m.get_logger")
-    async def test_calendar_callback_processing(self, mock_logger):
+    async def test_calendar_callback_processing(self):
         """Тест обробки callback даних календаря."""
         try:
             from src.bot_app.dir_service.calendar_m import process_calendar_callback
@@ -182,8 +172,7 @@ class TestCalendarM:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.bot_app.dir_service.calendar_m.get_logger")
-    async def test_calendar_error_handling(self, mock_logger):
+    async def test_calendar_error_handling(self):
         """Тест обробки помилок календаря."""
         try:
             from src.bot_app.dir_service.calendar_m import generate_calendar

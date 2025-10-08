@@ -11,8 +11,7 @@ class TestSQLConnect:
     """Тести для підключення до SQL бази даних."""
 
     @pytest.mark.asyncio
-    @patch("src.sql.connect.get_logger")
-    async def test_database_connection(self, mock_logger, mock_db_session):
+    async def test_database_connection(self, mock_db_session):
         """Тест підключення до бази даних."""
         try:
             from src.sql.connect import get_db_session
@@ -29,8 +28,7 @@ class TestSQLConnect:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.connect.get_logger")
-    async def test_database_engine_creation(self, mock_logger):
+    async def test_database_engine_creation(self):
         """Тест створення engine бази даних."""
         try:
             from src.sql.connect import create_engine
@@ -48,8 +46,7 @@ class TestSQLConnect:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.connect.get_logger")
-    async def test_connection_pool_configuration(self, mock_logger):
+    async def test_connection_pool_configuration(self):
         """Тест конфігурації пулу з'єднань."""
         try:
             from src.sql.connect import configure_connection_pool
@@ -63,8 +60,7 @@ class TestSQLConnect:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.connect.get_logger")
-    async def test_connection_health_check(self, mock_logger, mock_db_session):
+    async def test_connection_health_check(self, mock_db_session):
         """Тест перевірки здоров'я з'єднання."""
         try:
             from src.sql.connect import check_connection_health
@@ -81,8 +77,7 @@ class TestSQLConnect:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.connect.get_logger")
-    async def test_connection_retry_logic(self, mock_logger):
+    async def test_connection_retry_logic(self):
         """Тест логіки повторних спроб підключення."""
         try:
             from src.sql.connect import connect_with_retry
@@ -100,8 +95,7 @@ class TestSQLConnect:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.connect.get_logger")
-    async def test_transaction_management(self, mock_logger, mock_db_session):
+    async def test_transaction_management(self, mock_db_session):
         """Тест управління транзакціями."""
         try:
             from src.sql.connect import execute_in_transaction
@@ -117,8 +111,7 @@ class TestSQLConnect:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.connect.get_logger")
-    async def test_connection_cleanup(self, mock_logger, mock_db_session):
+    async def test_connection_cleanup(self, mock_db_session):
         """Тест очищення з'єднань."""
         try:
             from src.sql.connect import cleanup_connections
@@ -133,8 +126,7 @@ class TestSQLConnect:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.connect.get_logger")
-    async def test_database_url_validation(self, mock_logger):
+    async def test_database_url_validation(self):
         """Тест валідації URL бази даних."""
         try:
             from src.sql.connect import validate_database_url
@@ -153,8 +145,7 @@ class TestSQLConnect:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.connect.get_logger")
-    async def test_connection_timeout_handling(self, mock_logger):
+    async def test_connection_timeout_handling(self):
         """Тест обробки таймауту з'єднання."""
         try:
             from src.sql.connect import connect_with_timeout
@@ -172,8 +163,7 @@ class TestSQLConnect:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.connect.get_logger")
-    async def test_connection_error_handling(self, mock_logger):
+    async def test_connection_error_handling(self):
         """Тест обробки помилок з'єднання."""
         try:
             from src.sql.connect import handle_connection_error
@@ -189,8 +179,7 @@ class TestSQLConnect:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.connect.get_logger")
-    async def test_session_factory(self, mock_logger):
+    async def test_session_factory(self):
         """Тест фабрики сесій."""
         try:
             from src.sql.connect import SessionFactory
@@ -207,8 +196,7 @@ class TestSQLConnect:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.connect.get_logger")
-    async def test_connection_monitoring(self, mock_logger, mock_db_session):
+    async def test_connection_monitoring(self, mock_db_session):
         """Тест моніторингу з'єднань."""
         try:
             from src.sql.connect import monitor_connections

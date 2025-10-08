@@ -12,8 +12,7 @@ class TestComplexFuncDB:
     """Тести для складних функцій бази даних."""
 
     @pytest.mark.asyncio
-    @patch("src.sql.complex_func_db.get_logger")
-    async def test_get_birthday_analytics(self, mock_logger, mock_db_session):
+    async def test_get_birthday_analytics(self, mock_db_session):
         """Тест аналітики днів народження."""
         try:
             from src.sql.complex_func_db import get_birthday_analytics
@@ -34,8 +33,7 @@ class TestComplexFuncDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.complex_func_db.get_logger")
-    async def test_advanced_user_search(self, mock_logger, mock_db_session):
+    async def test_advanced_user_search(self, mock_db_session):
         """Тест розширеного пошуку користувачів."""
         try:
             from src.sql.complex_func_db import advanced_user_search
@@ -62,8 +60,7 @@ class TestComplexFuncDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.complex_func_db.get_logger")
-    async def test_generate_birthday_report(self, mock_logger, mock_db_session):
+    async def test_generate_birthday_report(self, mock_db_session):
         """Тест генерації звіту про дні народження."""
         try:
             from src.sql.complex_func_db import generate_birthday_report
@@ -86,8 +83,7 @@ class TestComplexFuncDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.complex_func_db.get_logger")
-    async def test_batch_notification_processing(self, mock_logger, mock_db_session):
+    async def test_batch_notification_processing(self, mock_db_session):
         """Тест пакетної обробки сповіщень."""
         try:
             from src.sql.complex_func_db import batch_process_notifications
@@ -111,8 +107,7 @@ class TestComplexFuncDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.complex_func_db.get_logger")
-    async def test_user_engagement_analysis(self, mock_logger, mock_db_session):
+    async def test_user_engagement_analysis(self, mock_db_session):
         """Тест аналізу залученості користувачів."""
         try:
             from src.sql.complex_func_db import analyze_user_engagement
@@ -137,8 +132,7 @@ class TestComplexFuncDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.complex_func_db.get_logger")
-    async def test_birthday_conflict_resolution(self, mock_logger, mock_db_session):
+    async def test_birthday_conflict_resolution(self, mock_db_session):
         """Тест вирішення конфліктів днів народження."""
         try:
             from src.sql.complex_func_db import resolve_birthday_conflicts
@@ -165,8 +159,7 @@ class TestComplexFuncDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.complex_func_db.get_logger")
-    async def test_smart_notification_scheduling(self, mock_logger, mock_db_session):
+    async def test_smart_notification_scheduling(self, mock_db_session):
         """Тест розумного планування сповіщень."""
         try:
             from src.sql.complex_func_db import smart_schedule_notifications
@@ -190,8 +183,7 @@ class TestComplexFuncDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.complex_func_db.get_logger")
-    async def test_data_migration_complex(self, mock_logger, mock_db_session):
+    async def test_data_migration_complex(self, mock_db_session):
         """Тест складної міграції даних."""
         try:
             from src.sql.complex_func_db import complex_data_migration
@@ -215,8 +207,7 @@ class TestComplexFuncDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.complex_func_db.get_logger")
-    async def test_performance_optimization(self, mock_logger, mock_db_session):
+    async def test_performance_optimization(self, mock_db_session):
         """Тест оптимізації продуктивності."""
         try:
             from src.sql.complex_func_db import optimize_query_performance
@@ -241,8 +232,7 @@ class TestComplexFuncDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.complex_func_db.get_logger")
-    async def test_data_integrity_check(self, mock_logger, mock_db_session):
+    async def test_data_integrity_check(self, mock_db_session):
         """Тест перевірки цілісності даних."""
         try:
             from src.sql.complex_func_db import check_data_integrity
@@ -273,8 +263,7 @@ class TestComplexFuncDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.complex_func_db.get_logger")
-    async def test_advanced_reporting(self, mock_logger, mock_db_session):
+    async def test_advanced_reporting(self, mock_db_session):
         """Тест розширеної звітності."""
         try:
             from src.sql.complex_func_db import generate_advanced_report
@@ -306,8 +295,7 @@ class TestComplexFuncDB:
             assert True
 
     @pytest.mark.asyncio
-    @patch("src.sql.complex_func_db.get_logger")
-    async def test_transaction_rollback_complex(self, mock_logger, mock_db_session):
+    async def test_transaction_rollback_complex(self, mock_db_session):
         """Тест складного відкату транзакції."""
         try:
             from src.sql.complex_func_db import complex_transaction_with_rollback
