@@ -12,6 +12,7 @@ black==25.9.0
 certifi==2024.8.30
 cfgv==3.4.0
 click==8.1.7
+coverage==7.10.7
 Deprecated==1.2.14
 distlib==0.4.0
 distro==1.9.0
@@ -27,6 +28,7 @@ httpx==0.27.2
 identify==2.6.15
 idna==3.10
 importlib_resources==6.4.5
+iniconfig==2.1.0
 isort==6.1.0
 Jinja2==3.1.4
 jiter==0.5.0
@@ -44,11 +46,16 @@ pathspec==0.12.1
 phonenumbers==8.13.47
 pillow==10.4.0
 platformdirs==4.4.0
+pluggy==1.6.0
 pre_commit==4.3.0
 psycopg2-binary==2.9.9
 pydantic==2.9.2
 pydantic_core==2.23.4
+Pygments==2.19.2
 pymongo==4.9.2
+pytest==8.4.2
+pytest-asyncio==1.2.0
+pytest-cov==7.0.0
 python-dotenv==1.0.1
 python-multipart==0.0.10
 python-stdnum==1.20
