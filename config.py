@@ -52,3 +52,8 @@ my_admin_chat = int(os.environ.get("MY_ADMIN_CHAT"))
 get_chat_id_bot = "@GetChatID_IL_BOT"
 
 my_banc_card = os.environ.get("MY_BANC_CARD")
+
+""" Valid groups for bot."""
+GROUP_R_D = int(os.environ.get("GROUP_R_D", 0))
+GROUP_TEST = int(os.environ.get("GROUP_TEST", 0))
+VALID_GROUPS_FOR_BOT = [GROUP_R_D, GROUP_TEST]

@@ -1,8 +1,11 @@
 alembic/
 .venv/
 .idea/
+tests/
 .gitignore
 alembic.ini
 src/mongo_db/
 *.log
 .env
+.coverage
+send_photo/

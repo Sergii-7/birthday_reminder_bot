@@ -1,3 +1,4 @@
+import asyncio
 import os
 import re
 from typing import Optional
@@ -5,12 +6,20 @@ from typing import Optional
 from aiogram import F
 from aiogram.types import FSInputFile, InputMediaDocument, Message
 
-from config import bot_user_name, file_log_fast_api, file_log_tel_bot, my_banc_card, sb_telegram_id
+from config import (
+    VALID_GROUPS_FOR_BOT,
+    bot_user_name,
+    file_log_fast_api,
+    file_log_tel_bot,
+    my_banc_card,
+    sb_telegram_id,
+)
 from src.bot_app.create_bot import bot, dp
 from src.bot_app.dir_menu.menu import Menu
 from src.bot_app.dir_menu.send_panel import panel_set_holidays
 from src.bot_app.dir_service.bot_service import check_admin, check_user_in_group
 from src.service.loggers.py_logger_tel_bot import get_logger
+from src.service.msg_tools.voice_data import handle_voice
 from src.service.service_tools import check_card_number
 from src.sql import func_db
 from src.sql.models import Chat, Holiday, User
@@ -24,6 +33,13 @@ async def working(message: Message):
     telegram_id, chat_id = message.from_user.id, message.chat.id
     if chat_id != telegram_id:
         """User sent message in group with bot"""
+        if chat_id not in VALID_GROUPS_FOR_BOT:
+            """If group is not in valid groups, bot will ignore message"""
+            return
+        if message.voice:
+            """User sent voice message in group with bot"""
+            # Handle voice message asynchronously
+            asyncio.create_task(handle_voice(message=message))
         return
     message_id, del_msg = message.message_id, True
     user: User = await func_db.get_user_by_telegram_id(telegram_id=telegram_id)

@@ -1,5 +1,8 @@
 ### Birthday reminder telegram-bot  by fast-api and aiogram for Avrora
 
+### Activate VENV
+```source .venv/bin/activate```
+
 ## alembic start to work:
 ```pip install alembic```
 
@@ -22,4 +25,30 @@ alembic revision --autogenerate -m "initial migration"
 
 ```
 alembic upgrade head
+```
+
+## pytest
+### Без coverage
+```
+pytest --no-cov
+```
+
+### Тільки швидкі тести
+```
+pytest -m "not slow"
+```
+
+#### З детальним coverage
+```
+pytest --cov-report=term-missing --cov-report=html
+```
+
+### Тести з нижчим порогом покриття
+```
+pytest --cov-fail-under=70
+```
+
+### Open report in html
+``` ai ignore
+open htmlcov/index.html
 ```
